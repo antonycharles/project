@@ -1,0 +1,53 @@
+version: '3.7'
+
+services:
+    dbpostgresql:
+        image: postgres:15-alpine
+        deploy:
+            resources:
+                limits:
+                    cpus: '0.50'
+                    memory: 50M
+        volumes:
+            - db_postgresql:/var/lib/postgresql/data
+        container_name: dbpostgresql
+        networks:
+            - family-network
+        ports:
+            - "5432:5432"
+        environment:
+            POSTGRES_PASSWORD: "Postgres2022!"
+
+    message.broker.rabbitmq:
+        build: ./infra/rabbitmq/
+        container_name: messagebrokerrabbitmq
+        ports:
+            - "5672:5672"
+            - "15672:15672"
+        networks:
+            - family-network
+
+    redis:
+        image: redis:6.2-alpine
+        container_name: redis
+        deploy:
+            resources:
+                limits:
+                    cpus: '0.50'
+                    memory: 50M
+        networks:
+            - family-network
+        ports:
+            - '6379:6379'
+        volumes: 
+            - cache:/data
+
+volumes:
+    cache:
+        driver: local
+    db_postgresql:
+        driver: local
+        
+networks:
+  family-network:
+    driver: bridge
