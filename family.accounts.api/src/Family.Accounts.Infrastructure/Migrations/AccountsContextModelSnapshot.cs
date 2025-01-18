@@ -54,7 +54,7 @@ namespace Family.Accounts.Infrastructure.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
-                    b.Property<Guid>("ApplicationId")
+                    b.Property<Guid>("AppId")
                         .HasColumnType("uuid");
 
                     b.Property<DateTime>("CreatedAt")
@@ -81,7 +81,7 @@ namespace Family.Accounts.Infrastructure.Migrations
 
                     b.HasIndex("PermissionFatherId");
 
-                    b.HasIndex("ApplicationId", "Role")
+                    b.HasIndex("AppId", "Role")
                         .IsUnique();
 
                     b.ToTable("Permissions");
@@ -234,9 +234,9 @@ namespace Family.Accounts.Infrastructure.Migrations
 
             modelBuilder.Entity("Family.Accounts.Core.Entities.Permission", b =>
                 {
-                    b.HasOne("Family.Accounts.Core.Entities.App", "Application")
+                    b.HasOne("Family.Accounts.Core.Entities.App", "App")
                         .WithMany()
-                        .HasForeignKey("ApplicationId")
+                        .HasForeignKey("AppId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
@@ -244,7 +244,7 @@ namespace Family.Accounts.Infrastructure.Migrations
                         .WithMany()
                         .HasForeignKey("PermissionFatherId");
 
-                    b.Navigation("Application");
+                    b.Navigation("App");
 
                     b.Navigation("PermissionFather");
                 });

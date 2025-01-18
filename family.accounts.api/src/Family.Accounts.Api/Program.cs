@@ -23,9 +23,9 @@ builder.Services.AddStackExchangeRedisCache(options =>
 
 var app = builder.Build();
 
+app.AddMigration();
 app.SeedData();
 
-app.AddMigration();
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

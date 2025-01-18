@@ -4,10 +4,12 @@ using System.Linq;
 using System.Threading.Tasks;
 using Family.Accounts.Core.Enums;
 
-namespace Family.Accounts.Core.Entities
+namespace Family.Accounts.Core.Responses
 {
-    public class App : BaseEntity
+    public class AppResponse
     {
+        public Guid Id { get; set; }
         public string Name { get; set; }
+        public StatusEnum Status { get; set; }
     }
 }

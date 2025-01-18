@@ -23,6 +23,5 @@ namespace Family.Accounts.Core.Entities
         public string Salt { get; set; }
         public Guid ProfileId { get; set; }
         public Profile? Profile { get; set; }
-        public StatusEnum Status { get; set; }
     }
 }

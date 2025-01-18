@@ -6,9 +6,9 @@ namespace Family.Accounts.Core.Handlers
 {
     public interface IAppHandler
     {
-        Task<PaginatedResponse<App>> GetAppsAsync(PaginatedRequest request);
-        Task<App> GetByIdAsync(Guid id);
-        Task<App> CreateAsync(AppRequest request);
+        Task<PaginatedResponse<AppResponse>> GetAppsAsync(PaginatedRequest request);
+        Task<AppResponse> GetByIdAsync(Guid id);
+        Task<AppResponse> CreateAsync(AppRequest request);
         Task UpdateAsync(Guid id, AppRequest request);
         Task DeleteAsync(Guid id);
     }

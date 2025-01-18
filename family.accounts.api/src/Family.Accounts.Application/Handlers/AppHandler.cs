@@ -21,7 +21,7 @@ namespace Family.Accounts.Application.Handlers
             _context = context;
         }
 
-        public async Task<App> CreateAsync(AppRequest request)
+        public async Task<AppResponse> CreateAsync(AppRequest request)
         {
             var app = request.ToApp();
 
@@ -31,7 +31,7 @@ namespace Family.Accounts.Application.Handlers
 
             await _context.SaveChangesAsync();
 
-            return app;
+            return app.ToAppResponse();
         }
 
         public async Task DeleteAsync(Guid id)
@@ -47,7 +47,7 @@ namespace Family.Accounts.Application.Handlers
             await _context.SaveChangesAsync();
         }
 
-        public async Task<PaginatedResponse<App>> GetAppsAsync(PaginatedRequest request)
+        public async Task<PaginatedResponse<AppResponse>> GetAppsAsync(PaginatedRequest request)
         {
             var query = _context.Apps.AsNoTracking();
 
@@ -61,11 +61,11 @@ namespace Family.Accounts.Application.Handlers
             .ToListAsync();
             
             var totalItems = await query.CountAsync();
-
-            return new PaginatedResponse<App>(apps, totalItems, request);
+            var response = apps.Select(s => s.ToAppResponse()).ToList();
+            return new PaginatedResponse<AppResponse>(response, totalItems, request);
         }
 
-        public async Task<App> GetByIdAsync(Guid id)
+        public async Task<AppResponse> GetByIdAsync(Guid id)
         {
             var app = await _context.Apps.AsNoTracking()
                 .FirstOrDefaultAsync(w => w.Id == id);
@@ -73,7 +73,7 @@ namespace Family.Accounts.Application.Handlers
             if(app == null)
                 throw new NotFoundException("App not found");
 
-            return app;
+            return app.ToAppResponse();
         }
 
         public async Task UpdateAsync(Guid id, AppRequest request)

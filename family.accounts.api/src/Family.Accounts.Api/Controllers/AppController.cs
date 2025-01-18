@@ -25,7 +25,7 @@ public class AppController : ControllerBase
     }
 
     [HttpGet]
-    [ProducesResponseType(typeof(PaginatedResponse<App>), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(PaginatedResponse<AppResponse>), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> GetAllAsync([FromQuery]PaginatedRequest request)
     {
@@ -42,7 +42,7 @@ public class AppController : ControllerBase
     }
     
     [HttpGet("{id}")]
-    [ProducesResponseType(typeof(App), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(AppResponse), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> GetByIdAsync(Guid id)
@@ -64,7 +64,7 @@ public class AppController : ControllerBase
     }
 
     [HttpPost]
-    [ProducesResponseType(typeof(App), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(AppResponse), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> CreateAsync([FromBody] AppRequest request)

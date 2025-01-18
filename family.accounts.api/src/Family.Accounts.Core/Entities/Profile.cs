@@ -12,7 +12,6 @@ namespace Family.Accounts.Core.Entities
         [Required]
         public string Name { get; set; }
         public ProfileTypeEnum Type { get; set; }
-        public StatusEnum Status { get; set; }
         public bool IsDefault { get; set; }
     }
 }

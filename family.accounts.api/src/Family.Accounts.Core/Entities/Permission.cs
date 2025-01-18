@@ -13,10 +13,9 @@ namespace Family.Accounts.Core.Entities
         public string Name { get; set; }
         [Required]
         public string Role { get; set; }
-        public StatusEnum Status { get; set; }
         [Required]
-        public Guid ApplicationId { get; set; }
-        public App? Application { get; set; }
+        public Guid AppId { get; set; }
+        public App? App { get; set; }
         public Guid? PermissionFatherId { get; set; }
         public Permission? PermissionFather { get; set; }
     }

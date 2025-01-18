@@ -17,7 +17,7 @@ namespace Family.Accounts.Infrastructure.EntitiesConfigurations
                 .ValueGeneratedOnAdd();
 
             builder
-                .HasIndex(s => new { s.ApplicationId, s.Role })
+                .HasIndex(s => new { s.AppId, s.Role })
                 .IsUnique();
 
         }

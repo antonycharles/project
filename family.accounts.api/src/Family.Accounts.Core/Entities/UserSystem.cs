@@ -10,7 +10,6 @@ namespace Family.Accounts.Core.Entities
     {
         public string Name { get; set; }
         public string Password { get; set; }
-        public StatusEnum Status { get; set; }
         public Guid ProfileId { get; set; }
         public Profile? Profile { get; set; }
     }

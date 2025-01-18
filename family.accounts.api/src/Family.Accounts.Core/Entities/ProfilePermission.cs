@@ -12,6 +12,5 @@ namespace Family.Accounts.Core.Entities
         public Profile? Profile { get; set; }
         public Guid PermissionId { get; set; }
         public Permission? Permission { get; set; }
-        public StatusEnum Status { get; set; }
     }
 }
