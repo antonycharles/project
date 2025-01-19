@@ -12,6 +12,7 @@ namespace Family.Accounts.Api.Configurations
         public static void AddDependence(this WebApplicationBuilder builder)
         {
             //GERA-COMMANDS-ADD-REPOSITORY
+            builder.Services.AddTransient<IPermissionHandler,PermissionHandler>();
             builder.Services.AddTransient<IProfileHandler,ProfileHandler>();
             builder.Services.AddTransient<IAppHandler,AppHandler>();
         }

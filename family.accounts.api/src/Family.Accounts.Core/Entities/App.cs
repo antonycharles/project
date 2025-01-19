@@ -9,5 +9,7 @@ namespace Family.Accounts.Core.Entities
     public class App : BaseEntity
     {
         public string Name { get; set; }
+        public ICollection<Permission> Permissions { get; set; }
+
     }
 }

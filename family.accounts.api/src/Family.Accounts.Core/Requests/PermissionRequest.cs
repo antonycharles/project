@@ -5,19 +5,21 @@ using System.Linq;
 using System.Threading.Tasks;
 using Family.Accounts.Core.Enums;
 
-namespace Family.Accounts.Core.Entities
+namespace Family.Accounts.Core.Requests
 {
-    public class Permission : BaseEntity
+    public class PermissionRequest
     {
-        [Required]
+        [Required(ErrorMessage = "Name is required")]
         public string Name { get; set; }
-        [Required]
+
+        [Required(ErrorMessage = "Role is required")]
         public string Role { get; set; }
-        [Required]
+
+        [Required(ErrorMessage = "App is required")]
         public Guid AppId { get; set; }
-        public App? App { get; set; }
+
         public Guid? PermissionFatherId { get; set; }
-        public Permission? PermissionFather { get; set; }
-        public ICollection<ProfilePermission> PermissionProfiles { get; set; }
+
+        public StatusEnum? Status { get; set; } = StatusEnum.Active;
     }
 }

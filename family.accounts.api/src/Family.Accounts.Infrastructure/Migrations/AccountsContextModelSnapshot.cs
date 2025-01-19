@@ -235,7 +235,7 @@ namespace Family.Accounts.Infrastructure.Migrations
             modelBuilder.Entity("Family.Accounts.Core.Entities.Permission", b =>
                 {
                     b.HasOne("Family.Accounts.Core.Entities.App", "App")
-                        .WithMany()
+                        .WithMany("Permissions")
                         .HasForeignKey("AppId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
@@ -252,13 +252,13 @@ namespace Family.Accounts.Infrastructure.Migrations
             modelBuilder.Entity("Family.Accounts.Core.Entities.ProfilePermission", b =>
                 {
                     b.HasOne("Family.Accounts.Core.Entities.Permission", "Permission")
-                        .WithMany()
+                        .WithMany("PermissionProfiles")
                         .HasForeignKey("PermissionId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.HasOne("Family.Accounts.Core.Entities.Profile", "Profile")
-                        .WithMany()
+                        .WithMany("ProfilePermissions")
                         .HasForeignKey("ProfileId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
@@ -288,6 +288,21 @@ namespace Family.Accounts.Infrastructure.Migrations
                         .IsRequired();
 
                     b.Navigation("Profile");
+                });
+
+            modelBuilder.Entity("Family.Accounts.Core.Entities.App", b =>
+                {
+                    b.Navigation("Permissions");
+                });
+
+            modelBuilder.Entity("Family.Accounts.Core.Entities.Permission", b =>
+                {
+                    b.Navigation("PermissionProfiles");
+                });
+
+            modelBuilder.Entity("Family.Accounts.Core.Entities.Profile", b =>
+                {
+                    b.Navigation("ProfilePermissions");
                 });
 #pragma warning restore 612, 618
         }
