@@ -1,0 +1,63 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Family.Accounts.Gestao.Web",
+            "type": "coreclr",
+            "request": "launch",
+            "preLaunchTask": "buildfamilyaccountsgestaoweb",
+            "program": "${workspaceFolder}/family.accounts.gestao.web/src/Family.Accounts.Gestao.Web/bin/Debug/net8.0/Family.Accounts.Gestao.Web.dll",
+            "args": [],
+            "cwd": "${workspaceFolder}/family.accounts.gestao.web",
+            "stopAtEntry": false,
+            "serverReadyAction": {
+                "action": "openExternally",
+                "pattern": "\\bNow listening on:\\s+(https?://\\S+)"
+            },
+            "env": {
+                "ASPNETCORE_ENVIRONMENT": "Development"
+            },
+            "sourceFileMap": {
+                "/Views": "${workspaceFolder}/family.accounts.gestao.web/src/Family.Accounts.Gestao.Web/Views"
+            }
+        },
+        {
+            "name": "Family.Accounts.Api",
+            "type": "coreclr",
+            "request": "launch",
+            "preLaunchTask": "buildfamilyaccountsapi",
+            "program": "${workspaceFolder}/family.accounts.api/src/Family.Accounts.Api/bin/Debug/net8.0/Family.Accounts.Api.dll",
+            "args": [],
+            "cwd": "${workspaceFolder}/family.accounts.api/src/Family.Accounts.Api/",
+            "stopAtEntry": false,
+            "serverReadyAction": {
+                "action": "openExternally",
+                "pattern": "\\bNow listening on:\\s+(https?://\\S+)"
+            },
+            "env": {
+                "ASPNETCORE_ENVIRONMENT": "Development"
+            },
+            "sourceFileMap": {
+                "/Views": "${workspaceFolder}/family.accounts.api/src/Family.Accounts.Api/Views"
+            }
+        },
+        {
+            "name": ".NET Core Attach",
+            "type": "coreclr",
+            "request": "attach"
+        }
+    ],
+    "compounds": [
+    {
+      "name": "Accounts",
+      "configurations": [
+        "Family.Accounts.Gestao.Web",
+        "Family.Accounts.Api"
+      ],
+      "stopAll": true
+    }
+  ]
+}
