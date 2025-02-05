@@ -13,6 +13,8 @@ namespace Family.Accounts.Core.Entities
         public string Name { get; set; }
         public ProfileTypeEnum Type { get; set; }
         public bool IsDefault { get; set; }
+        public Guid AppId { get; set; }
+        public App? App { get; set; }
         public ICollection<ProfilePermission> ProfilePermissions { get; set; }
     }
 }

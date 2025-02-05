@@ -18,10 +18,6 @@ namespace Family.Accounts.Core.Entities
         [Required]
         [MaxLength(200)]
         public string Password { get; set; }
-        [Required]
-        [MaxLength(200)]
-        public string Salt { get; set; }
-        public Guid ProfileId { get; set; }
-        public Profile? Profile { get; set; }
+        public ICollection<UserProfile>? UserProfiles { get; set; }
     }
 }

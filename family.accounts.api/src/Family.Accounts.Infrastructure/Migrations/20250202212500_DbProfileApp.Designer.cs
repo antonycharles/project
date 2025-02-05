@@ -3,6 +3,7 @@ using System;
 using Family.Accounts.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Family.Accounts.Infrastructure.Migrations
 {
     [DbContext(typeof(AccountsContext))]
-    partial class AccountsContextModelSnapshot : ModelSnapshot
+    [Migration("20250202212500_DbProfileApp")]
+    partial class DbProfileApp
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -177,6 +180,9 @@ namespace Family.Accounts.Infrastructure.Migrations
                         .HasMaxLength(200)
                         .HasColumnType("character varying(200)");
 
+                    b.Property<Guid>("ProfileId")
+                        .HasColumnType("uuid");
+
                     b.Property<int>("Status")
                         .HasColumnType("integer");
 
@@ -188,34 +194,9 @@ namespace Family.Accounts.Infrastructure.Migrations
                     b.HasIndex("Email")
                         .IsUnique();
 
+                    b.HasIndex("ProfileId");
+
                     b.ToTable("Users");
-                });
-
-            modelBuilder.Entity("Family.Accounts.Core.Entities.UserProfile", b =>
-                {
-                    b.Property<Guid>("ProfileId")
-                        .HasColumnType("uuid");
-
-                    b.Property<Guid>("UserId")
-                        .HasColumnType("uuid");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.Property<Guid>("Id")
-                        .HasColumnType("uuid");
-
-                    b.Property<int>("Status")
-                        .HasColumnType("integer");
-
-                    b.Property<DateTime?>("UpdatedAt")
-                        .HasColumnType("timestamp with time zone");
-
-                    b.HasKey("ProfileId", "UserId");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("UserProfiles");
                 });
 
             modelBuilder.Entity("Family.Accounts.Core.Entities.UserSystem", b =>
@@ -301,7 +282,7 @@ namespace Family.Accounts.Infrastructure.Migrations
                     b.Navigation("Profile");
                 });
 
-            modelBuilder.Entity("Family.Accounts.Core.Entities.UserProfile", b =>
+            modelBuilder.Entity("Family.Accounts.Core.Entities.User", b =>
                 {
                     b.HasOne("Family.Accounts.Core.Entities.Profile", "Profile")
                         .WithMany()
@@ -309,15 +290,7 @@ namespace Family.Accounts.Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("Family.Accounts.Core.Entities.User", "User")
-                        .WithMany("UserProfiles")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
                     b.Navigation("Profile");
-
-                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("Family.Accounts.Core.Entities.UserSystem", b =>
@@ -344,11 +317,6 @@ namespace Family.Accounts.Infrastructure.Migrations
             modelBuilder.Entity("Family.Accounts.Core.Entities.Profile", b =>
                 {
                     b.Navigation("ProfilePermissions");
-                });
-
-            modelBuilder.Entity("Family.Accounts.Core.Entities.User", b =>
-                {
-                    b.Navigation("UserProfiles");
                 });
 #pragma warning restore 612, 618
         }

@@ -1,0 +1,138 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using Family.Accounts.Core.Exceptions;
+using Family.Accounts.Core.Handlers;
+using Family.Accounts.Core.Requests;
+using Family.Accounts.Core.Responses;
+using Microsoft.AspNetCore.Mvc;
+
+namespace Family.Accounts.Api.Controllers
+{
+    [ApiController]
+    [Route("[controller]")]
+    public class UserController : ControllerBase
+    {
+        private readonly ILogger<UserController> _logger;
+        private readonly IUserHandler _userHandler;
+
+        public UserController(
+            ILogger<UserController> logger,
+            IUserHandler userHandler
+        )
+        {
+            _logger = logger;
+            _userHandler = userHandler;
+        }
+
+        [HttpGet]
+        [ProducesResponseType(typeof(PaginatedResponse<UserResponse>), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> GetAllAsync([FromQuery]PaginatedRequest request)
+        {
+            try
+            {
+                var result = await _userHandler.GetAsync(request);
+
+                return Ok(result);  
+            }
+            catch(Exception ex)
+            {
+                return Problem(ex.Message, statusCode: StatusCodes.Status500InternalServerError);
+            } 
+        }
+
+        [HttpGet("{id}")]
+        [ProducesResponseType(typeof(UserResponse), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> GetByIdAsync(Guid id)
+        {
+            try
+            {
+                var user = await _userHandler.GetByIdAsync(id);
+
+                return Ok(user);
+            }
+            catch(NotFoundException ex)
+            {
+                return Problem(ex.Message, statusCode: StatusCodes.Status404NotFound);
+            }
+            catch(Exception ex)
+            {
+                return Problem(ex.Message, statusCode: StatusCodes.Status500InternalServerError);
+            }
+        }
+
+        [HttpPost]
+        [ProducesResponseType(typeof(UserResponse), StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> CreateAsync([FromBody] UserRequest request)
+        {
+            try
+            {
+                var user = await _userHandler.CreateAsync(request);
+
+                return Created("", user);
+            }
+            catch(BusinessException ex)
+            {
+                return Problem(ex.Message, statusCode: StatusCodes.Status400BadRequest);
+            }
+            catch(Exception ex)
+            {
+                return Problem(ex.Message, statusCode: StatusCodes.Status500InternalServerError);
+            }
+        }
+
+        [HttpPut("{id}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> UpdateAsync(Guid id, [FromBody] UserUpdateRequest request)
+        {
+            try
+            {
+                await _userHandler.UpdateAsync(id, request);
+
+                return Ok();
+            }
+            catch(NotFoundException ex)
+            {
+                return Problem(ex.Message, statusCode: StatusCodes.Status404NotFound);
+            }
+            catch(BusinessException ex)
+            {
+                return Problem(ex.Message, statusCode: StatusCodes.Status400BadRequest);
+            }
+            catch(Exception ex)
+            {
+                return Problem(ex.Message, statusCode: StatusCodes.Status500InternalServerError);
+            }
+        }
+
+        [HttpDelete("{id}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> DeleteAsync(Guid id){
+            try
+            {
+                await _userHandler.DeleteAsync(id);
+
+                return Ok();
+            }
+            catch(NotFoundException ex)
+            {
+                return Problem(ex.Message, statusCode: StatusCodes.Status404NotFound);
+            }
+            catch(Exception ex)
+            {
+                return Problem(ex.Message, statusCode: StatusCodes.Status500InternalServerError);
+            }
+        }
+    }
+}

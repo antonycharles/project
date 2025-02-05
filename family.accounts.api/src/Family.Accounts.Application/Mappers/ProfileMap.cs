@@ -14,6 +14,7 @@ namespace Family.Accounts.Application.Mappers
             Name = request.Name,
             Type = request.Type.Value,
             IsDefault = request.IsDefault,
+            AppId = request.AppId.Value,
             Status = request.Status.Value
         };
 
@@ -29,6 +30,7 @@ namespace Family.Accounts.Application.Mappers
             profile.Name = request.Name;
             profile.Type = request.Type.Value;
             profile.IsDefault = request.IsDefault;
+            profile.AppId = request.AppId.Value;
             profile.Status = request.Status.Value;
         }
     }

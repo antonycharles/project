@@ -15,9 +15,14 @@ namespace Family.Accounts.Core.Requests
         [Required(ErrorMessage = "Type is required")]
         public ProfileTypeEnum? Type { get; set; }
 
+        [Required(ErrorMessage = "App is required")]
+        public Guid? AppId { get; set;}
+
         public bool IsDefault { get; set; } = false;
         
         [Required(ErrorMessage = "Status is required")]
         public StatusEnum? Status { get; set; }
+
+        public Guid[]? PermissionIds { get; set; }
     }
 }

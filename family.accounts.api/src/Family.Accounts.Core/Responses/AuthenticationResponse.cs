@@ -1,0 +1,13 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+
+namespace Family.Accounts.Core.Responses
+{
+    public class AuthenticationResponse
+    {
+        public DateTime? ExpiresIn { get; set; }
+        public string Token { get; set; }
+    }
+}

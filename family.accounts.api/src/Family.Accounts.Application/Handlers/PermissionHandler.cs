@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Family.Accounts.Application.Mappers;
 using Family.Accounts.Core.Entities;
+using Family.Accounts.Core.Enums;
 using Family.Accounts.Core.Exceptions;
 using Family.Accounts.Core.Handlers;
 using Family.Accounts.Core.Requests;
@@ -37,7 +38,7 @@ namespace Family.Accounts.Application.Handlers
         private async Task ValidExists(Permission permission)
         {
             var exist = await _context.Permissions.AsNoTracking()
-                .AnyAsync(w => w.Role == permission.Role && w.AppId == permission.AppId);
+                .AnyAsync(w => w.Role == permission.Role && w.AppId == permission.AppId && w.Status == StatusEnum.Active);
 
             if(exist)
                 throw new BusinessException("Permission role exists for App");
@@ -46,12 +47,14 @@ namespace Family.Accounts.Application.Handlers
         public async Task DeleteAsync(Guid id)
         {
             var permission = await _context.Permissions
-                .FirstOrDefaultAsync(w => w.Id == id);
+                .FirstOrDefaultAsync(w => w.Id == id && w.Status == StatusEnum.Active);
 
             if(permission == null)
                 throw new NotFoundException("Permission not found");
 
-            _context.Remove(permission);
+            permission.Status = StatusEnum.Inactive;
+
+            _context.Update(permission);
 
             await _context.SaveChangesAsync();
         }
@@ -60,7 +63,8 @@ namespace Family.Accounts.Application.Handlers
         {
             IQueryable<Permission> query = _context.Permissions.AsNoTracking()
                 .Include(i => i.App)
-                .Include(i => i.PermissionFather);
+                .Include(i => i.PermissionFather)
+                .Where(w => w.Status == StatusEnum.Active);
 
             if(request.Search is not null)
                 query = query.Where(w => w.Name.ToLower() == request.Search.ToLower());
@@ -79,7 +83,7 @@ namespace Family.Accounts.Application.Handlers
         public async Task<PermissionResponse> GetByIdAsync(Guid id)
         {
             var permission = await _context.Permissions.AsNoTracking()
-                .FirstOrDefaultAsync(w => w.Id == id);
+                .FirstOrDefaultAsync(w => w.Id == id && w.Status == StatusEnum.Active);
 
             if(permission == null)
                 throw new NotFoundException("Permission not found");
@@ -90,7 +94,7 @@ namespace Family.Accounts.Application.Handlers
         public async Task UpdateAsync(Guid id, PermissionRequest request)
         {
             var permission = await _context.Permissions
-                .FirstOrDefaultAsync(w => w.Id == id);
+                .FirstOrDefaultAsync(w => w.Id == id && w.Status == StatusEnum.Active);
 
             if(permission == null)
                 throw new NotFoundException("Permission not found");
