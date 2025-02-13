@@ -73,6 +73,8 @@ namespace Family.Accounts.Application.Handlers
         public async Task<ProfileResponse> GetByIdAsync(Guid id)
         {
             var profile = await _context.Profiles.AsNoTracking()
+                .Include(i => i.ProfilePermissions.Where(w => w.Status == StatusEnum.Active))
+                .ThenInclude(i => i.Permission)
                 .FirstOrDefaultAsync(w => w.Id == id && w.Status == StatusEnum.Active);
 
             if(profile == null)

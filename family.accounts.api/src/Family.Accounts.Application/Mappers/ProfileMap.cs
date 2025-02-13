@@ -20,10 +20,12 @@ namespace Family.Accounts.Application.Mappers
 
         public static ProfileResponse ToProfileResponse(this Profile profile) => new ProfileResponse{
             Id = profile.Id,
+            AppId = profile.AppId,
             Name = profile.Name,
             Type = profile.Type,
             IsDefault = profile.IsDefault,
-            Status = profile.Status
+            Status = profile.Status,
+            Permissions = profile.ProfilePermissions?.Select(s => s.Permission.ToPermissionResponse()).ToList()
         };
 
         public static void Update(this Profile profile, ProfileRequest request){
