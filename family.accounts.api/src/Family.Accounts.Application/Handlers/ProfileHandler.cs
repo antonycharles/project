@@ -28,7 +28,7 @@ namespace Family.Accounts.Application.Handlers
             await ValidExists(profile);
             _context.Profiles.Add(profile);
             
-            UpdatePermission(profile, request);
+            UpdatePermission(profile, request.PermissionIds);
             await _context.SaveChangesAsync();
 
             return profile.ToProfileResponse();
@@ -98,7 +98,7 @@ namespace Family.Accounts.Application.Handlers
             
             _context.Profiles.Update(profile);
 
-            UpdatePermission(profile, request);
+            UpdatePermission(profile, request.PermissionIds);
             
             await _context.SaveChangesAsync();
         }
@@ -112,17 +112,17 @@ namespace Family.Accounts.Application.Handlers
                     throw new BusinessException("Profile name exists");
         }
 
-        private void UpdatePermission(Profile profile, ProfileRequest request){
+        private void UpdatePermission(Profile profile, Guid[]? permissionIds){
 
             if(profile.ProfilePermissions != null && profile.ProfilePermissions.Count > 0){
                 foreach(var profielPermission in profile.ProfilePermissions)
                     profielPermission.Status = StatusEnum.Inactive;
             }
 
-            if(request.PermissionIds == null || request.PermissionIds.Count() == 0)
+            if(permissionIds == null || permissionIds.Count() == 0)
                 return; 
 
-            foreach(var permissionId in request.PermissionIds){
+            foreach(var permissionId in permissionIds){
                 var exist = profile.ProfilePermissions?.FirstOrDefault(w => w.PermissionId == permissionId);
 
                 if(exist != null)
@@ -134,6 +134,20 @@ namespace Family.Accounts.Application.Handlers
                     });
                 }
             }
+        }
+
+        public async Task UpdatePermissionsAsync(Guid id, Guid[]? permissionsIds)
+        {
+            var profile = await _context.Profiles
+                .Include(i => i.ProfilePermissions)
+                .FirstOrDefaultAsync(w => w.Id == id && w.Status == StatusEnum.Active);
+
+            if(profile == null)
+                throw new NotFoundException("Profile not found");
+
+            UpdatePermission(profile, permissionsIds);
+
+            await _context.SaveChangesAsync();
         }
     }
 }

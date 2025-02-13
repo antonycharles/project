@@ -115,6 +115,33 @@ namespace Family.Accounts.Api.Controllers
             }
         }
 
+        [HttpPut("Permissions/{id}")]
+        [ProducesResponseType(StatusCodes.Status200OK)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> UpdatePermissionsAsync(Guid id, [FromBody] Guid[] permissionsIds)
+        {
+            try
+            {
+                await _profileHandler.UpdatePermissionsAsync(id, permissionsIds);
+
+                return Ok();
+            }
+            catch(NotFoundException ex)
+            {
+                return Problem(ex.Message, statusCode: StatusCodes.Status404NotFound);
+            }
+            catch(BusinessException ex)
+            {
+                return Problem(ex.Message, statusCode: StatusCodes.Status400BadRequest);
+            }
+            catch(Exception ex)
+            {
+                return Problem(ex.Message, statusCode: StatusCodes.Status500InternalServerError);
+            }
+        }
+
         [HttpDelete("{id}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
