@@ -1,7 +1,7 @@
-<Project Sdk="Microsoft.NET.Sdk.Web">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <ItemGroup>
-    <ProjectReference Include="..\Family.Accounts.Gestao.Infrastructure\Family.Accounts.Gestao.Infrastructure.csproj" />
+    <PackageReference Include="Refit" Version="8.0.0" />
   </ItemGroup>
 
   <PropertyGroup>

@@ -1,8 +1,8 @@
 using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
-using Family.Accounts.Gestao.Web.Models;
+using Family.Accounts.Management.Web.Models;
 
-namespace Family.Accounts.Gestao.Web.Controllers;
+namespace Family.Accounts.Management.Web.Controllers;
 
 public class HomeController : Controller
 {

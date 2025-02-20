@@ -1,4 +1,4 @@
-namespace Family.Accounts.Gestao.Web.Models;
+namespace Family.Accounts.Management.Web.Models;
 
 public class ErrorViewModel
 {

@@ -1,6 +1,9 @@
+using Family.Accounts.Management.Web.Configurations;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+builder.AddDependence();
 builder.Services.AddControllersWithViews();
 
 var app = builder.Build();
