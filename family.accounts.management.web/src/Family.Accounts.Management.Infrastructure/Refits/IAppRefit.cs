@@ -4,11 +4,13 @@ using System.Linq;
 using System.Threading.Tasks;
 using Family.Accounts.Management.Infrastructure.Requests;
 using Family.Accounts.Management.Infrastructure.Responses;
+using Refit;
 
-namespace Family.Accounts.Management.Infrastructure.Repositories
+namespace Family.Accounts.Management.Infrastructure.Refits
 {
-    public interface IAppRepository
+    public interface IAppRefit
     {
-        Task<PaginatedResponse<AppResponse>> GetAsync(PaginatedRequest? request);
+        [Get("/App")]
+        Task<ApiResponse<PaginatedResponse<AppResponse>>> GetAsync(PaginatedRequest? request);
     }
 }
