@@ -106,7 +106,7 @@ namespace Family.Accounts.Application.Handlers
 
         private async Task ValidExists(Profile profile){
             var exist = await _context.Profiles.AsNoTracking()
-                .AnyAsync(w => w.Name == profile.Name && w.Status == StatusEnum.Active);
+                .AnyAsync(w => w.Name == profile.Name && w.Id != profile.Id && w.Status == StatusEnum.Active);
 
                 if(exist)
                     throw new BusinessException("Profile name exists");

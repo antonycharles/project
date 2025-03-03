@@ -1,0 +1,26 @@
+@model AppRequest
+@{
+    ViewData["Title"] = "App create";
+}
+<nav class="navbar bg-body-tertiary">
+  <div class="container-fluid">
+    <h1 class="navbar-brand fs-3">App - create</h1>
+  </div>
+</nav>
+
+<form asp-action="Create" method="post">
+  <div asp-validation-summary="All" class="text-danger"></div>
+  <div class="mb-3">
+    <label asp-for="Name" class="form-label">Name</label>
+    <input asp-for="Name" class="form-control">
+    <span asp-validation-for="Name" class="text-danger"></span>
+  </div>
+  <div class="mb-3">
+    <label asp-for="Status" class="form-label">Status</label>
+    <select asp-for="Status" class="form-select"  asp-items="Html.GetEnumSelectList<StatusEnum>()">
+      <option selected value="">Select...</option>
+    </select>
+    <span asp-validation-for="Name" class="text-danger"></span>
+  </div>
+  <button type="submit" class="btn btn-primary">Submit</button>
+</form>  

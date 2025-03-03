@@ -9,6 +9,10 @@ namespace Family.Accounts.Management.Infrastructure.Repositories
 {
     public interface IAppRepository
     {
+        Task CreateAsync(AppRequest request);
         Task<PaginatedResponse<AppResponse>> GetAsync(PaginatedRequest? request);
+        Task<AppResponse> GetByIdAsync(Guid id);
+        Task DeleteAsync(Guid id);
+        Task UpdateAsync(Guid id, AppRequest request);
     }
 }

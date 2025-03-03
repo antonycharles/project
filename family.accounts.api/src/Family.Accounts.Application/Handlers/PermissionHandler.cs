@@ -38,7 +38,7 @@ namespace Family.Accounts.Application.Handlers
         private async Task ValidExists(Permission permission)
         {
             var exist = await _context.Permissions.AsNoTracking()
-                .AnyAsync(w => w.Role == permission.Role && w.AppId == permission.AppId && w.Status == StatusEnum.Active);
+                .AnyAsync(w => w.Role == permission.Role && w.Id != permission.Id && w.AppId == permission.AppId && w.Status == StatusEnum.Active);
 
             if(exist)
                 throw new BusinessException("Permission role exists for App");

@@ -1,3 +1,5 @@
+using System.Text.Json;
+using System.Text.Json.Serialization;
 using Family.Accounts.Api.Configurations;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -8,7 +10,11 @@ var settings = builder.GetSettings();
 
 builder.AddDependence();
 
-builder.Services.AddControllers();
+builder.Services.AddControllers().AddJsonOptions(o =>
+{
+o.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
+o.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+});
 
 builder.Services.AddEndpointsApiExplorer();
 

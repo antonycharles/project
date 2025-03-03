@@ -112,7 +112,7 @@ namespace Family.Accounts.Application.Handlers
         private async Task ValidExistsAsync(User user)
         {
             var exist = await _context.Users.AsNoTracking()
-                .AnyAsync(w => w.Email == user.Email && w.Status == StatusEnum.Active);
+                .AnyAsync(w => w.Email == user.Email && w.Id != user.Id && w.Status == StatusEnum.Active);
 
             if(exist)
                 throw new BusinessException("User email exists");

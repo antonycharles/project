@@ -99,7 +99,7 @@ namespace Family.Accounts.Application.Handlers
 
         private async Task ValidExists(App app){
             var exist = await _context.Apps.AsNoTracking()
-                .AnyAsync(w => w.Name == app.Name &&  w.Status == StatusEnum.Active);
+                .AnyAsync(w => w.Name == app.Name && w.Id != app.Id &&  w.Status == StatusEnum.Active);
 
             if(exist)
                 throw new BusinessException("App name exists");
