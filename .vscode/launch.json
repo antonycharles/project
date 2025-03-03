@@ -8,10 +8,10 @@
             "name": "Family.Accounts.Gestao.Web",
             "type": "coreclr",
             "request": "launch",
-            "preLaunchTask": "buildfamilyaccountsgestaoweb",
-            "program": "${workspaceFolder}/family.accounts.gestao.web/src/Family.Accounts.Gestao.Web/bin/Debug/net8.0/Family.Accounts.Gestao.Web.dll",
+            "preLaunchTask": "buildfamilyaccountsmanagementweb",
+            "program": "${workspaceFolder}/family.accounts.management.web/src/Family.Accounts.Management.Web/bin/Debug/net8.0/Family.Accounts.Management.Web.dll",
             "args": [],
-            "cwd": "${workspaceFolder}/family.accounts.gestao.web",
+            "cwd": "${workspaceFolder}/family.accounts.management.web",
             "stopAtEntry": false,
             "serverReadyAction": {
                 "action": "openExternally",
@@ -21,7 +21,7 @@
                 "ASPNETCORE_ENVIRONMENT": "Development"
             },
             "sourceFileMap": {
-                "/Views": "${workspaceFolder}/family.accounts.gestao.web/src/Family.Accounts.Gestao.Web/Views"
+                "/Views": "${workspaceFolder}/family.accounts.management.web/src/Family.Accounts.Management.Web/Views"
             }
         },
         {

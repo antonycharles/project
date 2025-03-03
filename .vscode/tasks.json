@@ -2,12 +2,12 @@
     "version": "2.0.0",
     "tasks": [
         {
-            "label": "buildfamilyaccountsgestaoweb",
+            "label": "buildfamilyaccountsmanagementweb",
             "command": "dotnet",
             "type": "process",
             "args": [
                 "build",
-                "${workspaceFolder}/family.accounts.gestao.web/src/Family.Accounts.Gestao.Web/Family.Accounts.Gestao.Web.csproj",
+                "${workspaceFolder}/family.accounts.management.web/src/Family.Accounts.Management.Web/Family.Accounts.Management.Web.csproj",
                 "/property:GenerateFullPaths=true",
                 "/consoleloggerparameters:NoSummary"
             ],
