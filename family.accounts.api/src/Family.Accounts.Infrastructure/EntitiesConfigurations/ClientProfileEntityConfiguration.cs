@@ -8,11 +8,11 @@ using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
 namespace Family.Accounts.Infrastructure.EntitiesConfigurations
 {
-    public class UserProfileEntityConfiguration : IEntityTypeConfiguration<UserProfile>
+    public class ClientProfileEntityConfiguration : IEntityTypeConfiguration<ClientProfile>
     {
-        public void Configure(EntityTypeBuilder<UserProfile> builder)
+        public void Configure(EntityTypeBuilder<ClientProfile> builder)
         {
-            //builder.HasKey(s => new { s.ProfileId, s.UserId });
+            //builder.HasKey(s => new { s.ProfileId, s.ClientId });
         }
     }
 }

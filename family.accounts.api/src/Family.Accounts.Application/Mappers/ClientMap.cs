@@ -1,0 +1,33 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using Family.Accounts.Core.Entities;
+using Family.Accounts.Core.Requests;
+using Family.Accounts.Core.Responses;
+
+namespace Family.Accounts.Application.Mappers
+{
+    public static class ClientMap
+    {
+        public static Client ToClient(this ClientRequest request) => new Client
+        {
+            Name = request.Name,
+            Password = request.Password,
+            Status = request.Status != null ? request.Status.Value : Core.Enums.StatusEnum.Active,
+        };
+
+        public static ClientResponse ToClientResponse(this Client client) => new ClientResponse
+        {
+            Id = client.Id,
+            Name = client.Name,
+            Status = client.Status,
+        };
+
+        public static void Update(this Client client, ClientUpdateRequest request)
+        {
+            client.Name = request.Name;
+            client.Status = request.Status != null ? request.Status.Value : client.Status;
+        }
+    }
+}

@@ -21,6 +21,8 @@ namespace Family.Accounts.Api.Configurations
             builder.Services.AddTransient<IPermissionHandler,PermissionHandler>();
             builder.Services.AddTransient<IProfileHandler,ProfileHandler>();
             builder.Services.AddTransient<IAppHandler,AppHandler>();
+            builder.Services.AddTransient<IClientHandler,ClientHandler>();
+            builder.Services.AddTransient<IClientProfileHandler,ClientProfileHandler>();
         }
     }
 }

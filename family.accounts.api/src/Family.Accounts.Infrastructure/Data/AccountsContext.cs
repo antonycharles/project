@@ -40,5 +40,7 @@ namespace Family.Accounts.Infrastructure.Data
         public virtual DbSet<User> Users{ get; set; }
         public virtual DbSet<UserProfile> UserProfiles { get; set; }
         public virtual DbSet<UserSystem> UserSystems { get; set; }
+        public virtual DbSet<Client> Clients { get; set; }
+        public virtual DbSet<ClientProfile> ClientProfiles { get; set; }
     }
 }
