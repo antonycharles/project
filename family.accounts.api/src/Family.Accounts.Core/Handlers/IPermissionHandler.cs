@@ -6,7 +6,7 @@ namespace Family.Accounts.Core.Handlers
 {
     public interface IPermissionHandler
     {
-        Task<PaginatedResponse<PermissionResponse>> GetAsync(PaginatedRequest request);
+        Task<PaginatedResponse<PermissionResponse>> GetAsync(PaginatedPermissionRequest request);
         Task<PermissionResponse> GetByIdAsync(Guid id);
         Task<PermissionResponse> CreateAsync(PermissionRequest request);
         Task UpdateAsync(Guid id, PermissionRequest request);

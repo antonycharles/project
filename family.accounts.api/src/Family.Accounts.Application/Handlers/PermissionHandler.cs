@@ -59,7 +59,7 @@ namespace Family.Accounts.Application.Handlers
             await _context.SaveChangesAsync();
         }
 
-        public async Task<PaginatedResponse<PermissionResponse>> GetAsync(PaginatedRequest request)
+        public async Task<PaginatedResponse<PermissionResponse>> GetAsync(PaginatedPermissionRequest request)
         {
             IQueryable<Permission> query = _context.Permissions.AsNoTracking()
                 .Include(i => i.App)
@@ -69,6 +69,9 @@ namespace Family.Accounts.Application.Handlers
             if(request.Search is not null)
                 query = query.Where(w => w.Name.ToLower() == request.Search.ToLower());
 
+            if(request.AppId is not null)
+                query = query.Where(w => w.AppId == request.AppId);
+
             var permissions = await query
             .OrderBy(o => o.Name)
             .Skip((request.PageIndex - 1) * request.PageSize)
@@ -77,7 +80,7 @@ namespace Family.Accounts.Application.Handlers
             
             var totalItems = await query.CountAsync();
             var response = permissions.Select(s => s.ToPermissionResponse()).ToList();
-            return new PaginatedResponse<PermissionResponse>(response, totalItems, request);
+            return new PaginatedResponse<PermissionResponse>(response, totalItems, request.PageIndex, request.PageSize, request);
         }
 
         public async Task<PermissionResponse> GetByIdAsync(Guid id)

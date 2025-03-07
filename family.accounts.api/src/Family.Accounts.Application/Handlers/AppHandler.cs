@@ -66,7 +66,7 @@ namespace Family.Accounts.Application.Handlers
             
             var totalItems = await query.CountAsync();
             var response = apps.Select(s => s.ToAppResponse()).ToList();
-            return new PaginatedResponse<AppResponse>(response, totalItems, request);
+            return new PaginatedResponse<AppResponse>(response, totalItems,request.PageIndex, request.PageSize, request);
         }
 
         public async Task<AppResponse> GetByIdAsync(Guid id)

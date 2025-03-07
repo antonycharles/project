@@ -29,7 +29,7 @@ namespace Family.Accounts.Api.Controllers
         [HttpGet]
         [ProducesResponseType(typeof(PaginatedResponse<PermissionResponse>), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> GetAllAsync([FromQuery]PaginatedRequest request)
+        public async Task<IActionResult> GetAllAsync([FromQuery]PaginatedPermissionRequest request)
         {
             try
             {

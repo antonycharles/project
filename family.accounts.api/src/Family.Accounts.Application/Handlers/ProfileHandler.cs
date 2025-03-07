@@ -49,13 +49,16 @@ namespace Family.Accounts.Application.Handlers
             await _context.SaveChangesAsync();
         }
 
-        public async Task<PaginatedResponse<ProfileResponse>> GetAsync(PaginatedRequest request)
+        public async Task<PaginatedResponse<ProfileResponse>> GetAsync(PaginatedProfileRequest request)
         {
             var query = _context.Profiles.AsNoTracking()
                 .Where(w => w.Status == StatusEnum.Active);
 
             if(request.Search is not null)
                 query = query.Where(w => w.Name.ToLower() == request.Search.ToLower());
+
+            if(request.AppId is not null)
+                query = query.Where(w => w.AppId == request.AppId);
 
             var profiles = await query
             .OrderBy(o => o.Name)
@@ -67,7 +70,7 @@ namespace Family.Accounts.Application.Handlers
             
             var response = profiles.Select(s => s.ToProfileResponse()).ToList();
 
-            return new PaginatedResponse<ProfileResponse>(response, totalItems, request);
+            return new PaginatedResponse<ProfileResponse>(response, totalItems, request.PageIndex, request.PageSize, request);
         }
 
         public async Task<ProfileResponse> GetByIdAsync(Guid id)
