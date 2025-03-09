@@ -7,8 +7,8 @@ using Family.Accounts.Core.Responses;
 
 namespace Family.Accounts.Core.Handlers
 {
-    public interface IAuthenticationHandler
+    public interface IClientAuthorizationHandler
     {
-        Task<AuthenticationResponse> AuthenticationAsync(UserAuthenticationRequest request);
+        Task<AuthenticationResponse> AuthenticationAsync(ClientAuthenticationRequest request);
     }
 }

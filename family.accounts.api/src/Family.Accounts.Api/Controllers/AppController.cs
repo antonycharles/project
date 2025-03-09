@@ -64,7 +64,7 @@ public class AppController : ControllerBase
     }
 
     [HttpPost]
-    [ProducesResponseType(typeof(AppResponse), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(AppResponse), StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> CreateAsync([FromBody] AppRequest request)

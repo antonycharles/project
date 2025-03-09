@@ -23,6 +23,8 @@ namespace Family.Accounts.Api.Configurations
             builder.Services.AddTransient<IAppHandler,AppHandler>();
             builder.Services.AddTransient<IClientHandler,ClientHandler>();
             builder.Services.AddTransient<IClientProfileHandler,ClientProfileHandler>();
+            builder.Services.AddTransient<ITokenHandler,TokenHandler>();
+            builder.Services.AddTransient<ITokenKeyHandler,TokenKeyHandler>();
         }
     }
 }

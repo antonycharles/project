@@ -28,7 +28,7 @@ namespace Family.Accounts.Api.Controllers
         }
 
         [HttpPost]
-        [ProducesResponseType(typeof(ClientProfile), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ClientProfile), StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> CreateAsync([FromBody] ClientProfileRequest request)

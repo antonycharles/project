@@ -13,7 +13,6 @@ namespace Family.Accounts.Core.Requests
         [Required(ErrorMessage = "Name is required")]
         public string Name { get; set; }
 
-        public Guid? ProfileId { get; set; }
 
         [Required(ErrorMessage = "Password is required")]
         public string Password { get; set; }

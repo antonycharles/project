@@ -11,7 +11,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace Family.Accounts.Api.Controllers
 {
     [ApiController]
-    [Route("api/[controller]")]
+    [Route("[controller]")]
     public class ClientController : ControllerBase
     {
         private readonly ILogger<ClientController> _logger;
@@ -66,7 +66,7 @@ namespace Family.Accounts.Api.Controllers
         }
 
         [HttpPost]
-        [ProducesResponseType(typeof(ClientResponse), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(ClientResponse), StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> CreateAsync([FromBody] ClientRequest request)

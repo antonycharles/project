@@ -15,5 +15,7 @@ namespace Family.Accounts.Core.Requests
         
         [Required(ErrorMessage = "Status is required")]
         public StatusEnum? Status { get; set; }
+        
+        public string? CallbackUrl { get; set; }
     }
 }

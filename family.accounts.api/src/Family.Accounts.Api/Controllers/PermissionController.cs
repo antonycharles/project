@@ -66,7 +66,7 @@ namespace Family.Accounts.Api.Controllers
         }
 
         [HttpPost]
-        [ProducesResponseType(typeof(PermissionResponse), StatusCodes.Status200OK)]
+        [ProducesResponseType(typeof(PermissionResponse), StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> CreateAsync([FromBody] PermissionRequest request)
