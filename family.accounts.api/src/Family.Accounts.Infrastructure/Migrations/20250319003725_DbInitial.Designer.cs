@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Family.Accounts.Infrastructure.Migrations
 {
     [DbContext(typeof(AccountsContext))]
-    [Migration("20250119002439_DbInitial")]
+    [Migration("20250319003725_DbInitial")]
     partial class DbInitial
     {
         /// <inheritdoc />
@@ -31,10 +31,20 @@ namespace Family.Accounts.Infrastructure.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
+                    b.Property<string>("CallbackUrl")
+                        .HasColumnType("text");
+
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("timestamp with time zone");
 
+                    b.Property<string>("FaviconUrl")
+                        .HasColumnType("text");
+
                     b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Slug")
                         .IsRequired()
                         .HasColumnType("text");
 
@@ -49,6 +59,67 @@ namespace Family.Accounts.Infrastructure.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Apps");
+                });
+
+            modelBuilder.Entity("Family.Accounts.Core.Entities.Client", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Password")
+                        .IsRequired()
+                        .HasMaxLength(200)
+                        .HasColumnType("character varying(200)");
+
+                    b.Property<int>("Status")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasDefaultValue(1);
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Clients");
+                });
+
+            modelBuilder.Entity("Family.Accounts.Core.Entities.ClientProfile", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<Guid>("ClientId")
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<Guid>("ProfileId")
+                        .HasColumnType("uuid");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("integer");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ClientId");
+
+                    b.HasIndex("ProfileId");
+
+                    b.ToTable("ClientProfiles");
                 });
 
             modelBuilder.Entity("Family.Accounts.Core.Entities.Permission", b =>
@@ -96,6 +167,9 @@ namespace Family.Accounts.Infrastructure.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
+                    b.Property<Guid>("AppId")
+                        .HasColumnType("uuid");
+
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("timestamp with time zone");
 
@@ -105,6 +179,10 @@ namespace Family.Accounts.Infrastructure.Migrations
                         .HasDefaultValue(false);
 
                     b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Slug")
                         .IsRequired()
                         .HasColumnType("text");
 
@@ -120,6 +198,8 @@ namespace Family.Accounts.Infrastructure.Migrations
                         .HasColumnType("timestamp with time zone");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("AppId");
 
                     b.ToTable("Profiles");
                 });
@@ -175,14 +255,6 @@ namespace Family.Accounts.Infrastructure.Migrations
                         .HasMaxLength(200)
                         .HasColumnType("character varying(200)");
 
-                    b.Property<Guid>("ProfileId")
-                        .HasColumnType("uuid");
-
-                    b.Property<string>("Salt")
-                        .IsRequired()
-                        .HasMaxLength(200)
-                        .HasColumnType("character varying(200)");
-
                     b.Property<int>("Status")
                         .HasColumnType("integer");
 
@@ -194,9 +266,37 @@ namespace Family.Accounts.Infrastructure.Migrations
                     b.HasIndex("Email")
                         .IsUnique();
 
+                    b.ToTable("Users");
+                });
+
+            modelBuilder.Entity("Family.Accounts.Core.Entities.UserProfile", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<Guid>("ProfileId")
+                        .HasColumnType("uuid");
+
+                    b.Property<int>("Status")
+                        .HasColumnType("integer");
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<Guid>("UserId")
+                        .HasColumnType("uuid");
+
+                    b.HasKey("Id");
+
                     b.HasIndex("ProfileId");
 
-                    b.ToTable("Users");
+                    b.HasIndex("UserId");
+
+                    b.ToTable("UserProfiles");
                 });
 
             modelBuilder.Entity("Family.Accounts.Core.Entities.UserSystem", b =>
@@ -235,6 +335,25 @@ namespace Family.Accounts.Infrastructure.Migrations
                     b.ToTable("UserSystems");
                 });
 
+            modelBuilder.Entity("Family.Accounts.Core.Entities.ClientProfile", b =>
+                {
+                    b.HasOne("Family.Accounts.Core.Entities.Client", "Client")
+                        .WithMany("ClientProfiles")
+                        .HasForeignKey("ClientId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("Family.Accounts.Core.Entities.Profile", "Profile")
+                        .WithMany()
+                        .HasForeignKey("ProfileId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("Client");
+
+                    b.Navigation("Profile");
+                });
+
             modelBuilder.Entity("Family.Accounts.Core.Entities.Permission", b =>
                 {
                     b.HasOne("Family.Accounts.Core.Entities.App", "App")
@@ -250,6 +369,17 @@ namespace Family.Accounts.Infrastructure.Migrations
                     b.Navigation("App");
 
                     b.Navigation("PermissionFather");
+                });
+
+            modelBuilder.Entity("Family.Accounts.Core.Entities.Profile", b =>
+                {
+                    b.HasOne("Family.Accounts.Core.Entities.App", "App")
+                        .WithMany()
+                        .HasForeignKey("AppId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.Navigation("App");
                 });
 
             modelBuilder.Entity("Family.Accounts.Core.Entities.ProfilePermission", b =>
@@ -271,7 +401,7 @@ namespace Family.Accounts.Infrastructure.Migrations
                     b.Navigation("Profile");
                 });
 
-            modelBuilder.Entity("Family.Accounts.Core.Entities.User", b =>
+            modelBuilder.Entity("Family.Accounts.Core.Entities.UserProfile", b =>
                 {
                     b.HasOne("Family.Accounts.Core.Entities.Profile", "Profile")
                         .WithMany()
@@ -279,7 +409,15 @@ namespace Family.Accounts.Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
+                    b.HasOne("Family.Accounts.Core.Entities.User", "User")
+                        .WithMany("UserProfiles")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
                     b.Navigation("Profile");
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("Family.Accounts.Core.Entities.UserSystem", b =>
@@ -298,6 +436,11 @@ namespace Family.Accounts.Infrastructure.Migrations
                     b.Navigation("Permissions");
                 });
 
+            modelBuilder.Entity("Family.Accounts.Core.Entities.Client", b =>
+                {
+                    b.Navigation("ClientProfiles");
+                });
+
             modelBuilder.Entity("Family.Accounts.Core.Entities.Permission", b =>
                 {
                     b.Navigation("PermissionProfiles");
@@ -306,6 +449,11 @@ namespace Family.Accounts.Infrastructure.Migrations
             modelBuilder.Entity("Family.Accounts.Core.Entities.Profile", b =>
                 {
                     b.Navigation("ProfilePermissions");
+                });
+
+            modelBuilder.Entity("Family.Accounts.Core.Entities.User", b =>
+                {
+                    b.Navigation("UserProfiles");
                 });
 #pragma warning restore 612, 618
         }

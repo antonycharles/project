@@ -12,6 +12,7 @@ namespace Family.Accounts.Application.Mappers
     {
         public static Profile ToProfile(this ProfileRequest request) => new Profile{
             Name = request.Name,
+            Slug = request.Slug.Trim(),
             Type = request.Type.Value,
             IsDefault = request.IsDefault,
             AppId = request.AppId.Value,
@@ -22,6 +23,7 @@ namespace Family.Accounts.Application.Mappers
             Id = profile.Id,
             AppId = profile.AppId,
             Name = profile.Name,
+            Slug = profile.Slug,
             Type = profile.Type,
             IsDefault = profile.IsDefault,
             Status = profile.Status,
@@ -30,6 +32,7 @@ namespace Family.Accounts.Application.Mappers
 
         public static void Update(this Profile profile, ProfileRequest request){
             profile.Name = request.Name;
+            profile.Slug = request.Slug.Trim();
             profile.Type = request.Type.Value;
             profile.IsDefault = request.IsDefault;
             profile.AppId = request.AppId.Value;

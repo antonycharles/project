@@ -13,6 +13,9 @@ namespace Family.Accounts.Core.Requests
         [Required(ErrorMessage = "Name is required")]
         public string Name { get; set; }
         
+        [Required(ErrorMessage = "Slug is required")]
+        public string Slug { get; set; }
+        
         [Required(ErrorMessage = "Status is required")]
         public StatusEnum? Status { get; set; }
         

@@ -115,7 +115,7 @@ namespace Family.Accounts.Application.Handlers
                 .AnyAsync(w => w.Email == user.Email && w.Id != user.Id && w.Status == StatusEnum.Active);
 
             if(exist)
-                throw new BusinessException("User email exists");
+                throw new BusinessException("User email already exists");
         }
     }
 }

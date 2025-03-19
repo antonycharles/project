@@ -112,7 +112,7 @@ namespace Family.Accounts.Application.Handlers
                 .AnyAsync(w => w.Name == profile.Name && w.Id != profile.Id && w.Status == StatusEnum.Active);
 
                 if(exist)
-                    throw new BusinessException("Profile name exists");
+                    throw new BusinessException("Profile name already exists");
         }
 
         private void UpdatePermission(Profile profile, Guid[]? permissionIds){

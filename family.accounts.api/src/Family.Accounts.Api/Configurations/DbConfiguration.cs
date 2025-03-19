@@ -45,6 +45,9 @@ namespace Family.Accounts.Api.Configurations
                 var context = scope.ServiceProvider.GetService<AccountsContext>();
 
                 AppSeed.Seeder(context);
+                PermissionSeed.Seeder(context);
+                ProfileSeed.Seeder(context);
+                UserProfileSeed.Seeder(context);
             }
         }
     }

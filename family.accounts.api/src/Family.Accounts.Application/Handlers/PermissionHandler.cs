@@ -41,7 +41,7 @@ namespace Family.Accounts.Application.Handlers
                 .AnyAsync(w => w.Role == permission.Role && w.Id != permission.Id && w.AppId == permission.AppId && w.Status == StatusEnum.Active);
 
             if(exist)
-                throw new BusinessException("Permission role exists for App");
+                throw new BusinessException("Permission role already exists for App");
         }
 
         public async Task DeleteAsync(Guid id)

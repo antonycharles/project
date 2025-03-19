@@ -16,5 +16,6 @@ namespace Family.Accounts.Core.Entities
         public Guid AppId { get; set; }
         public App? App { get; set; }
         public ICollection<ProfilePermission> ProfilePermissions { get; set; }
+        public string Slug { get; set; }
     }
 }

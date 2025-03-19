@@ -16,17 +16,20 @@ namespace Family.Accounts.Api.Seeds
             var apps = new List<App>();
             
             apps.Add(new App{
-                Name = "Family accounts",
+                Name = "Family accounts - Api",
+                Slug = "family-accounts-api",
                 Status = StatusEnum.Active
             });
 
             apps.Add(new App{
-                Name = "Family money",
+                Name = "Family money - Api",
+                Slug = "family-money-api",
                 Status = StatusEnum.Active
             });
 
             apps.Add(new App{
-                Name = "Family task",
+                Name = "Family task - Api",
+                Slug = "family-task-api",
                 Status = StatusEnum.Active
             });
 
@@ -34,7 +37,7 @@ namespace Family.Accounts.Api.Seeds
 
             foreach(var app in apps)
             {
-                if(!appsDb.Any(w => w.Name == app.Name))
+                if(!appsDb.Any(w => w.Slug == app.Slug))
                     context.Apps.Add(app);
             }
 

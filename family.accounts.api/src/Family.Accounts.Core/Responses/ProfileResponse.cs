@@ -15,5 +15,6 @@ namespace Family.Accounts.Core.Responses
         public bool IsDefault { get; set; } 
         public StatusEnum? Status { get; set; }
         public IList<PermissionResponse>? Permissions { get; set; }
+        public string Slug { get; set; }
     }
 }

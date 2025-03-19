@@ -9,6 +9,7 @@ namespace Family.Accounts.Core.Entities
     public class App : BaseEntity
     {
         public string Name { get; set; }
+        public string Slug { get; set; }
         public string? CallbackUrl { get; set; }
         public string? FaviconUrl { get; set; }
         public ICollection<Permission> Permissions { get; set; }
