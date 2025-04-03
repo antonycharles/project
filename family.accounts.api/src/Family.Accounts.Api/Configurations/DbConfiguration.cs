@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Family.Accounts.Api.Seeds;
+using Family.Accounts.Application.Providers;
 using Family.Accounts.Core;
 using Family.Accounts.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
@@ -43,11 +44,14 @@ namespace Family.Accounts.Api.Configurations
             using(var scope = host.Services.CreateScope())
             {
                 var context = scope.ServiceProvider.GetService<AccountsContext>();
+                var passwordProvider = scope.ServiceProvider.GetService<IPasswordProvider>();
 
                 AppSeed.Seeder(context);
                 PermissionSeed.Seeder(context);
                 ProfileSeed.Seeder(context);
                 UserProfileSeed.Seeder(context);
+                ClientSeed.Seeder(context, passwordProvider);
+                ClientProfileSeed.Seeder(context);
             }
         }
     }

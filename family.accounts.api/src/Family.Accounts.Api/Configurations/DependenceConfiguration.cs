@@ -25,6 +25,7 @@ namespace Family.Accounts.Api.Configurations
             builder.Services.AddTransient<IClientProfileHandler,ClientProfileHandler>();
             builder.Services.AddTransient<ITokenHandler,TokenHandler>();
             builder.Services.AddTransient<ITokenKeyHandler,TokenKeyHandler>();
+            builder.Services.AddTransient<IClientAuthorizationHandler, ClientAuthorizationHandler>();
         }
     }
 }

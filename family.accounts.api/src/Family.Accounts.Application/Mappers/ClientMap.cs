@@ -22,6 +22,7 @@ namespace Family.Accounts.Application.Mappers
             Id = client.Id,
             Name = client.Name,
             Status = client.Status,
+            Profiles = client.ClientProfiles?.Where(w => w.Profile != null).Select(s => s.Profile.ToProfileResponse()).ToList()
         };
 
         public static void Update(this Client client, ClientUpdateRequest request)

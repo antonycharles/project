@@ -14,6 +14,11 @@ namespace Family.Accounts.Application.Handlers
         private readonly IDistributedCache _cache;
         private readonly string KEY_CACHE = "family:accounts:token:key";
 
+        public TokenKeyHandler(IDistributedCache cache)
+        {
+            _cache = cache;
+        }
+
         TokenValidationParameters TokenValidationParams = new TokenValidationParameters
         {
             ValidIssuer = "www.mysite.com",

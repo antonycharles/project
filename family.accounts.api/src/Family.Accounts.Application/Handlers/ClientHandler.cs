@@ -79,6 +79,8 @@ namespace Family.Accounts.Application.Handlers
         public async Task<ClientResponse> GetByIdAsync(Guid id)
         {
             var client = await _context.Clients.AsNoTracking()
+                .Include(i => i.ClientProfiles)
+                .ThenInclude(i => i.Profile)
                 .FirstOrDefaultAsync(w => w.Id == id && w.Status == StatusEnum.Active);
 
             if(client == null)

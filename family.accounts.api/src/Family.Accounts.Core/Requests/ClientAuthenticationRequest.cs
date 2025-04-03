@@ -12,7 +12,7 @@ namespace Family.Accounts.Core.Requests
         public Guid ClientId { get; set; }
         
         [Required]
-        public Guid AppId { get; set; }
+        public string AppSlug { get; set; }
 
         [Required]
         public string ClientSecret { get; set; }   

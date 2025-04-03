@@ -25,7 +25,7 @@ namespace Family.Accounts.Application.Handlers
 
         public ClientAuthorizationHandler(
             AccountsContext context,
-            PasswordProvider passwordProvider,
+            IPasswordProvider passwordProvider,
             ITokenHandler tokenHandler)
         {   
             _context = context;
@@ -61,11 +61,11 @@ namespace Family.Accounts.Application.Handlers
 
             if(
                 client.ClientProfiles == null || 
-                client.ClientProfiles.Any(w => w.Profile.AppId == request.AppId && w.Profile.Status == StatusEnum.Active) == false)
+                client.ClientProfiles.Any(w => w.Profile.App.Slug == request.AppSlug && w.Profile.Status == StatusEnum.Active) == false)
                 throw new BusinessException(MSG_CLIENT_NOT_HAVE_PROFILE);
 
 
-            client.ClientProfiles = client.ClientProfiles.Where(w => w.Profile.AppId == request.AppId).ToList();
+            client.ClientProfiles = client.ClientProfiles.Where(w => w.Profile.App.Slug == request.AppSlug).ToList();
 
             return _tokenHandler.GenerateToken(client);
         }
