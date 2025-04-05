@@ -27,7 +27,8 @@ namespace Family.Accounts.Api.Seeds
             var profiles = new List<Profile>();
 
             profiles.Add(new Profile { Name = "Admin", AppId = app.Id, Slug = "admin" });
-            profiles.Add(new Profile { Name = "User", AppId = app.Id, Slug = "user", Type = Core.Enums.ProfileTypeEnum.User, IsDefault = true });
+            profiles.Add(new Profile { Name = "Login", AppId = app.Id, Slug = "login", Type = Core.Enums.ProfileTypeEnum.System });
+            profiles.Add(new Profile { Name = "User", AppId = app.Id, Slug = "user", IsDefault = true });
 
             var profilesDb = context.Profiles.AsNoTracking().ToList();
 

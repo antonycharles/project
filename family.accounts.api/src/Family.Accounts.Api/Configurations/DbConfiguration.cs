@@ -49,9 +49,10 @@ namespace Family.Accounts.Api.Configurations
                 AppSeed.Seeder(context);
                 PermissionSeed.Seeder(context);
                 ProfileSeed.Seeder(context);
-                UserProfileSeed.Seeder(context);
+                ProfilePermissionSeed.Seeder(context);
                 ClientSeed.Seeder(context, passwordProvider);
                 ClientProfileSeed.Seeder(context);
+                UserFamilyAccountsSeed.Seeder(context, passwordProvider);
             }
         }
     }

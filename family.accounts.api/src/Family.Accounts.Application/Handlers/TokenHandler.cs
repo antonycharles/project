@@ -37,7 +37,7 @@ namespace Family.Accounts.Application.Handlers
             {
                 new Claim(CustomClaimTypes.Id, client.Id.ToString()),
                 new Claim(CustomClaimTypes.Name, client.Name),
-                new Claim(CustomClaimTypes.Type, "client"),
+                new Claim(CustomClaimTypes.Type, profile.Type.ToString() ?? ""),
             };
 
             foreach (var role in roles)
@@ -52,16 +52,16 @@ namespace Family.Accounts.Application.Handlers
         {
             var profile = user.UserProfiles
                 .Where(w => w.Status == StatusEnum.Active)
-                .Where(w => w.Profile.AppId == request.AppId && w.Profile.Status == StatusEnum.Active)
+                .Where(w => w.Profile.App.Slug == request.AppSlug && w.Profile.Status == StatusEnum.Active)
                 .Select(s => s.Profile).FirstOrDefault();
 
             var roles = GetRoles(profile);
 
             var claims = new List<Claim>
             {
-                new Claim(ClaimTypes.Sid, user.Id.ToString()),
-                new Claim(ClaimTypes.Name, user.Name),
-                new Claim(ClaimTypes.Email, user.Email),
+                new Claim(CustomClaimTypes.Id, user.Id.ToString()),
+                new Claim(CustomClaimTypes.Name, user.Name),
+                new Claim(CustomClaimTypes.Email, user.Email),
                 new Claim(CustomClaimTypes.Type, "user"),
             };
 
@@ -111,7 +111,7 @@ namespace Family.Accounts.Application.Handlers
             var roles = new List<string>();
 
             var rolesProfile = profile.ProfilePermissions
-                .Where(w => w.Status == StatusEnum.Active && w.Permission.Status == StatusEnum.Active)
+                .Where(w => w.Permission != null && w.Permission.Role != null && w.Status == StatusEnum.Active && w.Permission.Status == StatusEnum.Active)
                 .Select(s => s.Permission.Role);
 
             roles.AddRange(rolesProfile);

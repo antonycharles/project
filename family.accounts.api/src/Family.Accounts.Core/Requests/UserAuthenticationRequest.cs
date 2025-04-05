@@ -9,7 +9,7 @@ namespace Family.Accounts.Core.Requests
     public class UserAuthenticationRequest
     {
         [Required(ErrorMessage = "App is required")]
-        public Guid? AppId { get; set; }
+        public string? AppSlug { get; set; }
 
         [Required(ErrorMessage = "Email is required")]
         [EmailAddress]

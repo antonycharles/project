@@ -16,6 +16,7 @@ namespace Family.Accounts.Api.Configurations
 
 
             //GERA-COMMANDS-ADD-REPOSITORY
+            builder.Services.AddTransient<IUserHandler,UserHandler>();
             builder.Services.AddTransient<IUserProfileHandler,UserProfileHandler>();
             builder.Services.AddTransient<IUserHandler,UserHandler>();
             builder.Services.AddTransient<IPermissionHandler,PermissionHandler>();
@@ -26,6 +27,7 @@ namespace Family.Accounts.Api.Configurations
             builder.Services.AddTransient<ITokenHandler,TokenHandler>();
             builder.Services.AddTransient<ITokenKeyHandler,TokenKeyHandler>();
             builder.Services.AddTransient<IClientAuthorizationHandler, ClientAuthorizationHandler>();
+            builder.Services.AddTransient<IUserAuthorizationHandler, UserAuthorizationHandler>();
         }
     }
 }

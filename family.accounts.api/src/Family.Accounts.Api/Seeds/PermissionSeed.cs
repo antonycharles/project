@@ -34,6 +34,8 @@ namespace Family.Accounts.Api.Seeds
             BasicCRUD(context, app, permissions, "User", "user");
             BasicCRUD(context, app, permissions, "User profile", "user-profile");
 
+            permissions.Add(new Permission { Name = "User - authorization", Role = "user-authorization", AppId = app.Id });
+
             var permissionsDb = context.Permissions.AsNoTracking().ToList();
 
             foreach(var permission in permissions)

@@ -22,7 +22,7 @@ namespace Family.Accounts.Application.Handlers
 
         public UserAuthorizationHandler(
             AccountsContext context,
-            PasswordProvider passwordProvider,
+            IPasswordProvider passwordProvider,
             ITokenHandler tokenHandler,
             IUserHandler userHandler){    
             _context = context;
@@ -37,6 +37,10 @@ namespace Family.Accounts.Application.Handlers
                 .Include(i => i.UserProfiles.Where(w => w.Status == StatusEnum.Active))
                 .ThenInclude(i => i.Profile)
                 .ThenInclude(i => i.App)
+                .Include(i => i.UserProfiles.Where(w => w.Status == StatusEnum.Active))
+                .ThenInclude(i => i.Profile)
+                .ThenInclude(i => i.ProfilePermissions.Where(w => w.Status == StatusEnum.Active))
+                .ThenInclude(i => i.Permission)
                 .FirstOrDefaultAsync(w => w.Email == request.Email && w.Status == StatusEnum.Active);
 
             if(user == null)
@@ -56,13 +60,14 @@ namespace Family.Accounts.Application.Handlers
         private async Task<UserProfile> GetUserProfileAsync(User user, UserAuthenticationRequest request)
         {
             var userProfileExist = user.UserProfiles
-                .FirstOrDefault(w => w.Profile.AppId == request.AppId);
+                .FirstOrDefault(w => w.Profile.App.Slug == request.AppSlug);
                 
             if(userProfileExist != null)
                 return userProfileExist;
 
             var profileDefault = await _context.Profiles.AsNoTracking()
-                .FirstOrDefaultAsync(w => w.IsDefault == true && w.AppId == request.AppId);
+                .Include(i => i.App)
+                .FirstOrDefaultAsync(w => w.IsDefault == true && w.App.Slug == request.AppSlug);
 
             if(profileDefault == null)
                 throw new BusinessException(MSG_PROFILE_NOT_FOUND_FOR_USER);
@@ -77,7 +82,7 @@ namespace Family.Accounts.Application.Handlers
             var userProfile = await _context.UserProfiles.AsNoTracking()
                 .Include(i => i.Profile)
                 .ThenInclude(i => i.App)
-                .FirstOrDefaultAsync(w => w.Profile.AppId == request.AppId);
+                .FirstOrDefaultAsync(w => w.Profile.App.Slug == request.AppSlug);
 
             if(userProfile == null)
                 throw new BusinessException(MSG_PROFILE_NOT_FOUND_FOR_USER);
