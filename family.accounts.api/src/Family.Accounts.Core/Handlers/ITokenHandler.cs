@@ -12,5 +12,6 @@ namespace Family.Accounts.Core.Handlers
     {
         AuthenticationResponse GenerateToken(Client client);
         AuthenticationResponse GenerateToken(User user, UserAuthenticationRequest request);
+        bool ValidateToken(string token);
     }
 }

@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Family.Accounts.Api.Helpers;
 using Family.Accounts.Core.Exceptions;
 using Family.Accounts.Core.Handlers;
 using Family.Accounts.Core.Requests;
@@ -28,6 +29,7 @@ namespace Family.Accounts.Api.Controllers
         }
 
         [HttpGet]
+        [AuthorizeRole(RoleConstants.ProfileRole.List)]
         [ProducesResponseType(typeof(PaginatedResponse<ProfileResponse>), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> GetAllAsync([FromQuery]PaginatedProfileRequest request)
@@ -45,6 +47,7 @@ namespace Family.Accounts.Api.Controllers
         }
 
         [HttpGet("{id}")]
+        [AuthorizeRole(RoleConstants.ProfileRole.List)]
         [ProducesResponseType(typeof(ProfileResponse), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
@@ -67,6 +70,7 @@ namespace Family.Accounts.Api.Controllers
         }
 
         [HttpPost]
+        [AuthorizeRole(RoleConstants.ProfileRole.Create)]
         [ProducesResponseType(typeof(ProfileResponse), StatusCodes.Status201Created)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
@@ -89,6 +93,7 @@ namespace Family.Accounts.Api.Controllers
         }
 
         [HttpPut("{id}")]
+        [AuthorizeRole(RoleConstants.ProfileRole.Update)]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -116,6 +121,7 @@ namespace Family.Accounts.Api.Controllers
         }
 
         [HttpPut("Permissions/{id}")]
+        [AuthorizeRole(RoleConstants.ProfileRole.Update)]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -143,6 +149,7 @@ namespace Family.Accounts.Api.Controllers
         }
 
         [HttpDelete("{id}")]
+        [AuthorizeRole(RoleConstants.ProfileRole.Delete)]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]

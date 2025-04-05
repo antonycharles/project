@@ -2,9 +2,12 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Family.Accounts.Api.Helpers;
 using Family.Accounts.Application.Handlers;
 using Family.Accounts.Application.Providers;
 using Family.Accounts.Core.Handlers;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 
 namespace Family.Accounts.Api.Configurations
 {
@@ -14,6 +17,11 @@ namespace Family.Accounts.Api.Configurations
         {
             builder.Services.AddScoped<IPasswordProvider,PasswordProvider>();
 
+
+            builder.Services.AddScoped<IClaimsTransformation, ClaimsTranformer>();
+            builder.Services.AddTransient<CustomJwtBearerHandler>();
+            builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+                .AddScheme<JwtBearerOptions, CustomJwtBearerHandler>(JwtBearerDefaults.AuthenticationScheme, options => { });
 
             //GERA-COMMANDS-ADD-REPOSITORY
             builder.Services.AddTransient<IUserHandler,UserHandler>();

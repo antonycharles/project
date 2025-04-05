@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Family.Accounts.Api.Helpers;
 using Family.Accounts.Core.Exceptions;
 using Family.Accounts.Core.Handlers;
 using Family.Accounts.Core.Requests;
@@ -28,6 +29,7 @@ namespace Family.Accounts.Api.Controllers
 
 
         [HttpPost]
+        [AuthorizeRole(RoleConstants.UserAuthorizationRole.Authorization)]
         [ProducesResponseType(typeof(AuthenticationResponse), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]

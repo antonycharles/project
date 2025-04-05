@@ -1,3 +1,4 @@
+using Family.Accounts.Api.Helpers;
 using Family.Accounts.Core.Entities;
 using Family.Accounts.Core.Exceptions;
 using Family.Accounts.Core.Handlers;
@@ -25,6 +26,7 @@ public class AppController : ControllerBase
     }
 
     [HttpGet]
+    [AuthorizeRole(RoleConstants.AppRole.List)]
     [ProducesResponseType(typeof(PaginatedResponse<AppResponse>), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
     public async Task<IActionResult> GetAllAsync([FromQuery]PaginatedRequest request)
@@ -42,6 +44,7 @@ public class AppController : ControllerBase
     }
     
     [HttpGet("{id}")]
+    [AuthorizeRole(RoleConstants.AppRole.List)]
     [ProducesResponseType(typeof(AppResponse), StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
@@ -64,6 +67,7 @@ public class AppController : ControllerBase
     }
 
     [HttpPost]
+    [AuthorizeRole(RoleConstants.AppRole.Create)]
     [ProducesResponseType(typeof(AppResponse), StatusCodes.Status201Created)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]
@@ -87,6 +91,7 @@ public class AppController : ControllerBase
 
 
     [HttpPut("{id}")]
+    [AuthorizeRole(RoleConstants.AppRole.Update)]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status400BadRequest)]
@@ -114,6 +119,7 @@ public class AppController : ControllerBase
     }
 
     [HttpDelete("{id}")]
+    [AuthorizeRole(RoleConstants.AppRole.Delete)]
     [ProducesResponseType(StatusCodes.Status200OK)]
     [ProducesResponseType(StatusCodes.Status404NotFound)]
     [ProducesResponseType(StatusCodes.Status500InternalServerError)]

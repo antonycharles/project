@@ -118,5 +118,34 @@ namespace Family.Accounts.Application.Handlers
 
             return roles;
         }
+
+        public bool ValidateToken(string token)
+        {
+            var tokenHandler = new JsonWebTokenHandler();
+
+            var key = _tokenKeyHandler.GetPublicKeys().First();
+
+            var validationParameters = new TokenValidationParameters
+            {
+                ValidateIssuerSigningKey = true,
+                IssuerSigningKey = key,
+                ValidateIssuer = true,
+                ValidIssuer = T_ISSUER,
+                ValidateAudience = true,
+                ValidAudience = T_AUDIENCE,
+                ValidateLifetime = true,
+                ClockSkew = TimeSpan.Zero
+            };
+
+            try
+            {
+                tokenHandler.ValidateToken(token, validationParameters);
+                return true;
+            }
+            catch (Exception)
+            {
+                return false;
+            }
+        }
     }
 }
