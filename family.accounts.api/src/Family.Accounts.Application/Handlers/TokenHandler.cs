@@ -70,7 +70,7 @@ namespace Family.Accounts.Application.Handlers
                 claims.Add(new Claim(CustomClaimTypes.Role, role));
 
             
-            return GenerationAuthenticationResponse(claims, profile.App);
+            return GenerationAuthenticationResponse(claims, profile?.App);
         }
 
         private AuthenticationResponse GenerationAuthenticationResponse(List<Claim> claims, App? app)
@@ -109,6 +109,9 @@ namespace Family.Accounts.Application.Handlers
         private List<string> GetRoles(Profile? profile)
         {
             var roles = new List<string>();
+
+            if(profile == null)
+                return roles;
 
             var rolesProfile = profile.ProfilePermissions
                 .Where(w => w.Permission != null && w.Permission.Role != null && w.Status == StatusEnum.Active && w.Permission.Status == StatusEnum.Active)

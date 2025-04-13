@@ -51,8 +51,11 @@ namespace Family.Accounts.Application.Handlers
             if(user == null || user.Password != passwordHash)
                 throw new BusinessException(MSG_USER_OR_PASSAWORD_INVALID);
 
-            var userProfile = await GetUserProfileAsync(user,request);
-            user.UserProfiles.Add(userProfile);
+            if(request.AppSlug != null)
+            {
+                var userProfile = await GetUserProfileAsync(user,request);
+                user.UserProfiles.Add(userProfile);
+            }
 
             return _tokenHandler.GenerateToken(user,request);
         }

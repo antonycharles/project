@@ -1,7 +1,20 @@
+using Family.Accounts.Login.Web.Configurations;
+
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Services.AddHttpClient();
+
+builder.AddConfigurationRoot();
+builder.AddDependence();
+
+
 // Add services to the container.
-builder.Services.AddControllersWithViews();
+builder.Services.AddControllersWithViews()
+    .AddJsonOptions(
+    x =>
+    {
+        x.JsonSerializerOptions.PropertyNameCaseInsensitive = true;
+    });
 
 var app = builder.Build();
 

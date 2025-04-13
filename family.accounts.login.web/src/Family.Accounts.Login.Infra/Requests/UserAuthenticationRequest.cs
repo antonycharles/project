@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Family.Accounts.Core.Requests
+namespace Family.Accounts.Login.Infra.Requests
 {
     public class UserAuthenticationRequest
     {
