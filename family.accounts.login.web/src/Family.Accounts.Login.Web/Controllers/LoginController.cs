@@ -2,11 +2,14 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using Family.Accounts.Login.Infra.Exceptions;
 using Family.Accounts.Login.Infra.Repositories;
 using Family.Accounts.Login.Infra.Requests;
+using Family.Accounts.Login.Infra.Responses;
 using Family.Accounts.Login.Web.Models;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
@@ -25,9 +28,12 @@ namespace Family.Accounts.Login.Web.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> IndexAsync()
+        public async Task<IActionResult> IndexAsync(string? AppSlug = "")
         {
-            return View();
+            return View(new UserAuthenticationRequest
+            {
+                AppSlug = AppSlug
+            });
         }
 
         [HttpPost]
@@ -38,6 +44,9 @@ namespace Family.Accounts.Login.Web.Controllers
                     return View(request);
                 
                 var result = await _userAuthorizationRepository.AuthenticateAsync(request);
+                var userInfo = await _userAuthorizationRepository.GetUserInfoByIdAsync(result.AuthId.ToString());
+
+                await AddCookieAuthentication(result, userInfo);
 
                 return Redirect(result.CallbackUrl ?? Url.Action("Index", "Home"));
             }
@@ -52,6 +61,21 @@ namespace Family.Accounts.Login.Web.Controllers
             }
 
             return View(request);
+        }
+
+        private async Task AddCookieAuthentication(AuthenticationResponse auth, UserResponse userInfo)
+        {
+            var claims = new List<Claim>
+            {
+                new Claim(ClaimTypes.Sid, userInfo.Id.ToString()),
+                new Claim(ClaimTypes.Name, userInfo.Name),
+                new Claim(ClaimTypes.Email, userInfo.Email)
+            };
+
+            var identity = new ClaimsIdentity(claims, "CookieAuth");
+            var principal = new ClaimsPrincipal(identity);
+
+            await HttpContext.SignInAsync("Family.Accounts.Login.Web", principal);
         }
     }
 }

@@ -37,14 +37,14 @@ namespace Family.Accounts.Application.Handlers
             {
                 new Claim(CustomClaimTypes.Id, client.Id.ToString()),
                 new Claim(CustomClaimTypes.Name, client.Name),
-                new Claim(CustomClaimTypes.Type, profile.Type.ToString() ?? ""),
+                new Claim(CustomClaimTypes.Type, UserTypeEnum.client.ToString()),
             };
 
             foreach (var role in roles)
                 claims.Add(new Claim(CustomClaimTypes.Role, role));
 
 
-            return GenerationAuthenticationResponse(claims, profile.App);
+            return GenerationAuthenticationResponse(claims, client.Id, profile.App);
         }
 
 
@@ -62,7 +62,7 @@ namespace Family.Accounts.Application.Handlers
                 new Claim(CustomClaimTypes.Id, user.Id.ToString()),
                 new Claim(CustomClaimTypes.Name, user.Name),
                 new Claim(CustomClaimTypes.Email, user.Email),
-                new Claim(CustomClaimTypes.Type, "user"),
+                new Claim(CustomClaimTypes.Type, UserTypeEnum.user.ToString()),
             };
 
 
@@ -70,10 +70,10 @@ namespace Family.Accounts.Application.Handlers
                 claims.Add(new Claim(CustomClaimTypes.Role, role));
 
             
-            return GenerationAuthenticationResponse(claims, profile?.App);
+            return GenerationAuthenticationResponse(claims, user.Id, profile?.App);
         }
 
-        private AuthenticationResponse GenerationAuthenticationResponse(List<Claim> claims, App? app)
+        private AuthenticationResponse GenerationAuthenticationResponse(List<Claim> claims, Guid authId, App? app)
         {
             SecurityTokenDescriptor jwt = GetSecurityTokenDescriptor(claims);
 
@@ -88,7 +88,8 @@ namespace Family.Accounts.Application.Handlers
             {
                 ExpiresIn = jwt.Expires.Value.AddMinutes(-3),
                 CallbackUrl = app?.CallbackUrl,
-                Token = lastJws
+                Token = lastJws,
+                AuthId = authId
             };
         }
 

@@ -8,6 +8,15 @@ builder.AddConfigurationRoot();
 builder.AddDependence();
 
 
+builder.Services.AddAuthentication("CookieAuth")
+    .AddCookie("CookieAuth", options =>
+    {
+        options.Cookie.Name = "Family.Accounts.Login.Web";
+        options.LoginPath = "/Login";
+        options.AccessDeniedPath = "/Login";
+        options.ExpireTimeSpan = TimeSpan.FromMinutes(180);
+    });
+
 // Add services to the container.
 builder.Services.AddControllersWithViews()
     .AddJsonOptions(

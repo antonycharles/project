@@ -10,5 +10,6 @@ namespace Family.Accounts.Login.Infra.Repositories
     public interface IUserAuthorizationRepository
     {
         Task<AuthenticationResponse> AuthenticateAsync(UserAuthenticationRequest request);
+        Task<UserResponse> GetUserInfoByIdAsync(string userId);
     }
 }

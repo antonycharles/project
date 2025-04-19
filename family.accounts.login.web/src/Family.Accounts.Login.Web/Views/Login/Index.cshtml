@@ -6,6 +6,7 @@
 </div>
 <form asp-action="Index" method="post" class="form-signin">
     <h1 class="h3 mb-3 fw-normal">Log In</h1>
+    <input type="hidden" asp-for="AppSlug" />
     <div class="form-floating">
       <input asp-for="Email" class="form-control" id="floatingInput" placeholder="">
       <label>Email</label>

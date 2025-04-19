@@ -41,14 +41,14 @@ namespace Family.Accounts.Application.Handlers
                 .ThenInclude(i => i.Profile)
                 .ThenInclude(i => i.ProfilePermissions.Where(w => w.Status == StatusEnum.Active))
                 .ThenInclude(i => i.Permission)
-                .FirstOrDefaultAsync(w => w.Email == request.Email && w.Status == StatusEnum.Active);
+                .FirstOrDefaultAsync(w => (w.Email == request.Email || w.Id == request.UserId) && w.Status == StatusEnum.Active);
 
             if(user == null)
                 throw new BusinessException(MSG_USER_OR_PASSAWORD_INVALID);
 
             var passwordHash = _passwordProvider.HashPassword(request.Password);
 
-            if(user == null || user.Password != passwordHash)
+            if(user.Password != passwordHash && request.UserId != user.Id)
                 throw new BusinessException(MSG_USER_OR_PASSAWORD_INVALID);
 
             if(request.AppSlug != null)

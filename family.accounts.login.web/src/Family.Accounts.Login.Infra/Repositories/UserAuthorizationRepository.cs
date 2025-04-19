@@ -24,12 +24,22 @@ namespace Family.Accounts.Login.Infra.Repositories
 
         public async Task<AuthenticationResponse> AuthenticateAsync(UserAuthenticationRequest request)
         {
+            await AddToken();
+            return await base.PostAsync<AuthenticationResponse>("/UserAuthorization", request);
+        }
+
+        private async Task AddToken()
+        {
             var token = await _clientAuthorizationRepository.AuthenticateAsync();
 
-            if(token != null)
+            if (token != null)
                 _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token.Token);
+        }
 
-            return await base.PostAsync<AuthenticationResponse>("/UserAuthorization", request);
+        public async Task<UserResponse> GetUserInfoByIdAsync(string userId)
+        {
+            await AddToken();
+            return await base.PostAsync<UserResponse>($"/userInfo/{userId}", null);
         }
     }
 }

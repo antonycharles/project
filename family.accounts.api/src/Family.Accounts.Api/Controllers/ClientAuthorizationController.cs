@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Family.Accounts.Api.Helpers;
 using Family.Accounts.Core.Exceptions;
 using Family.Accounts.Core.Handlers;
 using Family.Accounts.Core.Requests;
@@ -17,14 +18,17 @@ namespace Family.Accounts.Api.Controllers
     public class ClientAuthorizationController : ControllerBase
     {
         private readonly ILogger<UserAuthorizationController> _logger;
+        private readonly IClientHandler _clientHandler;
         private readonly IClientAuthorizationHandler _clientAuthorizationHandler;
 
         public ClientAuthorizationController(
             ILogger<UserAuthorizationController> logger,
+            IClientHandler clientHandler,
             IClientAuthorizationHandler clientAuthorizationHandler
         )
         {
             _logger = logger;
+            _clientHandler = clientHandler;
             _clientAuthorizationHandler = clientAuthorizationHandler;
         }
 
@@ -41,6 +45,25 @@ namespace Family.Accounts.Api.Controllers
                 var user = await _clientAuthorizationHandler.AuthenticationAsync(request);
 
                 return Ok(user);
+            }
+            catch(BusinessException ex)
+            {
+                return Problem(ex.Message, statusCode: StatusCodes.Status400BadRequest);
+            }
+            catch(Exception ex)
+            {
+                return Problem(ex.Message, statusCode: StatusCodes.Status500InternalServerError);
+            }
+        }
+
+        [HttpGet("userInfo")]
+        [AuthorizeRole(RoleConstants.UserAuthorizationRole.Authorization)]
+        public async Task<IActionResult> UserInfoAsync(Guid clientId)
+        {
+            try
+            {
+                var client = await _clientHandler.GetByIdAsync(clientId);
+                return Ok(client);
             }
             catch(BusinessException ex)
             {
