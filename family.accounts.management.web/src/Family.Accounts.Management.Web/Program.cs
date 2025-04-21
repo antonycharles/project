@@ -3,8 +3,24 @@ using Family.Accounts.Management.Web.Configurations;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-builder.AddDependence();
+builder.AddConfigurationRoot();
+var settings = builder.GetSettings();
+builder.AddDependence(settings);
+
+
+builder.Services.AddAuthentication("CookieManagement")
+    .AddCookie("CookieManagement", options =>
+    {
+        options.Cookie.Name = "Family.Accounts.Management.Web";
+        options.LoginPath = "/Account/Login";
+        options.LogoutPath = "/Account/Logout";
+        options.AccessDeniedPath = "/Account/AccessDenied";
+        options.ExpireTimeSpan = TimeSpan.FromMinutes(60);
+    });
+
 builder.Services.AddControllersWithViews();
+
+
 
 var app = builder.Build();
 
@@ -21,6 +37,7 @@ app.UseStaticFiles();
 
 app.UseRouting();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllerRoute(

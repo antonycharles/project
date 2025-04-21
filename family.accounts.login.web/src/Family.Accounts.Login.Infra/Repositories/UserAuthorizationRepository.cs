@@ -39,7 +39,7 @@ namespace Family.Accounts.Login.Infra.Repositories
         public async Task<UserResponse> GetUserInfoByIdAsync(string userId)
         {
             await AddToken();
-            return await base.PostAsync<UserResponse>($"/userInfo/{userId}", null);
+            return await base.GetAsync<UserResponse>($"/UserAuthorization/userInfo/{userId}");
         }
     }
 }

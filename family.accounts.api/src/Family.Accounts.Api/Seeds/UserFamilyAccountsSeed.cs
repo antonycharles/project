@@ -38,7 +38,7 @@ namespace Family.Accounts.Api.Seeds
                 {
                     Id = Guid.NewGuid(),
                     UserId = user.Id,
-                    ProfileId = context.Profiles.AsNoTracking().FirstOrDefault(w => w.Slug == "admin" && w.App.Slug == "family-accounts-api").Id,
+                    ProfileId = context.Profiles.AsNoTracking().FirstOrDefault(w => w.Slug == "admin" && w.App.Slug == "family-accounts-management").Id,
                     Status = StatusEnum.Active
                 }
             };

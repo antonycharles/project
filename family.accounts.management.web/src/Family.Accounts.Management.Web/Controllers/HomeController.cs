@@ -1,9 +1,11 @@
 using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using Family.Accounts.Management.Web.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace Family.Accounts.Management.Web.Controllers;
 
+[Authorize]
 public class HomeController : Controller
 {
     private readonly ILogger<HomeController> _logger;
@@ -15,6 +17,7 @@ public class HomeController : Controller
 
     public IActionResult Index()
     {
+        var teste = User.Claims.ToList();
         return View();
     }
 

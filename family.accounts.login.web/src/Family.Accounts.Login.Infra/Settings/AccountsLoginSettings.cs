@@ -19,5 +19,8 @@ namespace Family.Accounts.Login.Infra.Settings
 
         [Required]
         public string AppFamilyAccountsApiSlug { get; set; }
+
+        [Required]
+        public string RedisUrl { get; set; }
     }
 }

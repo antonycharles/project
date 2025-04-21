@@ -2,9 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Family.Accounts.Login.Infra.Settings;
+using Family.Accounts.Management.Infrastructure.Settings;
 
-namespace Family.Accounts.Login.Web.Configurations
+namespace Family.Accounts.Management.Web.Configurations
 {
     public static class ConfigurationRoot
     {
@@ -19,17 +19,17 @@ namespace Family.Accounts.Login.Web.Configurations
             builder.Configuration.AddEnvironmentVariables();
 
             builder.Services
-                .AddOptions<AccountsLoginSettings>()
-                .BindConfiguration(nameof(AccountsLoginSettings))
+                .AddOptions<AccountsManagementSettings>()
+                .BindConfiguration(nameof(AccountsManagementSettings))
                 .ValidateDataAnnotations()
                 .ValidateOnStart(); 
         }
 
-        public static AccountsLoginSettings GetSettings(this WebApplicationBuilder builder)
+        public static AccountsManagementSettings GetSettings(this WebApplicationBuilder builder)
         {
             return builder.Configuration
-                .GetSection(nameof(AccountsLoginSettings))
-                .Get<AccountsLoginSettings>();
+                .GetSection(nameof(AccountsManagementSettings))
+                .Get<AccountsManagementSettings>();
         }
     }
 }

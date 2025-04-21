@@ -60,18 +60,19 @@ namespace Family.Accounts.Management.Infrastructure.Repositories
         {
             try
             {
-                var response = await _appRefit.GetAsync(request);
-
-                if (!response.IsSuccessStatusCode)
-                {
-                    throw new Exception(response.ReasonPhrase);
-                }
-
-                return response.Content;
+                return await _appRefit.GetAsync(request);
+            }
+            catch(ApiException ex) when (ex.StatusCode == System.Net.HttpStatusCode.NotFound)
+            {
+                throw new ExternalApiException("App not found");
             }
             catch (ApiException ex)
             {
-                throw new Exception(ex.Content.ToString());
+                throw new ExternalApiException(ex.Content.ToString());
+            }
+            catch (Exception ex)
+            {
+                throw new ExternalApiException(ex.Message);
             }
         }
 

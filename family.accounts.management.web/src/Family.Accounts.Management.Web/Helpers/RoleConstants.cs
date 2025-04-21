@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Family.Accounts.Api.Helpers
+namespace Family.Accounts.Management.Web.Helpers
 {
     public class RoleConstants
     {
-        protected const string code = "1";
+        protected const string code = "4";
         protected const string list = "list";
         protected const string create = "create";
         protected const string update = "update";
@@ -52,16 +52,6 @@ namespace Family.Accounts.Api.Helpers
             public const string Create = $"{code}-{prefix}-{create}";
             public const string Update = $"{code}-{prefix}-{update}";
             public const string Delete = $"{code}-{prefix}-{delete}";
-        }
-
-        public class TokenRole{
-            private const string prefix = "token";
-            public const string PublicKey = $"{code}-{prefix}-public-key";
-        }
-
-        public class UserAuthorizationRole{
-            private const string prefix = "user-authorization";
-            public const string Authorization = $"{code}-{prefix}";
         }
 
         public class UserRole{

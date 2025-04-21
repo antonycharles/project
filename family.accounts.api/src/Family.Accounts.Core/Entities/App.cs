@@ -8,6 +8,8 @@ namespace Family.Accounts.Core.Entities
 {
     public class App : BaseEntity
     {
+        public int Code { get; set; }
+        public AppTypeEnum Type { get; set; }
         public string Name { get; set; }
         public string Slug { get; set; }
         public string? CallbackUrl { get; set; }

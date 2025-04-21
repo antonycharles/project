@@ -22,6 +22,13 @@ namespace Family.Accounts.Api.Seeds
                 Status = StatusEnum.Active
             });
 
+            clients.Add(new Client{
+                Id = new Guid("e7f8a9b0-1c2d-3e4f-5a6b-7c8d9e0f1a2b"),
+                Name = "Family accounts - Management",
+                Password = passwordProvider.HashPassword("123456"),
+                Status = StatusEnum.Active
+            });
+
             var clientsDb = context.Clients.AsNoTracking().ToList();
 
             foreach(var client in clients)

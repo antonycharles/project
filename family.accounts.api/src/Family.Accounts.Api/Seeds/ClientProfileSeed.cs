@@ -15,14 +15,20 @@ namespace Family.Accounts.Api.Seeds
             
             clientProfiles.Add(new ClientProfile{
                 ClientId = new Guid("d3b0f1a2-4c5e-4b8c-9f7e-1a2b3c4d5e6f"),
-                ProfileId =  context.Profiles.AsNoTracking().FirstOrDefault(w => w.Slug == "login").Id
+                ProfileId =  context.Profiles.AsNoTracking().FirstOrDefault(w => w.App.Slug == "family-accounts-api" && w.Slug == "login").Id
+            });
+
+            clientProfiles.Add(new ClientProfile{
+                ClientId = new Guid("e7f8a9b0-1c2d-3e4f-5a6b-7c8d9e0f1a2b"),
+                ProfileId =  context.Profiles.AsNoTracking().FirstOrDefault(w => w.App.Slug == "family-accounts-api" && w.Slug == "admin").Id
             });
 
             var clientProfileDb = context.ClientProfiles.AsNoTracking().ToList();
 
             foreach(var clientProfile in clientProfiles)
             {
-                var exist = clientProfileDb.Any(w => w.ClientId == clientProfile.ClientId && w.ProfileId == clientProfile.ProfileId);
+                var exist = clientProfileDb
+                    .Any(w => w.ClientId == clientProfile.ClientId && w.ProfileId == clientProfile.ProfileId);
                 
                 if(exist == false)
                     context.ClientProfiles.Add(clientProfile);

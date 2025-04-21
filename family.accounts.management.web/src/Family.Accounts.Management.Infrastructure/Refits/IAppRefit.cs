@@ -14,7 +14,7 @@ namespace Family.Accounts.Management.Infrastructure.Refits
         Task<AppResponse> CreateAsync(AppRequest request);
 
         [Get("/App")]
-        Task<ApiResponse<PaginatedResponse<AppResponse>>> GetAsync(PaginatedRequest? request);
+        Task<PaginatedResponse<AppResponse>> GetAsync(PaginatedRequest? request);
         
         [Delete("/App/{id}")]
         Task DeleteAsync(Guid id);

@@ -8,6 +8,7 @@ using Family.Accounts.Core.Exceptions;
 using Family.Accounts.Core.Handlers;
 using Family.Accounts.Core.Requests;
 using Family.Accounts.Core.Responses;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Family.Accounts.Api.Controllers
@@ -58,7 +59,8 @@ namespace Family.Accounts.Api.Controllers
         [HttpGet("userInfo/{userId}")]
         [ProducesResponseType(typeof(UserResponse), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status400BadRequest)]
-        [AuthorizeRole(RoleConstants.UserAuthorizationRole.Authorization)]
+        //[AuthorizeRole(RoleConstants.UserAuthorizationRole.Authorization)]
+        [AllowAnonymous]
         public async Task<IActionResult> UserInfoAsync(Guid userId)
         {
             try

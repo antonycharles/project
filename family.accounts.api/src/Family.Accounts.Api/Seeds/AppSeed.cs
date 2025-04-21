@@ -16,20 +16,34 @@ namespace Family.Accounts.Api.Seeds
             var apps = new List<App>();
             
             apps.Add(new App{
+                Code = 1,
+                Type = AppTypeEnum.Api,
                 Name = "Family accounts - Api",
                 Slug = "family-accounts-api",
                 Status = StatusEnum.Active
             });
 
             apps.Add(new App{
+                Code = 2,
+                Type = AppTypeEnum.Api,
                 Name = "Family money - Api",
                 Slug = "family-money-api",
                 Status = StatusEnum.Active
             });
 
             apps.Add(new App{
+                Code = 3,
+                Type = AppTypeEnum.Api,
                 Name = "Family task - Api",
                 Slug = "family-task-api",
+                Status = StatusEnum.Active
+            });
+            
+            apps.Add(new App{
+                Code = 4,
+                Type = AppTypeEnum.Web,
+                Name = "Family accounts - Management",
+                Slug = "family-accounts-management",
                 Status = StatusEnum.Active
             });
 

@@ -7,11 +7,14 @@ using Family.Accounts.Management.Infrastructure.Exceptions;
 using Family.Accounts.Management.Infrastructure.Repositories;
 using Family.Accounts.Management.Infrastructure.Requests;
 using Family.Accounts.Management.Infrastructure.Responses;
+using Family.Accounts.Management.Web.Helpers;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
 namespace Family.Accounts.Management.Web.Controllers
 {
+    [Authorize]
     public class AppController : Controller
     {
         private readonly ILogger<AppController> _logger;
@@ -25,6 +28,7 @@ namespace Family.Accounts.Management.Web.Controllers
             _appRepository = appRepository;
         }
 
+        [AuthorizeRole(RoleConstants.AppRole.List)]
         public async Task<IActionResult> IndexAsync(PaginatedRequest? request)
         {
             try
@@ -33,8 +37,11 @@ namespace Family.Accounts.Management.Web.Controllers
                 return View(apps);
 
             }
+            catch(ExternalApiException ex){
+                ModelState.AddModelError("Error", ex.Message);
+                return View();
+            }
             catch(Exception ex){
-                var teste = ex.Message;
                 return View(new PaginatedResponse<AppResponse>(){
                     Request = new PaginatedRequest(),
                 });
@@ -42,12 +49,14 @@ namespace Family.Accounts.Management.Web.Controllers
         }
 
         [HttpGet]
+        [AuthorizeRole(RoleConstants.AppRole.Create)]
         public async Task<IActionResult> CreateAsync()
         {
             return View();
         }
 
         [HttpPost]
+        [AuthorizeRole(RoleConstants.AppRole.Create)]
         public async Task<IActionResult> CreateAsync(AppRequest request)
         {
             try
@@ -66,6 +75,7 @@ namespace Family.Accounts.Management.Web.Controllers
         }
 
         [HttpGet]
+        [AuthorizeRole(RoleConstants.AppRole.Update)]
         public async Task<IActionResult> EditAsync(Guid id){
             try
             {
@@ -85,6 +95,8 @@ namespace Family.Accounts.Management.Web.Controllers
             }
         }
 
+        [HttpPost]
+        [AuthorizeRole(RoleConstants.AppRole.Update)]
         public async Task<IActionResult> EditAsync(Guid id, AppRequest request)
         {
             try
@@ -102,7 +114,8 @@ namespace Family.Accounts.Management.Web.Controllers
             }
         }
 
-        [HttpGet]
+        [HttpDelete]
+        [AuthorizeRole(RoleConstants.AppRole.Delete)]
         public async Task<IActionResult> DeleteAsync(Guid id)
         {
             try

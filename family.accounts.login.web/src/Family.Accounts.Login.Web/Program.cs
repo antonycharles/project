@@ -5,6 +5,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddHttpClient();
 
 builder.AddConfigurationRoot();
+var settings = builder.GetSettings();
 builder.AddDependence();
 
 
@@ -16,6 +17,12 @@ builder.Services.AddAuthentication("CookieAuth")
         options.AccessDeniedPath = "/Login";
         options.ExpireTimeSpan = TimeSpan.FromMinutes(180);
     });
+
+builder.Services.AddStackExchangeRedisCache(options =>
+{
+    options.Configuration = settings.RedisUrl;
+    options.InstanceName = "family_accounts_login_"; // Optional prefix for cache keys
+});
 
 // Add services to the container.
 builder.Services.AddControllersWithViews()

@@ -41,7 +41,7 @@ namespace Family.Accounts.Application.Handlers
             };
 
             foreach (var role in roles)
-                claims.Add(new Claim(CustomClaimTypes.Role, role));
+                claims.Add(new Claim(CustomClaimTypes.Role, profile.App.Code + "-" + role));
 
 
             return GenerationAuthenticationResponse(claims, client.Id, profile.App);
@@ -67,7 +67,7 @@ namespace Family.Accounts.Application.Handlers
 
 
             foreach (var role in roles)
-                claims.Add(new Claim(CustomClaimTypes.Role, role));
+                claims.Add(new Claim(CustomClaimTypes.Role, profile.App.Code + "-" + role));
 
             
             return GenerationAuthenticationResponse(claims, user.Id, profile?.App);

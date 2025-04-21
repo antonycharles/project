@@ -12,6 +12,7 @@ namespace Family.Accounts.Api.Seeds
     {
         public static void Seeder(AccountsContext context){
             SeederFamilyAccounts(context);
+            SeederFamilyManagement(context);
 
             context.SaveChanges();
         } 
@@ -25,16 +26,29 @@ namespace Family.Accounts.Api.Seeds
                 return;
 
             var permissions = new List<Permission>();
-
-            BasicCRUD(context, app, permissions, "App", "app");
-            BasicCRUD(context, app, permissions, "Client", "client");
-            BasicCRUD(context, app, permissions, "Client profile", "client-profile");
-            BasicCRUD(context, app, permissions, "Permission", "permission");
-            BasicCRUD(context, app, permissions, "Profile", "profile");
-            BasicCRUD(context, app, permissions, "User", "user");
-            BasicCRUD(context, app, permissions, "User profile", "user-profile");
+            AddPermissionsAccountsBase(context, app, permissions);
 
             permissions.Add(new Permission { Name = "User - authorization", Role = "user-authorization", AppId = app.Id });
+            permissions.Add(new Permission { Name = "Token - public key", Role = "token-public-key", AppId = app.Id });
+
+            var permissionsDb = context.Permissions.AsNoTracking().ToList();
+
+            foreach (var permission in permissions)
+            {
+                if (!permissionsDb.Any(w => w.Role == permission.Role && w.AppId == permission.AppId))
+                    context.Permissions.Add(permission);
+            }
+        }
+
+        private static void SeederFamilyManagement(AccountsContext context)
+        {
+            var app = context.Apps.AsNoTracking().FirstOrDefault(w => w.Slug == "family-accounts-management");
+
+            if (app == null)
+                return;
+
+            var permissions = new List<Permission>();
+            AddPermissionsAccountsBase(context, app, permissions);
 
             var permissionsDb = context.Permissions.AsNoTracking().ToList();
 
@@ -43,6 +57,17 @@ namespace Family.Accounts.Api.Seeds
                 if(!permissionsDb.Any(w => w.Role == permission.Role && w.AppId == permission.AppId))
                     context.Permissions.Add(permission);
             }
+        }
+
+        private static void AddPermissionsAccountsBase(AccountsContext context, App app, List<Permission> permissions)
+        {
+            BasicCRUD(context, app, permissions, "App", "app");
+            BasicCRUD(context, app, permissions, "Client", "client");
+            BasicCRUD(context, app, permissions, "Client profile", "client-profile");
+            BasicCRUD(context, app, permissions, "Permission", "permission");
+            BasicCRUD(context, app, permissions, "Profile", "profile");
+            BasicCRUD(context, app, permissions, "User", "user");
+            BasicCRUD(context, app, permissions, "User profile", "user-profile");
         }
 
         private static void BasicCRUD(AccountsContext context, App app, List<Permission> permissions, string namePermission, string rolePermission)
