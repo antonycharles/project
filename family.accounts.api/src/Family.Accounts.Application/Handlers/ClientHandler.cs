@@ -45,12 +45,12 @@ namespace Family.Accounts.Application.Handlers
         public async Task DeleteAsync(Guid id)
         {
             var client = await _context.Clients
-                .FirstOrDefaultAsync(w => w.Id == id && w.Status == StatusEnum.Active);
+                .FirstOrDefaultAsync(w => w.Id == id && w.IsDeleted == false);
 
             if(client == null)
                 throw new NotFoundException("Client not found");
 
-            client.Status = StatusEnum.Inactive;
+            client.IsDeleted = true;
 
             _context.Update(client);
 
@@ -60,7 +60,7 @@ namespace Family.Accounts.Application.Handlers
         public async Task<PaginatedResponse<ClientResponse>> GetAsync(PaginatedRequest request)
         {
             var query = _context.Clients.AsNoTracking()
-                .Where(w => w.Status == StatusEnum.Active);
+                .Where(w => w.IsDeleted == false);
 
             if(request.Search is not null)
                 query = query.Where(w => w.Name.ToLower() == request.Search.ToLower());
@@ -81,7 +81,7 @@ namespace Family.Accounts.Application.Handlers
             var client = await _context.Clients.AsNoTracking()
                 .Include(i => i.ClientProfiles)
                 .ThenInclude(i => i.Profile)
-                .FirstOrDefaultAsync(w => w.Id == id && w.Status == StatusEnum.Active);
+                .FirstOrDefaultAsync(w => w.Id == id && w.IsDeleted == false);
 
             if(client == null)
                 throw new NotFoundException("Client not found");
@@ -92,7 +92,7 @@ namespace Family.Accounts.Application.Handlers
         public async Task UpdateAsync(Guid id, ClientUpdateRequest request)
         {
             var client = await _context.Clients
-                .FirstOrDefaultAsync(w => w.Id == id && w.Status == StatusEnum.Active);
+                .FirstOrDefaultAsync(w => w.Id == id && w.IsDeleted == false);
 
             if(client == null)
                 throw new NotFoundException("Client not found");
@@ -112,7 +112,7 @@ namespace Family.Accounts.Application.Handlers
         private async Task ValidExistsAsync(Client client)
         {
             var exist = await _context.Clients.AsNoTracking()
-                .AnyAsync(w => w.Name == client.Name && w.Id != client.Id && w.Status == StatusEnum.Active);
+                .AnyAsync(w => w.Name == client.Name && w.Id != client.Id && w.IsDeleted == false);
 
             if(exist)
                 throw new BusinessException("Client name already exists");

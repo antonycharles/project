@@ -37,12 +37,12 @@ namespace Family.Accounts.Application.Handlers
         public async Task DeleteAsync(Guid id)
         {
             var profile = await _context.Profiles
-                .FirstOrDefaultAsync(w => w.Id == id && w.Status == StatusEnum.Active);
+                .FirstOrDefaultAsync(w => w.Id == id && w.IsDeleted == false);
 
             if(profile == null)
                 throw new NotFoundException("Profile not found");
 
-            profile.Status = StatusEnum.Inactive;
+            profile.IsDeleted = true;
 
             _context.Update(profile);
 
@@ -52,7 +52,7 @@ namespace Family.Accounts.Application.Handlers
         public async Task<PaginatedResponse<ProfileResponse>> GetAsync(PaginatedProfileRequest request)
         {
             var query = _context.Profiles.AsNoTracking()
-                .Where(w => w.Status == StatusEnum.Active);
+                .Where(w => w.IsDeleted == false);
 
             if(request.Search is not null)
                 query = query.Where(w => w.Name.ToLower() == request.Search.ToLower());
@@ -76,9 +76,9 @@ namespace Family.Accounts.Application.Handlers
         public async Task<ProfileResponse> GetByIdAsync(Guid id)
         {
             var profile = await _context.Profiles.AsNoTracking()
-                .Include(i => i.ProfilePermissions.Where(w => w.Status == StatusEnum.Active))
+                .Include(i => i.ProfilePermissions.Where(w => w.IsDeleted == false))
                 .ThenInclude(i => i.Permission)
-                .FirstOrDefaultAsync(w => w.Id == id && w.Status == StatusEnum.Active);
+                .FirstOrDefaultAsync(w => w.Id == id && w.IsDeleted == false);
 
             if(profile == null)
                 throw new NotFoundException("Profile not found");
@@ -90,7 +90,7 @@ namespace Family.Accounts.Application.Handlers
         {
             var profile = await _context.Profiles
                 .Include(i => i.ProfilePermissions)
-                .FirstOrDefaultAsync(w => w.Id == id && w.Status == StatusEnum.Active);
+                .FirstOrDefaultAsync(w => w.Id == id && w.IsDeleted == false);
 
             if(profile == null)
                 throw new NotFoundException("Profile not found");
@@ -109,7 +109,7 @@ namespace Family.Accounts.Application.Handlers
 
         private async Task ValidExists(Profile profile){
             var exist = await _context.Profiles.AsNoTracking()
-                .AnyAsync(w => w.Name == profile.Name && w.Id != profile.Id && w.Status == StatusEnum.Active);
+                .AnyAsync(w => w.Name == profile.Name && w.Id != profile.Id && w.IsDeleted == false);
 
                 if(exist)
                     throw new BusinessException("Profile name already exists");
@@ -119,7 +119,7 @@ namespace Family.Accounts.Application.Handlers
 
             if(profile.ProfilePermissions != null && profile.ProfilePermissions.Count > 0){
                 foreach(var profielPermission in profile.ProfilePermissions)
-                    profielPermission.Status = StatusEnum.Inactive;
+                    profielPermission.IsDeleted = true;
             }
 
             if(permissionIds == null || permissionIds.Count() == 0)
@@ -129,7 +129,7 @@ namespace Family.Accounts.Application.Handlers
                 var exist = profile.ProfilePermissions?.FirstOrDefault(w => w.PermissionId == permissionId);
 
                 if(exist != null)
-                    exist.Status = StatusEnum.Active;
+                    exist.IsDeleted = false;
                 else{
                     _context.ProfilePermissions.Add(new ProfilePermission{
                         ProfileId = profile.Id,
@@ -143,7 +143,7 @@ namespace Family.Accounts.Application.Handlers
         {
             var profile = await _context.Profiles
                 .Include(i => i.ProfilePermissions)
-                .FirstOrDefaultAsync(w => w.Id == id && w.Status == StatusEnum.Active);
+                .FirstOrDefaultAsync(w => w.Id == id && w.IsDeleted == false);
 
             if(profile == null)
                 throw new NotFoundException("Profile not found");

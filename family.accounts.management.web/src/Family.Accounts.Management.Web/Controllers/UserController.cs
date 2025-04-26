@@ -4,37 +4,35 @@ using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using Family.Accounts.Management.Infrastructure.Exceptions;
-using Family.Accounts.Management.Infrastructure.Mappers;
 using Family.Accounts.Management.Infrastructure.Repositories;
 using Family.Accounts.Management.Infrastructure.Requests;
 using Family.Accounts.Management.Infrastructure.Responses;
 using Family.Accounts.Management.Web.Helpers;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 
 namespace Family.Accounts.Management.Web.Controllers
 {
-    [Authorize]
-    public class AppController : Controller
+    [Route("[controller]")]
+    public class UserController : Controller
     {
-        private readonly ILogger<AppController> _logger;
-        private readonly IAppRepository _appRepository;
+        private readonly ILogger<UserController> _logger;
+        private readonly IUserRepository _userRepository;
 
-        public AppController(
-            ILogger<AppController> logger,
-            IAppRepository appRepository)
+        public UserController(
+            ILogger<UserController> logger,
+            IUserRepository appRepository)
         {
             _logger = logger;
-            _appRepository = appRepository;
+            _userRepository = appRepository;
         }
 
-        [AuthorizeRole(RoleConstants.AppRole.List)]
+        [AuthorizeRole(RoleConstants.UserRole.List)]
         public async Task<IActionResult> IndexAsync(PaginatedRequest? request)
         {
             try
             {
-                var apps = await _appRepository.GetAsync(request);
+                var apps = await _userRepository.GetAsync(request);
                 return View(apps);
 
             }
@@ -43,31 +41,31 @@ namespace Family.Accounts.Management.Web.Controllers
                 return View();
             }
             catch(Exception ex){
-                return View(new PaginatedResponse<AppResponse>(){
+                return View(new PaginatedResponse<UserResponse>(){
                     Request = new PaginatedRequest(),
                 });
             }
         }
 
         [HttpGet]
-        [AuthorizeRole(RoleConstants.AppRole.Create)]
+        [AuthorizeRole(RoleConstants.UserRole.Create)]
         public async Task<IActionResult> CreateAsync()
         {
             return View();
         }
 
         [HttpPost]
-        [AuthorizeRole(RoleConstants.AppRole.Create)]
+        [AuthorizeRole(RoleConstants.UserRole.Create)]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> CreateAsync(AppRequest request)
+        public async Task<IActionResult> CreateAsync(UserRequest request)
         {
             try
             {
                 if(!ModelState.IsValid)
                     return View();
 
-                await _appRepository.CreateAsync(request);
-                HttpContext.AddMessageSuccess("App created success!");
+                await _userRepository.CreateAsync(request);
+                HttpContext.AddMessageSuccess("User created success!");
                 return RedirectToAction("Index");
             }
             catch(ExternalApiException ex){
@@ -81,12 +79,12 @@ namespace Family.Accounts.Management.Web.Controllers
         }
 
         [HttpGet]
-        [AuthorizeRole(RoleConstants.AppRole.Update)]
+        [AuthorizeRole(RoleConstants.UserRole.Update)]
         public async Task<IActionResult> EditAsync(Guid id){
             try
             {
-                var app = await _appRepository.GetByIdAsync(id);
-                return View(app.ToAppRequest());
+                var app = await _userRepository.GetByIdAsync(id);
+                return View(app.ToUserRequest());
             }
             catch(Exception ex){
                 HttpContext.AddMessageError(ex.Message);
@@ -95,18 +93,18 @@ namespace Family.Accounts.Management.Web.Controllers
         }
 
         [HttpPost]
-        [AuthorizeRole(RoleConstants.AppRole.Update)]
+        [AuthorizeRole(RoleConstants.UserRole.Update)]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> EditAsync(Guid id, AppRequest request)
+        public async Task<IActionResult> EditAsync(Guid id, UserRequest request)
         {
             try
             {
                 if(!ModelState.IsValid)
                     return View();
 
-                await _appRepository.UpdateAsync(id, request);
+                await _userRepository.UpdateAsync(id, request);
 
-                HttpContext.AddMessageSuccess("App update success!");
+                HttpContext.AddMessageSuccess("User update success!");
                 return RedirectToAction("Index");
             }
             catch(ExternalApiException ex){
@@ -121,11 +119,11 @@ namespace Family.Accounts.Management.Web.Controllers
 
 
         [HttpGet]
-        [AuthorizeRole(RoleConstants.AppRole.Delete)]
+        [AuthorizeRole(RoleConstants.UserRole.Delete)]
         public async Task<IActionResult> DeleteConfirmAsync(Guid id){
             try
             {
-                var app = await _appRepository.GetByIdAsync(id);
+                var app = await _userRepository.GetByIdAsync(id);
                 return View(app);
             }
             catch(Exception ex){
@@ -135,14 +133,14 @@ namespace Family.Accounts.Management.Web.Controllers
         }
 
         [HttpPost]
-        [AuthorizeRole(RoleConstants.AppRole.Delete)]
+        [AuthorizeRole(RoleConstants.UserRole.Delete)]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteAsync(Guid id)
         {
             try
             {
-                await _appRepository.DeleteAsync(id);
-                HttpContext.AddMessageSuccess("App delete success!");
+                await _userRepository.DeleteAsync(id);
+                HttpContext.AddMessageSuccess("User delete success!");
                 return RedirectToAction("Index");
             }
             catch(Exception ex){
@@ -151,10 +149,5 @@ namespace Family.Accounts.Management.Web.Controllers
             }
         }
 
-        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-        public IActionResult Error()
-        {
-            return View("Error!");
-        }
     }
 }

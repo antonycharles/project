@@ -14,6 +14,7 @@ namespace Family.Accounts.Application.Handlers
     {
         private const string MSG_USER_OR_PASSAWORD_INVALID = "User or password invalid";
         private const string MSG_PROFILE_NOT_FOUND_FOR_USER = "Profile not found for user and app";
+        private const string MSG_USER_INACTIVE = "User is inactive";
 
         private readonly AccountsContext _context;
         private readonly IPasswordProvider _passwordProvider;
@@ -34,14 +35,14 @@ namespace Family.Accounts.Application.Handlers
         public async Task<AuthenticationResponse> AuthenticationAsync(UserAuthenticationRequest request)
         {
             var user = await _context.Users.AsNoTracking()
-                .Include(i => i.UserProfiles.Where(w => w.Status == StatusEnum.Active))
+                .Include(i => i.UserProfiles.Where(w => w.Status == StatusEnum.Active && w.IsDeleted == false))
                 .ThenInclude(i => i.Profile)
                 .ThenInclude(i => i.App)
-                .Include(i => i.UserProfiles.Where(w => w.Status == StatusEnum.Active))
+                .Include(i => i.UserProfiles.Where(w => w.Status == StatusEnum.Active && w.IsDeleted == false))
                 .ThenInclude(i => i.Profile)
-                .ThenInclude(i => i.ProfilePermissions.Where(w => w.Status == StatusEnum.Active))
+                .ThenInclude(i => i.ProfilePermissions.Where(w => w.Status == StatusEnum.Active && w.IsDeleted == false))
                 .ThenInclude(i => i.Permission)
-                .FirstOrDefaultAsync(w => (w.Email == request.Email || w.Id == request.UserId) && w.Status == StatusEnum.Active);
+                .FirstOrDefaultAsync(w => w.Email == request.Email || w.Id == request.UserId);
 
             if(user == null)
                 throw new BusinessException(MSG_USER_OR_PASSAWORD_INVALID);
@@ -50,6 +51,9 @@ namespace Family.Accounts.Application.Handlers
 
             if(user.Password != passwordHash && request.UserId != user.Id)
                 throw new BusinessException(MSG_USER_OR_PASSAWORD_INVALID);
+
+            if(user.Status != StatusEnum.Active || user.IsDeleted == true)
+                throw new BusinessException(MSG_USER_INACTIVE);
 
             if(request.AppSlug != null)
             {

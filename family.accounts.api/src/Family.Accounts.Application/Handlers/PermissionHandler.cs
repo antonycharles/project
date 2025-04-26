@@ -38,7 +38,7 @@ namespace Family.Accounts.Application.Handlers
         private async Task ValidExists(Permission permission)
         {
             var exist = await _context.Permissions.AsNoTracking()
-                .AnyAsync(w => w.Role == permission.Role && w.Id != permission.Id && w.AppId == permission.AppId && w.Status == StatusEnum.Active);
+                .AnyAsync(w => w.Role == permission.Role && w.Id != permission.Id && w.AppId == permission.AppId && w.IsDeleted == false);
 
             if(exist)
                 throw new BusinessException("Permission role already exists for App");
@@ -47,12 +47,12 @@ namespace Family.Accounts.Application.Handlers
         public async Task DeleteAsync(Guid id)
         {
             var permission = await _context.Permissions
-                .FirstOrDefaultAsync(w => w.Id == id && w.Status == StatusEnum.Active);
+                .FirstOrDefaultAsync(w => w.Id == id && w.IsDeleted == false);
 
             if(permission == null)
                 throw new NotFoundException("Permission not found");
 
-            permission.Status = StatusEnum.Inactive;
+            permission.IsDeleted = true;
 
             _context.Update(permission);
 
@@ -64,7 +64,7 @@ namespace Family.Accounts.Application.Handlers
             IQueryable<Permission> query = _context.Permissions.AsNoTracking()
                 .Include(i => i.App)
                 .Include(i => i.PermissionFather)
-                .Where(w => w.Status == StatusEnum.Active);
+                .Where(w => w.IsDeleted == false);
 
             if(request.Search is not null)
                 query = query.Where(w => w.Name.ToLower() == request.Search.ToLower());
@@ -86,7 +86,7 @@ namespace Family.Accounts.Application.Handlers
         public async Task<PermissionResponse> GetByIdAsync(Guid id)
         {
             var permission = await _context.Permissions.AsNoTracking()
-                .FirstOrDefaultAsync(w => w.Id == id && w.Status == StatusEnum.Active);
+                .FirstOrDefaultAsync(w => w.Id == id && w.IsDeleted == false);
 
             if(permission == null)
                 throw new NotFoundException("Permission not found");
@@ -97,7 +97,7 @@ namespace Family.Accounts.Application.Handlers
         public async Task UpdateAsync(Guid id, PermissionRequest request)
         {
             var permission = await _context.Permissions
-                .FirstOrDefaultAsync(w => w.Id == id && w.Status == StatusEnum.Active);
+                .FirstOrDefaultAsync(w => w.Id == id && w.IsDeleted == false);
 
             if(permission == null)
                 throw new NotFoundException("Permission not found");

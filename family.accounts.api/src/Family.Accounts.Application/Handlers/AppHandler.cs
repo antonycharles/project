@@ -38,12 +38,12 @@ namespace Family.Accounts.Application.Handlers
         public async Task DeleteAsync(Guid id)
         {
             var app = await _context.Apps
-                .FirstOrDefaultAsync(w => w.Id == id && w.Status == StatusEnum.Active);
+                .FirstOrDefaultAsync(w => w.Id == id && w.IsDeleted == false);
 
             if(app == null)
                 throw new NotFoundException("App not found");
 
-            app.Status = StatusEnum.Inactive;
+            app.IsDeleted = true;
 
             _context.Update(app);
 
@@ -53,7 +53,7 @@ namespace Family.Accounts.Application.Handlers
         public async Task<PaginatedResponse<AppResponse>> GetAppsAsync(PaginatedRequest request)
         {
             var query = _context.Apps.AsNoTracking()
-                .Where(w => w.Status == StatusEnum.Active);
+                .Where(w => w.IsDeleted == false);
 
             if(request.Search is not null)
                 query = query.Where(w => w.Name.ToLower() == request.Search.ToLower());
@@ -72,7 +72,7 @@ namespace Family.Accounts.Application.Handlers
         public async Task<AppResponse> GetByIdAsync(Guid id)
         {
             var app = await _context.Apps.AsNoTracking()
-                .FirstOrDefaultAsync(w => w.Id == id && w.Status == StatusEnum.Active);
+                .FirstOrDefaultAsync(w => w.Id == id && w.IsDeleted == false);
 
             if(app == null)
                 throw new NotFoundException("App not found");
@@ -83,7 +83,7 @@ namespace Family.Accounts.Application.Handlers
         public async Task UpdateAsync(Guid id, AppRequest request)
         {
             var app = await _context.Apps
-                .FirstOrDefaultAsync(w => w.Id == id && w.Status == StatusEnum.Active);
+                .FirstOrDefaultAsync(w => w.Id == id && w.IsDeleted == false);
 
             if(app == null)
                 throw new NotFoundException("App not found");
@@ -99,10 +99,10 @@ namespace Family.Accounts.Application.Handlers
 
         private async Task ValidExists(App app){
             var exist = await _context.Apps.AsNoTracking()
-                .AnyAsync(w => (w.Slug == app.Slug || w.Name == app.Name ) && w.Id != app.Id &&  w.Status == StatusEnum.Active);
+                .AnyAsync(w => (w.Slug == app.Slug || w.Name == app.Name || w.Code == app.Code) && w.Id != app.Id &&  w.IsDeleted == false);
 
             if(exist)
-                throw new BusinessException("App name or slug already exists");
+                throw new BusinessException("App name, code or slug already exists");
         }
     }
 }

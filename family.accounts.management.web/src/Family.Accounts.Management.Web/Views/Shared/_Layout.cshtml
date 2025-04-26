@@ -1,4 +1,6 @@
-﻿<!DOCTYPE html>
+﻿@using Family.Accounts.Management.Web.Helpers;
+
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
@@ -45,11 +47,24 @@
         </nav>
     </header>
     <div class="container">
+                
+        @if(Context.IsMessageSuccess()){
+            <div class="alert alert-success alert-dismissible" role="alert">
+                <div>@Context.GetMessageSuccess()</div>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        }
+            
+        @if(Context.IsMessageError()){
+            <div class="alert alert-danger alert-dismissible" role="alert">
+                <div>@Context.GetMessageError()</div>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        }
         <main role="main" class="pb-3">
             @RenderBody()
         </main>
     </div>
-
     <footer class="border-top footer text-muted">
         <div class="container">
             &copy; 2025 - Family.Accounts.Management.Web - <a asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>

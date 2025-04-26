@@ -9,7 +9,9 @@ namespace Family.Accounts.Core.Requests
 {
     public class AppRequest
     {
-        
+        [Required]
+        public int? Code { get; set; }
+
         [Required(ErrorMessage = "Name is required")]
         public string Name { get; set; }
         

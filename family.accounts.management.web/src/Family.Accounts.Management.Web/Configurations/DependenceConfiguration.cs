@@ -19,12 +19,18 @@ namespace Family.Accounts.Management.Web.Configurations
             builder.Services.AddScoped<AuthHeaderHandler>();
             builder.Services.AddScoped<IClaimsTransformation, ClaimsTranformer>();
             builder.Services.AddScoped<IAppRepository, AppRepository>();
+            builder.Services.AddScoped<IUserRepository, UserRepository>();
             builder.Services.AddScoped<ILoginRepository, LoginRepository>();
 
 
             builder.Services.AddRefitClient<IAppRefit>().ConfigureHttpClient(c =>
             {
                 c.BaseAddress = new  Uri(settings.FamilyAccountsApiUrl);
+            })
+            .AddHttpMessageHandler<AuthHeaderHandler>();
+
+            builder.Services.AddRefitClient<IUserRefit>().ConfigureHttpClient(c => {
+                c.BaseAddress = new Uri(settings.FamilyAccountsApiUrl);
             })
             .AddHttpMessageHandler<AuthHeaderHandler>();
 

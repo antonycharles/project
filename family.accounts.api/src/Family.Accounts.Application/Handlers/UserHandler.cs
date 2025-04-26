@@ -45,12 +45,12 @@ namespace Family.Accounts.Application.Handlers
         public async Task DeleteAsync(Guid id)
         {
             var user = await _context.Users
-                .FirstOrDefaultAsync(w => w.Id == id && w.Status == StatusEnum.Active);
+                .FirstOrDefaultAsync(w => w.Id == id && w.IsDeleted == false);
 
             if(user == null)
                 throw new NotFoundException("User not found");
 
-            user.Status = StatusEnum.Inactive;
+            user.IsDeleted = true;
 
             _context.Update(user);
 
@@ -60,7 +60,7 @@ namespace Family.Accounts.Application.Handlers
         public async Task<PaginatedResponse<UserResponse>> GetAsync(PaginatedRequest request)
         {
             var query = _context.Users.AsNoTracking()
-                .Where(w => w.Status == StatusEnum.Active);
+                .Where(w => w.IsDeleted == false);
 
             if(request.Search is not null)
                 query = query.Where(w => w.Name.ToLower() == request.Search.ToLower());
@@ -79,9 +79,9 @@ namespace Family.Accounts.Application.Handlers
         public async Task<UserResponse> GetByIdAsync(Guid id)
         {
             var user = await _context.Users.AsNoTracking()
-                .Include(i => i.UserProfiles.Where(w => w.Status == StatusEnum.Active))
+                .Include(i => i.UserProfiles.Where(w => w.Status == StatusEnum.Active && w.IsDeleted == false))
                 .ThenInclude(i => i.Profile)
-                .FirstOrDefaultAsync(w => w.Id == id && w.Status == StatusEnum.Active);
+                .FirstOrDefaultAsync(w => w.Id == id && w.IsDeleted == false);
 
             if(user == null)
                 throw new NotFoundException("User not found");
@@ -92,7 +92,7 @@ namespace Family.Accounts.Application.Handlers
         public async Task UpdateAsync(Guid id, UserUpdateRequest request)
         {
             var user = await _context.Users
-                .FirstOrDefaultAsync(w => w.Id == id && w.Status == StatusEnum.Active);
+                .FirstOrDefaultAsync(w => w.Id == id && w.IsDeleted == false);
 
             if(user == null)
                 throw new NotFoundException("User not found");
@@ -112,7 +112,7 @@ namespace Family.Accounts.Application.Handlers
         private async Task ValidExistsAsync(User user)
         {
             var exist = await _context.Users.AsNoTracking()
-                .AnyAsync(w => w.Email == user.Email && w.Id != user.Id && w.Status == StatusEnum.Active);
+                .AnyAsync(w => w.Email == user.Email && w.Id != user.Id && w.IsDeleted == false);
 
             if(exist)
                 throw new BusinessException("User email already exists");

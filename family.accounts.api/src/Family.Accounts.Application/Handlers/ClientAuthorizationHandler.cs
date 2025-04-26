@@ -36,11 +36,11 @@ namespace Family.Accounts.Application.Handlers
         public async Task<AuthenticationResponse> AuthenticationAsync(ClientAuthenticationRequest request)
         {
             var client = await _context.Clients.AsNoTracking()
-                .Include(i => i.ClientProfiles.Where(w => w.Status == StatusEnum.Active))
+                .Include(i => i.ClientProfiles.Where(w => w.Status == StatusEnum.Active && w.IsDeleted == false))
                 .ThenInclude(i => i.Profile)
-                .ThenInclude(i => i.ProfilePermissions.Where(w => w.Status == StatusEnum.Active))
+                .ThenInclude(i => i.ProfilePermissions.Where(w => w.Status == StatusEnum.Active && w.IsDeleted == false))
                 .ThenInclude(i => i.Permission)
-                .Include(i => i.ClientProfiles.Where(w => w.Status == StatusEnum.Active))
+                .Include(i => i.ClientProfiles.Where(w => w.Status == StatusEnum.Active && w.IsDeleted == false))
                 .ThenInclude(i => i.Profile)
                 .ThenInclude(i => i.App)
                 .FirstOrDefaultAsync(w => w.Id == request.ClientId);

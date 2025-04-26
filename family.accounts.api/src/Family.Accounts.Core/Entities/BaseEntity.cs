@@ -15,5 +15,6 @@ namespace Family.Accounts.Core.Entities
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
         public DateTime? UpdatedAt { get; set; }
         public StatusEnum Status { get; set; } = StatusEnum.Active;
+        public bool IsDeleted { get; set; } = false;
     }
 }

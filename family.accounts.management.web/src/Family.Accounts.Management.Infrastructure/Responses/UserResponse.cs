@@ -6,13 +6,12 @@ using src.Family.Accounts.Management.Infrastructure.Enums;
 
 namespace Family.Accounts.Management.Infrastructure.Responses
 {
-    public class AppResponse
+    public class UserResponse
     {
         public Guid Id { get; set; }
-        public int Code { get; set; }
         public string Name { get; set; }
-        public string Slug { get; set; }
-        public string? CallbackUrl { get; set; }
-        public StatusEnum Status { get; set; } 
+        public string Email { get; set; }
+        public List<ProfileResponse>? Profiles { get; set; } 
+        public StatusEnum Status { get; set; }
     }
 }

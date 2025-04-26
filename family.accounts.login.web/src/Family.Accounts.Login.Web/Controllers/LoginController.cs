@@ -64,7 +64,10 @@ namespace Family.Accounts.Login.Web.Controllers
                     new DistributedCacheEntryOptions { AbsoluteExpirationRelativeToNow = _cacheExpiry }
                 );
 
-                return Redirect($"{result.CallbackUrl}?code={code}" ?? Url.Action("Index", "Home"));
+                if(result.CallbackUrl != null && result.CallbackUrl != "")
+                    return Redirect($"{result.CallbackUrl}?code={code}");
+                else
+                    return Redirect(Url.Action("Index", "Home"));
             }
             catch(ExternalApiException ex)
             {

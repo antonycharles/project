@@ -32,7 +32,7 @@ namespace Family.Accounts.Application.Handlers
                 throw new NotFoundException("Profile not found");
 
             var existClientProfileForApp = await _context.ClientProfiles.AsNoTracking()
-                .AnyAsync(w => w.Status == StatusEnum.Active && w.ClientId == clientProfile.ClientId && w.Profile.AppId == profile.AppId);
+                .AnyAsync(w => w.IsDeleted == false && w.ClientId == clientProfile.ClientId && w.Profile.AppId == profile.AppId);
 
             if(existClientProfileForApp == true)
                 throw new BusinessException("Client already has a profile for this app");
@@ -47,12 +47,12 @@ namespace Family.Accounts.Application.Handlers
         public async Task DeleteAsync(Guid id)
         {
             var clientProfile = await _context.ClientProfiles
-                .FirstOrDefaultAsync(w => w.Id == id && w.Status == StatusEnum.Active);
+                .FirstOrDefaultAsync(w => w.Id == id && w.IsDeleted == false);
 
             if(clientProfile == null)
                 throw new NotFoundException("Client profile not found");
 
-            clientProfile.Status = StatusEnum.Inactive;
+            clientProfile.IsDeleted = true;
 
             _context.Update(clientProfile);
 
