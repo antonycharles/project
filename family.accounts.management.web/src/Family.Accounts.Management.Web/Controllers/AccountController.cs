@@ -34,7 +34,7 @@ namespace Family.Accounts.Management.Web.Controllers
         [HttpGet("Login")]
         public IActionResult Login()
         {
-            return Redirect(_settings.FamilyAcountsLoginUrl + "/login?appSlug=" + _settings.FamilyAccountsManagementSlug);
+            return Redirect(_settings.FamilyAcountsLoginRedirectUrl + "/login?appSlug=" + _settings.FamilyAccountsManagementSlug);
         }
 
         [HttpGet("Callback")]

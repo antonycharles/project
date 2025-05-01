@@ -23,9 +23,9 @@ namespace Family.Accounts.Application.Test.Handlers
         }
 
         [Theory]
-        [InlineData("App name Xpto", StatusEnum.Active)]
-        [InlineData("App name GDAER", StatusEnum.Inactive)]
-        public async Task Return_AppResponse_When_CreateAppIsSuccessfulAsync(string appName, StatusEnum status)
+        [InlineData("App name Xpto", 1, "app-name-xpto", StatusEnum.Active)]
+        [InlineData("App name GDAER", 2, "app-name-gdaer", StatusEnum.Inactive)]
+        public async Task Return_AppResponse_When_CreateAppIsSuccessfulAsync(string appName, int code, string slug, StatusEnum status)
         {
             //Arrange
             _accountsContext.Apps.AddRange(AppFake.Create().Generate(10));
@@ -33,6 +33,8 @@ namespace Family.Accounts.Application.Test.Handlers
 
             var appRequest = new AppRequest{
                 Name = appName,
+                Slug = slug,
+                Code = code,
                 Status = status
             };
 

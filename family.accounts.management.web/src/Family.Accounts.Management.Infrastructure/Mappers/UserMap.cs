@@ -15,5 +15,6 @@ namespace Family.Accounts.Management.Infrastructure.Mappers
             Email = user.Email,
             Status = user.Status,
         };
+        
     }
 }

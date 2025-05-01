@@ -16,6 +16,8 @@ namespace Family.Accounts.Management.Infrastructure.Settings
 
         [Required]
         public string FamilyAcountsLoginUrl { get; set; }
+        [Required]
+        public string FamilyAcountsLoginRedirectUrl { get; set; }
         
         [Required]
         public string FamilyAccountsApiUrl { get; set; }

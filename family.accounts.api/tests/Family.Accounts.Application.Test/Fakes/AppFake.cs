@@ -13,6 +13,8 @@ namespace Family.Accounts.Application.Test.Fakes
         public static Faker<App> Create(){
             return new Faker<App>()
                 .RuleFor(r => r.Id, r => Guid.NewGuid())
+                .RuleFor(r => r.Code, r => new Random().Next(1000, 10000))
+                .RuleFor(r => r.Slug, r => r.Lorem.Slug())
                 .RuleFor(r => r.Name, r => r.Name.FullName())
                 .RuleFor(r => r.Status, r => r.PickRandom<StatusEnum>());
         }

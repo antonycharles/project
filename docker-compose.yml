@@ -1,4 +1,4 @@
-version: '3.7'
+version: '3.9'
 
 services:
     dbpostgresql:
@@ -41,6 +41,56 @@ services:
             - '6379:6379'
         volumes: 
             - cache:/data
+
+    familyaccountsapi:
+        build:
+            context: ./family.accounts.api
+            dockerfile: Dockerfile
+        container_name: family-accounts-api
+        ports:
+            - "9501:8080"
+        networks: 
+            - family-network
+        environment:
+            - ASPNETCORE_ENVIRONMENT=Development
+        depends_on:
+            - dbpostgresql
+            - message.broker.rabbitmq
+            - redis
+
+    familyaccountsloginweb:
+        build:
+            context: ./family.accounts.login.web
+            dockerfile: Dockerfile
+        container_name: family.accounts.login.web
+        ports:
+            - "9001:8080"
+        networks: 
+            - family-network
+        environment:
+            - ASPNETCORE_ENVIRONMENT=Development
+        depends_on:
+            - dbpostgresql
+            - message.broker.rabbitmq
+            - redis
+            - familyaccountsapi
+
+    familyaccountsmanagementweb:
+        build:
+            context: ./family.accounts.management.web
+            dockerfile: Dockerfile
+        container_name: family.accounts.management.web
+        ports:
+            - "9002:8080"
+        networks: 
+            - family-network
+        environment:
+            - ASPNETCORE_ENVIRONMENT=Development
+        depends_on:
+            - dbpostgresql
+            - message.broker.rabbitmq
+            - redis
+            - familyaccountsloginweb
 
 volumes:
     cache:

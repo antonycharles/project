@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Family.Accounts.Management.Infrastructure.Exceptions;
 using Family.Accounts.Management.Infrastructure.Repositories;
+using Family.Accounts.Management.Infrastructure.Mappers;
 using Family.Accounts.Management.Infrastructure.Requests;
 using Family.Accounts.Management.Infrastructure.Responses;
 using Family.Accounts.Management.Web.Helpers;
@@ -83,8 +84,8 @@ namespace Family.Accounts.Management.Web.Controllers
         public async Task<IActionResult> EditAsync(Guid id){
             try
             {
-                var app = await _userRepository.GetByIdAsync(id);
-                return View(app.ToUserRequest());
+                var user = await _userRepository.GetByIdAsync(id);
+                return View(user.ToUserRequest());
             }
             catch(Exception ex){
                 HttpContext.AddMessageError(ex.Message);
