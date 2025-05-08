@@ -18,7 +18,7 @@ namespace Family.Accounts.Management.Web.Models
         }
 
         public int GetPagesNexts(){
-            return this.PageIndex + 2 <= this.TotalItems ? this.PageIndex + 1 : this.TotalPages + 1;
+            return this.PageIndex + 2 <= this.TotalPages ? this.PageIndex + 3 : this.TotalPages + 1;
         }
     }
 }

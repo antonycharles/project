@@ -1,0 +1,36 @@
+@model AppPermissionViewModel
+@{
+    ViewData["Title"] = "User";
+}
+<nav class="navbar bg-body-tertiary">
+  <div class="container-fluid">
+    <h1 class="navbar-brand fs-3">
+        @Model.App.Name
+    </h1>
+  </div>
+</nav>
+<table class="table">
+  <thead>
+    <tr>
+      <th scope="col">Permission</th>
+      <th scope="col">Role</th>
+      <th scope="col">Status</th>
+    </tr>
+  </thead>
+  <tbody>
+    @if(Model.Permissions != null && Model.Permissions.TotalItems > 0){
+        @foreach(var permission in Model.Permissions.Items.OrderBy(o => o.Name))
+        {
+            <tr>
+                <td class="align-middle">@permission.Name</td>
+                <td class="align-middle">@permission.Role</td>
+                <td class="align-middle">@permission.Status.GetDisplayName()</td>
+            </tr>
+        }
+    }else{
+        <tr>
+            <td colspan="3">No records found!</td>
+        </tr>
+    }
+  </tbody>
+</table>

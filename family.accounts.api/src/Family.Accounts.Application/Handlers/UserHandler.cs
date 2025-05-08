@@ -81,6 +81,7 @@ namespace Family.Accounts.Application.Handlers
             var user = await _context.Users.AsNoTracking()
                 .Include(i => i.UserProfiles.Where(w => w.Status == StatusEnum.Active && w.IsDeleted == false))
                 .ThenInclude(i => i.Profile)
+                .ThenInclude(i => i.App)
                 .FirstOrDefaultAsync(w => w.Id == id && w.IsDeleted == false);
 
             if(user == null)

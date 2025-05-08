@@ -14,7 +14,6 @@ using Microsoft.Extensions.Logging;
 
 namespace Family.Accounts.Management.Web.Controllers
 {
-    [Route("[controller]")]
     public class UserController : Controller
     {
         private readonly ILogger<UserController> _logger;
@@ -28,13 +27,14 @@ namespace Family.Accounts.Management.Web.Controllers
             _userRepository = appRepository;
         }
 
+        [HttpGet]
         [AuthorizeRole(RoleConstants.UserRole.List)]
         public async Task<IActionResult> IndexAsync(PaginatedRequest? request)
         {
             try
             {
-                var apps = await _userRepository.GetAsync(request);
-                return View(apps);
+                var users = await _userRepository.GetAsync(request);
+                return View(users);
 
             }
             catch(ExternalApiException ex){
@@ -45,6 +45,22 @@ namespace Family.Accounts.Management.Web.Controllers
                 return View(new PaginatedResponse<UserResponse>(){
                     Request = new PaginatedRequest(),
                 });
+            }
+        }
+
+
+        [HttpGet]
+        [AuthorizeRole(RoleConstants.UserRole.List)]
+        public async Task<IActionResult> DetailsAsync(Guid id){
+            try
+            {
+                var user = await _userRepository.GetByIdAsync(id);
+                return View(user);
+            }
+            catch(Exception ex)
+            {
+                HttpContext.AddMessageError(ex.Message);
+                return RedirectToAction("Index");
             }
         }
 

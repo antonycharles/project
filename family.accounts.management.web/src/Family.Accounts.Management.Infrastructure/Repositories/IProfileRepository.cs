@@ -11,7 +11,7 @@ namespace Family.Accounts.Management.Infrastructure.Repositories
     {
         
         Task CreateAsync(ProfileRequest request);
-        Task<PaginatedResponse<ProfileResponse>> GetAsync(PaginatedRequest? request);
+        Task<PaginatedResponse<ProfileResponse>> GetAsync(ProfilePaginatedRequest? request);
         Task<ProfileResponse> GetByIdAsync(Guid id);
         Task DeleteAsync(Guid id);
         Task UpdateAsync(Guid id, ProfileRequest request);

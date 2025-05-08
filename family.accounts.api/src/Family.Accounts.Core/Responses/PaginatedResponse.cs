@@ -22,6 +22,8 @@ namespace Family.Accounts.Core.Responses
             Items = items;
             Request = request;
             TotalItems = totalItems;
+            this.PageIndex = PageIndex;
+            this.PageSize = PageSize;
         }
     }
 }

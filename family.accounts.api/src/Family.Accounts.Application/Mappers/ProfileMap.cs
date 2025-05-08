@@ -22,6 +22,7 @@ namespace Family.Accounts.Application.Mappers
         public static ProfileResponse ToProfileResponse(this Profile profile) => new ProfileResponse{
             Id = profile.Id,
             AppId = profile.AppId,
+            AppName = profile?.App?.Name,
             Name = profile.Name,
             Slug = profile.Slug,
             Type = profile.Type,

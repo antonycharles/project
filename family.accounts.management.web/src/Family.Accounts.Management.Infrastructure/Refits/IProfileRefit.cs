@@ -14,7 +14,7 @@ namespace Family.Accounts.Management.Infrastructure.Refits
         Task<ProfileResponse> CreateAsync(ProfileRequest request);
 
         [Get("/Profile")]
-        Task<ApiResponse<PaginatedResponse<ProfileResponse>>> GetAsync(PaginatedRequest? request);
+        Task<ApiResponse<PaginatedResponse<ProfileResponse>>> GetAsync(ProfilePaginatedRequest? request);
         
         [Delete("/Profile/{id}")]
         Task DeleteAsync(Guid id);

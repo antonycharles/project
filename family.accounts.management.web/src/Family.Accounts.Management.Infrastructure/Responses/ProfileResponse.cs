@@ -8,6 +8,7 @@ namespace Family.Accounts.Management.Infrastructure.Responses
     {
         public Guid Id { get; set; }
         public Guid AppId { get; set; }
+        public string AppName { get; set; }
         public string Name { get; set; }
         public ProfileTypeEnum? Type { get; set; }
         public bool IsDefault { get; set; } 

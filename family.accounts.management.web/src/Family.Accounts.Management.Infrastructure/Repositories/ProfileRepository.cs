@@ -55,7 +55,7 @@ namespace Family.Accounts.Management.Infrastructure.Repositories
             }
         }
 
-        public async Task<PaginatedResponse<ProfileResponse>> GetAsync(PaginatedRequest? request)
+        public async Task<PaginatedResponse<ProfileResponse>> GetAsync(ProfilePaginatedRequest? request)
         {
             try
             {

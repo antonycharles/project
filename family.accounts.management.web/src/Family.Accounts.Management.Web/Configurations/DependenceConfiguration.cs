@@ -21,13 +21,27 @@ namespace Family.Accounts.Management.Web.Configurations
             builder.Services.AddScoped<IAppRepository, AppRepository>();
             builder.Services.AddScoped<IUserRepository, UserRepository>();
             builder.Services.AddScoped<ILoginRepository, LoginRepository>();
-
+            builder.Services.AddScoped<IProfileRepository, ProfileRepository>();
+            builder.Services.AddScoped<IPermissionRepository,PermissionRepository>();
 
             builder.Services.AddRefitClient<IAppRefit>().ConfigureHttpClient(c =>
             {
                 c.BaseAddress = new  Uri(settings.FamilyAccountsApiUrl);
             })
             .AddHttpMessageHandler<AuthHeaderHandler>();
+
+            builder.Services.AddRefitClient<IProfileRefit>().ConfigureHttpClient(c =>
+            {
+                c.BaseAddress = new  Uri(settings.FamilyAccountsApiUrl);
+            })
+            .AddHttpMessageHandler<AuthHeaderHandler>();
+
+            builder.Services.AddRefitClient<IPermissionRefit>().ConfigureHttpClient(c =>
+            {
+                c.BaseAddress = new  Uri(settings.FamilyAccountsApiUrl);
+            })
+            .AddHttpMessageHandler<AuthHeaderHandler>();
+
 
             builder.Services.AddRefitClient<IUserRefit>().ConfigureHttpClient(c => {
                 c.BaseAddress = new Uri(settings.FamilyAccountsApiUrl);

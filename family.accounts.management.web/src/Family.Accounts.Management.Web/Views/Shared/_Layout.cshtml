@@ -30,6 +30,12 @@
                                 <a class="nav-link text-white" asp-area="" asp-controller="App" asp-action="Index">App</a>
                             </li>
                         }
+                        @if(User.IsInRole(RoleConstants.UserRole.List))
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-white" asp-area="" asp-controller="User" asp-action="Index">User</a>
+                            </li>
+                        }
                     </ul>
                     <ul class="navbar-nav flex-grow-1 justify-content-end">
                         <li class="nav-item dropdown">
