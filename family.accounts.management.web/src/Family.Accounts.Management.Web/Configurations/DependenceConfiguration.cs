@@ -23,6 +23,7 @@ namespace Family.Accounts.Management.Web.Configurations
             builder.Services.AddScoped<ILoginRepository, LoginRepository>();
             builder.Services.AddScoped<IProfileRepository, ProfileRepository>();
             builder.Services.AddScoped<IPermissionRepository,PermissionRepository>();
+            builder.Services.AddScoped<IClientRepository, ClientRepository>();
 
             builder.Services.AddRefitClient<IAppRefit>().ConfigureHttpClient(c =>
             {
@@ -42,13 +43,17 @@ namespace Family.Accounts.Management.Web.Configurations
             })
             .AddHttpMessageHandler<AuthHeaderHandler>();
 
-
             builder.Services.AddRefitClient<IUserRefit>().ConfigureHttpClient(c => {
                 c.BaseAddress = new Uri(settings.FamilyAccountsApiUrl);
             })
             .AddHttpMessageHandler<AuthHeaderHandler>();
 
 
+            builder.Services.AddRefitClient<IClientRefit>().ConfigureHttpClient(c => {
+                c.BaseAddress = new Uri(settings.FamilyAccountsApiUrl);
+            })
+            .AddHttpMessageHandler<AuthHeaderHandler>();
+            
             builder.Services.AddRefitClient<IClientAuthorizationRefit>().ConfigureHttpClient(c =>
             {
                 c.BaseAddress = new  Uri(settings.FamilyAccountsApiUrl);

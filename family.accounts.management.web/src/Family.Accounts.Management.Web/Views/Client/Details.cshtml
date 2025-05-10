@@ -1,6 +1,6 @@
-@model ProfileResponse
+@model ClientResponse
 @{
-    ViewData["Title"] = "Profile";
+    ViewData["Title"] = "Client";
 }
 <nav class="navbar bg-body-tertiary">
   <div class="container-fluid">
@@ -19,17 +19,19 @@
 <table class="table">
   <thead>
     <tr>
-      <th scope="col">Permission</th>
+      <th scope="col">Profile</th>
+      <th scope="col">App</th>
       <th scope="col">Status</th>
     </tr>
   </thead>
   <tbody>
-    @if(Model.Permissions != null && Model.Permissions.Count > 0){
-        @foreach(var permission in Model.Permissions.OrderBy(o => o.Name))
+    @if(Model.Profiles != null && Model.Profiles.Count > 0){
+        @foreach(var profile in Model.Profiles.OrderBy(o => o.Name))
         {
             <tr>
-                <td class="align-middle">@permission.Name</td>
-                <td class="align-middle">@permission.Status.GetDisplayName()</td>
+                <td class="align-middle">@profile.Name</td>
+                <td class="align-middle">@profile.AppName</td>
+                <td class="align-middle">@profile.Status.GetDisplayName()</td>
             </tr>
         }
     }else{
