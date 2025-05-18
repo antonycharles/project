@@ -58,6 +58,20 @@ services:
             - message.broker.rabbitmq
             - redis
 
+    fileuploadapi:
+        build:
+            context: ./family.accounts.management.web
+            dockerfile: Dockerfile
+        container_name: family-file-api
+        ports:
+            - "9502:8080"
+        networks: 
+            - family-network
+        environment:
+            - ASPNETCORE_ENVIRONMENT=Development
+        volumes:
+            - uploads:/app/Uploads
+
     familyaccountsloginweb:
         build:
             context: ./family.accounts.login.web
@@ -94,6 +108,8 @@ services:
 
 volumes:
     cache:
+        driver: local
+    uploads:
         driver: local
     db_postgresql:
         driver: local
