@@ -45,6 +45,7 @@ namespace Family.File.Api.Helpers
 
             return new FileDocument
             {
+                Id = Guid.NewGuid(),
                 Name = file.FileName,
                 Url = fileUrl,
                 ContentType = file.ContentType,

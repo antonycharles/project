@@ -36,7 +36,6 @@ namespace Family.File.Api.Controllers
             {
                 return BadRequest(ex.Message);
             }
-
         }
 
         [HttpPost("Base64")]
@@ -47,18 +46,8 @@ namespace Family.File.Api.Controllers
             //return Ok(fileUpload);
         }
 
-        [HttpPut("{hash}")]
-        public async Task<ActionResult> UpdateFileAsync(string hash)
-        {
-
-            //await _fileUploadHandler.UpdateFileAsync(hash);
-
-            return Ok();
-
-        }
-
-        [HttpDelete("{hash}")]
-        public async Task<ActionResult> DeleteFileAsync(string hash)
+        [HttpDelete("{id}")]
+        public async Task<ActionResult> DeleteFileAsync(Guid id)
         {
 
             //await _fileUploadHandler.DeleteFileAsync(hash);

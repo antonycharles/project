@@ -60,7 +60,7 @@ services:
 
     fileuploadapi:
         build:
-            context: ./family.accounts.management.web
+            context: ./family.file.api
             dockerfile: Dockerfile
         container_name: family-file-api
         ports:
