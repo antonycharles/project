@@ -11,7 +11,7 @@ namespace Family.Accounts.Management.Web.Helpers
         private const string redirectResponseError = "ErrorRedirectedResponse";
 
         public static bool IsMessageSuccess(this HttpContext context){
-            if(context.GetMessageSuccess() != null && context.GetMessageSuccess() != "")
+            if(context.Request.Cookies[redirectResponse] is not null)
                 return true;
 
             return false;
@@ -38,7 +38,7 @@ namespace Family.Accounts.Management.Web.Helpers
 
 
         public static bool IsMessageError(this HttpContext context){
-            if(context.GetMessageError() != null && context.GetMessageError() != "")
+            if(context.Request.Cookies[redirectResponseError] is not null)
                 return true;
 
             return false;

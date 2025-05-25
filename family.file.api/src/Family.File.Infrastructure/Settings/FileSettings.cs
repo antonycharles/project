@@ -10,5 +10,13 @@ namespace Family.File.Infrastructure.Settings
     {
         [Required]
         public required string UploadDirectory { get; set; }
+        [Required]
+        public required string DatabaseHost { get; set; }
+        [Required]
+        public required string DatabasePort { get; set; }
+        [Required]
+        public required string DatabaseUser { get; set; }
+        [Required]
+        public required string DatabasePassword { get; set; }
     }
 }

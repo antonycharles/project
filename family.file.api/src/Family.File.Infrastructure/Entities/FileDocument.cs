@@ -15,6 +15,9 @@ namespace Family.File.Infrastructure.Entities
 
         [Required]
         public string Url { get; set; }
+        
+        [Required]
+        public string Path { get; set; }
 
         [Required]
         public string ContentType { get; set; }
