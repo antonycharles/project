@@ -10,10 +10,10 @@ using Microsoft.Extensions.Options;
 
 namespace Family.Accounts.Login.Infra.Repositories
 {
-    public class UserAuthorizationRepository : BaseRepository, IUserAuthorizationRepository
+    public class UserRepository : BaseRepository, IUserRepository
     {
         private readonly IClientAuthorizationRepository _clientAuthorizationRepository;
-        public UserAuthorizationRepository(
+        public UserRepository(
             HttpClient httpClient, 
             IClientAuthorizationRepository clientAuthorizationRepository,
             IOptions<AccountsLoginSettings> options) : base(httpClient)
@@ -22,24 +22,24 @@ namespace Family.Accounts.Login.Infra.Repositories
             _clientAuthorizationRepository = clientAuthorizationRepository;
         }
 
-        public async Task<AuthenticationResponse> AuthenticateAsync(UserAuthenticationRequest request)
+        public async Task<UserResponse> CreateAsync(UserRequest request)
         {
             await AddToken();
-            return await base.PostAsync<AuthenticationResponse>("/UserAuthorization", request);
+            return await base.PostAsync<UserResponse>("/User", request);
         }
 
-        protected async Task AddToken()
+        private async Task AddToken()
         {
             var token = await _clientAuthorizationRepository.AuthenticateAsync();
 
             if (token != null)
                 _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token.Token);
         }
-
-        public async Task<UserResponse> GetUserInfoByIdAsync(string userId)
+        
+        public async Task UpdateAsync(Guid userId, UserRequest request)
         {
             await AddToken();
-            return await base.GetAsync<UserResponse>($"/UserAuthorization/userInfo/{userId}");
+            await base.PutAsync("/User", request);
         }
     }
 }

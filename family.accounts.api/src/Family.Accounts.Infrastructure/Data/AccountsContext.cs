@@ -38,6 +38,7 @@ namespace Family.Accounts.Infrastructure.Data
         public virtual DbSet<Profile> Profiles { get; set; }
         public virtual DbSet<ProfilePermission> ProfilePermissions{ get; set; }
         public virtual DbSet<User> Users{ get; set; }
+        public virtual DbSet<UserPhoto> UserPhotos { get; set; }
         public virtual DbSet<UserProfile> UserProfiles { get; set; }
         public virtual DbSet<UserSystem> UserSystems { get; set; }
         public virtual DbSet<Client> Clients { get; set; }

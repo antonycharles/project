@@ -2,8 +2,7 @@
 @{
     ViewData["Title"] = "Log In";
 }
-<div asp-validation-summary="ModelOnly">
-</div>
+<div asp-validation-summary="ModelOnly"></div>
 <form asp-action="Index" method="post" class="form-signin">
     <h1 class="h3 mb-3 fw-normal">Log In</h1>
     <input type="hidden" asp-for="AppSlug" />
@@ -25,6 +24,6 @@
     <button class="w-100 btn btn-lg btn-primary" type="submit">Login</button>
     <a asp-controller="ResetPassword" class="w-100 btn btn-link btn-sm">Forgot Password?</a>
     <hr/>
-    <a asp-controller="SignUp" class="w-100 btn btn-link text-success fw-bolder">Sign Up</a>
+    <a asp-controller="SignUp" asp-route-appslug="@Model.AppSlug" class="w-100 btn btn-link text-success fw-bolder">Sign Up</a>
 
 </form>

@@ -3,13 +3,15 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
+using Family.Accounts.Login.Infra.Enums;
 
 namespace Family.Accounts.Login.Infra.Requests
 {
-    public class UserAuthenticationRequest
+    public class UserRequest
     {
-        public Guid? UserId { get; set; }
         public string? AppSlug { get; set; }
+        [Required(ErrorMessage = "Name is required")]
+        public string Name { get; set; }
 
         [Required(ErrorMessage = "Email is required")]
         [EmailAddress]
@@ -18,5 +20,6 @@ namespace Family.Accounts.Login.Infra.Requests
         [Required(ErrorMessage = "Password is required")]
         [DataType(DataType.Password)]
         public string Password { get; set; }
+        public StatusEnum? Status { get; set; } = StatusEnum.Active;
     }
 }

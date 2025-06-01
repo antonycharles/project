@@ -42,12 +42,12 @@ namespace Family.Accounts.Application.Handlers
                 .ThenInclude(i => i.Profile)
                 .ThenInclude(i => i.ProfilePermissions.Where(w => w.Status == StatusEnum.Active && w.IsDeleted == false))
                 .ThenInclude(i => i.Permission)
-                .FirstOrDefaultAsync(w => w.Email == request.Email || w.Id == request.UserId);
+                .FirstOrDefaultAsync(w => (w.Email == request.Email && request.UserId == null) || (w.Id == request.UserId && request.Email == null));
 
             if(user == null)
                 throw new BusinessException(MSG_USER_OR_PASSAWORD_INVALID);
 
-            var passwordHash = _passwordProvider.HashPassword(request.Password);
+            var passwordHash = request.Password != null ? _passwordProvider.HashPassword(request.Password) : Guid.NewGuid().ToString();
 
             if(user.Password != passwordHash && request.UserId != user.Id)
                 throw new BusinessException(MSG_USER_OR_PASSAWORD_INVALID);

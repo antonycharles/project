@@ -38,6 +38,41 @@ namespace Family.Accounts.Login.Web.Controllers
         [HttpGet]
         public async Task<IActionResult> IndexAsync(string? AppSlug = "")
         {
+            try
+            {
+                if (User.Identity.IsAuthenticated)
+                {
+                    var result = await _userAuthorizationRepository.AuthenticateAsync(new UserAuthenticationRequest
+                    {
+                        AppSlug = AppSlug,
+                        UserId = new Guid(User.FindFirst(ClaimTypes.Sid)?.Value)
+                    });
+
+                    var code = Guid.NewGuid().ToString();
+
+                    await _cache.SetStringAsync(
+                        code,
+                        JsonSerializer.Serialize(result),
+                        new DistributedCacheEntryOptions { AbsoluteExpirationRelativeToNow = _cacheExpiry }
+                    );
+
+                    if(result.CallbackUrl != null && result.CallbackUrl != "")
+                        return Redirect($"{result.CallbackUrl}?code={code}");
+                    else
+                        return Redirect(Url.Action("Index", "Home"));
+                    
+                }
+            }
+            catch(ExternalApiException ex)
+            {
+                base.AddModelError(ex);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An error occurred while processing the request.");
+                ModelState.AddModelError(string.Empty, ex.Message);
+            }
+
             return View(new UserAuthenticationRequest
             {
                 AppSlug = AppSlug

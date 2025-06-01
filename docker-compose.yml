@@ -71,6 +71,10 @@ services:
             - ASPNETCORE_ENVIRONMENT=Development
         volumes:
             - uploads:/app/Uploads
+        depends_on:
+            - dbpostgresql
+            - message.broker.rabbitmq
+            - redis
 
     familyaccountsloginweb:
         build:

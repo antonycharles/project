@@ -11,6 +11,8 @@ namespace Family.Accounts.Core
         [Required]
         public string DatabaseConnection { get; set; }
         [Required]
-        public string RedisConnection { get; set;}
+        public string RedisConnection { get; set; }
+        [Required]
+        public string FamilyFileApiUrl { get; set; }
     }
 }

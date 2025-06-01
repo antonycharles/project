@@ -15,21 +15,66 @@ namespace Family.Accounts.Login.Infra.Repositories
         {
             _httpClient = httpClient;
         }
-        
+
+        protected async Task PutAsync(string url, object data)
+        {
+            try
+            {
+                var content = new StringContent(JsonSerializer.Serialize(data), System.Text.Encoding.UTF8, "application/json");
+                var response = await _httpClient.PutAsync(url, content);
+
+                if (response.IsSuccessStatusCode == false)
+                    await GenerateErrorException(response);
+
+                return;
+            }
+            catch (ExternalApiException ex)
+            {
+                throw ex;
+            }
+            catch (Exception ex)
+            {
+                throw new ExternalApiException($"Error in request: {ex.Message}", ex);
+            }
+        }
+
+
+        protected async Task PostAsync(string url, object data)
+        {
+            try
+            {
+                var content = new StringContent(JsonSerializer.Serialize(data), System.Text.Encoding.UTF8, "application/json");
+                var response = await _httpClient.PostAsync(url, content);
+
+                if (response.IsSuccessStatusCode == false)
+                    await GenerateErrorException(response);
+                    
+                return;
+            }
+            catch (ExternalApiException ex)
+            {
+                throw ex;
+            }
+            catch (Exception ex)
+            {
+                throw new ExternalApiException($"Error in request: {ex.Message}", ex);
+            }
+        }
+
         protected async Task<T> PostAsync<T>(string url, object data)
         {
             try
             {
                 var content = new StringContent(JsonSerializer.Serialize(data), System.Text.Encoding.UTF8, "application/json");
                 var response = await _httpClient.PostAsync(url, content);
-                
-                if(response.IsSuccessStatusCode == false)
+
+                if (response.IsSuccessStatusCode == false)
                     await GenerateErrorException(response);
 
                 var responseContent = await response.Content.ReadAsStringAsync();
                 return JsonSerializer.Deserialize<T>(responseContent, GetJsonSerializerOptions());
             }
-            catch(ExternalApiException ex)
+            catch (ExternalApiException ex)
             {
                 throw ex;
             }
@@ -138,10 +183,30 @@ namespace Family.Accounts.Login.Infra.Repositories
                     }
                     else if (error.Key == "errors")
                     {
-                        var errorArray = error.Value.AsArray();
-                        foreach (var item in errorArray)
+                        if (error.Value is JsonObject errorObject)
                         {
-                            errorList.Add(item.ToString());
+                            foreach (var item in errorObject)
+                            {
+                                if (item.Value is JsonArray array)
+                                {
+                                    foreach (var arrayItem in array)
+                                    {
+                                        errorList.Add(arrayItem.ToString());
+                                    }
+                                }
+                                else
+                                {
+                                    errorList.Add(item.Value.ToString());
+                                }
+                            }
+                        }
+                        else
+                        {
+                            var errorArray = error.Value.AsArray();
+                            foreach (var item in errorArray)
+                            {
+                                errorList.Add(item.ToString());
+                            }
                         }
                     }
                 }

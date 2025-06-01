@@ -18,6 +18,8 @@ namespace Family.Accounts.Core.Entities
         [Required]
         [MaxLength(200)]
         public string Password { get; set; }
+
+        public UserPhoto? UserPhoto { get; set; }
         public ICollection<UserProfile>? UserProfiles { get; set; }
     }
 }

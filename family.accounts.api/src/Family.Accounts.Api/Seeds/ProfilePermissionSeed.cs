@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Family.Accounts.Api.Helpers;
 using Family.Accounts.Core.Entities;
 using Family.Accounts.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
@@ -52,7 +53,9 @@ namespace Family.Accounts.Api.Seeds
             var roles = new List<string>
             {
                 "user-authorization",
-                "token-public-key"
+                "token-public-key",
+                "user-create",
+                "user-update",
             };
 
             var permissions = context.Permissions.AsNoTracking()

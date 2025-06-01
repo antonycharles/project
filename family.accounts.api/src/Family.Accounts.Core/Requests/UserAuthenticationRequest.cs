@@ -13,10 +13,10 @@ namespace Family.Accounts.Core.Requests
 
         [RequiredIf("IsEmailPasswordRequired", true, ErrorMessage = "Email is required")]
         [EmailAddress]
-        public string Email { get; set; }
+        public string? Email { get; set; }
 
         [RequiredIf("IsEmailPasswordRequired", true, ErrorMessage = "Password is required")]
-        public string Password { get; set; }
+        public string? Password { get; set; }
         
         public Guid? UserId { get; set; }
         
