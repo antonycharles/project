@@ -34,11 +34,12 @@ namespace Family.File.Api.Controllers
             FileDocument document = new FileDocument();
             try
             {
+                var appId = User.GetId();
                 if (file == null || file.Length == 0)
                     throw new Exception("Nenhum arquivo enviado.");
 
-                document = await _uploadHelper.UploadFileAsync(file, this.GetUrlBase());
-                document.AppId = User.GetId();
+                document = await _uploadHelper.UploadFileAsync(file, appId.ToString(), this.GetUrlBase());
+                document.AppId = appId;
                 await _fileDocumentRepository.AddAsync(document);
 
                 return Ok(document);
@@ -50,26 +51,15 @@ namespace Family.File.Api.Controllers
             }
         }
 
-        private async Task RemoveFile(FileDocument document)
-        {
-            try
-            {
-                if (document != null && document.Url != null)
-                    await _uploadHelper.DeleteFileFromDiskAsync(document);
-            }
-            catch (Exception)
-            {
-            }
-        }
-
         [HttpPost("Base64")]
         public async Task<ActionResult> UploadFileBase64Async(string fileName, [FromBody] string base64, string contentType)
         {
             FileDocument document = new FileDocument();
             try
             {
-                document = await _uploadHelper.UploadBase64FileAsync(base64, fileName, contentType, this.GetUrlBase());
-                document.AppId = User.GetId();
+                var appId = User.GetId();
+                document = await _uploadHelper.UploadBase64FileAsync(base64, fileName, contentType, appId.ToString(), this.GetUrlBase());
+                document.AppId = appId;
                 await _fileDocumentRepository.AddAsync(document);
 
                 return Ok(document);
@@ -84,14 +74,41 @@ namespace Family.File.Api.Controllers
         [HttpDelete("{id}")]
         public async Task<ActionResult> DeleteFileAsync(Guid id)
         {
-            await _fileDocumentRepository.DeleteAsync(id);
-            return Ok();
+            try
+            {
+                var document = await _fileDocumentRepository.GetByIdAsync(id);
+
+                if (document == null)
+                    throw new Exception("Document not found");
+
+                await _fileDocumentRepository.DeleteAsync(id);
+
+                await _uploadHelper.DeleteFileFromDiskAsync(document);
+                return Ok();
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
 
+
+        private async Task RemoveFile(FileDocument document)
+        {
+            try
+            {
+                if (document != null && document.Url != null)
+                    await _uploadHelper.DeleteFileFromDiskAsync(document);
+            }
+            catch (Exception)
+            {
+            }
+        }
+        
         private string GetUrlBase()
         {
             var uriBuilder = new UriBuilder
-            {  
+            {
                 Scheme = Request.Scheme,
                 Host = Request.Host.Host,
                 Port = Request.Host.Port ?? (Request.Scheme == "https" ? 443 : 80)

@@ -26,7 +26,7 @@ namespace Family.File.Infrastructure.Repositories
 
         public async Task<FileDocument?> GetByIdAsync(Guid id)
         {
-            const string sql = "SELECT * FROM FileDocument WHERE Id = @Id";
+            const string sql = "SELECT * FROM FileDocument WHERE Id = @Id and Active = TRUE";
             return await _connection.QueryFirstOrDefaultAsync<FileDocument>(sql, new { Id = id });
         }
 

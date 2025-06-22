@@ -13,7 +13,7 @@ namespace Family.File.Api.Helpers
             _fileSettings = fileSettings.Value;
         }
 
-        public async Task<FileDocument> UploadFileAsync(IFormFile file, string urlBase = null)
+        public async Task<FileDocument> UploadFileAsync(IFormFile file, string appId, string urlBase = null)
         {
             if (file == null || file.Length == 0)
                 throw new Exception("Nenhum arquivo encontrado.");
@@ -24,7 +24,8 @@ namespace Family.File.Api.Helpers
             var originalFileName = file.FileName;
             var extension = Path.GetExtension(originalFileName);
             var newFileName = $"{id}{extension}";
-            string uploadDir = MontaDiretorio(date);
+
+            string uploadDir = GenerateDirectoryString(date, appId);
 
             Directory.CreateDirectory(uploadDir);
             var filePath = Path.Combine(uploadDir, newFileName);
@@ -32,7 +33,7 @@ namespace Family.File.Api.Helpers
             using var stream = new FileStream(filePath, FileMode.Create);
             await file.CopyToAsync(stream);
 
-            var fileUrl = $"/files/{date.Year.ToString()}/{date.Month.ToString()}/{date.Day.ToString()}/{newFileName}";
+            var fileUrl = GenerateUrlString(newFileName, date, appId);
 
             return new FileDocument
             {
@@ -47,17 +48,7 @@ namespace Family.File.Api.Helpers
             };
         }
 
-        private static string MontaDiretorio(DateTime date)
-        {
-            return Path.Combine(
-                Directory.GetCurrentDirectory(),
-                "Uploads",
-                date.Year.ToString(),
-                date.Month.ToString(),
-                date.Day.ToString());
-        }
-
-        public async Task<FileDocument> UploadBase64FileAsync(string base64String, string originalFileName, string contentType, string urlBase = null)
+        public async Task<FileDocument> UploadBase64FileAsync(string base64String, string originalFileName, string contentType, string appId, string urlBase = null)
         {
             if (string.IsNullOrWhiteSpace(base64String))
                 throw new Exception("Nenhum conteúdo base64 fornecido.");
@@ -80,7 +71,7 @@ namespace Family.File.Api.Helpers
 
             var newFileName = $"{id}{extension}";
 
-            var uploadDir = MontaDiretorio(date);
+            var uploadDir = GenerateDirectoryString(date, appId);
 
             Directory.CreateDirectory(uploadDir);
 
@@ -101,7 +92,7 @@ namespace Family.File.Api.Helpers
 
             await System.IO.File.WriteAllBytesAsync(filePath, fileBytes);
 
-            var fileUrl = $"/files/{date.Year}/{date.Month}/{date.Day}/{newFileName}";
+            var fileUrl = GenerateUrlString(newFileName, date, appId);
 
             return new FileDocument
             {
@@ -118,22 +109,40 @@ namespace Family.File.Api.Helpers
 
         public async Task DeleteFileFromDiskAsync(FileDocument document)
         {
-            if (string.IsNullOrWhiteSpace(document?.Url))
+            if (string.IsNullOrWhiteSpace(document?.Path))
                 throw new Exception("Invalid file.");
 
-            var relativePath = document.Url.Replace("/files", "").TrimStart('/');
 
-            var filePath = Path.Combine(
-                Directory.GetCurrentDirectory(),
-                "Uploads",
-                relativePath.Replace("/", Path.DirectorySeparatorChar.ToString()));
-
-            if (System.IO.File.Exists(filePath))
+            if (System.IO.File.Exists(document.Path))
             {
-                System.IO.File.Delete(filePath);
+                System.IO.File.Delete(document.Path);
             }
 
             await Task.CompletedTask;
+        }
+
+
+        private static string GenerateDirectoryString(DateTime date, string appId, string subDirectory = "default")
+        {
+            return Path.Combine(
+                "Uploads",
+                appId,
+                subDirectory,
+                date.Year.ToString(),
+                date.Month.ToString(),
+                date.Day.ToString());
+        }
+
+        private static string GenerateUrlString(string newFileName, DateTime date, string appId, string subDirectory = "default")
+        {
+            return Path.Combine(
+                "files",
+                appId,
+                subDirectory,
+                date.Year.ToString(),
+                date.Month.ToString(),
+                date.Day.ToString(),
+                newFileName);
         }
     }
 }
