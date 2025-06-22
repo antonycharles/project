@@ -15,6 +15,7 @@ namespace Family.Accounts.Api.Seeds
             SeederFamilyAccountsApiAdmin(context);
             SeederFamilyAccountsApiLogin(context);
             SeederFamilyAccountsManagementLogin(context);
+            SeederFamilyAccountsApiPublicToken(context);
 
             context.SaveChanges();
         }
@@ -56,6 +57,30 @@ namespace Family.Accounts.Api.Seeds
                 "token-public-key",
                 "user-create",
                 "user-update",
+            };
+
+            var permissions = context.Permissions.AsNoTracking()
+                .Where(w => w.AppId == app.Id && roles.Contains(w.Role)).ToList();
+
+            AddProfilePermission(context, profile, permissions);
+        }
+
+        private static void SeederFamilyAccountsApiPublicToken(AccountsContext context)
+        {
+            var app = context.Apps.AsNoTracking().FirstOrDefault(w => w.Slug == "family-accounts-api");
+
+            if(app == null)
+                return;
+
+            var profile = context.Profiles.AsNoTracking()
+                .FirstOrDefault(w => w.Slug == "public-token" && w.AppId == app.Id);
+
+            if(profile == null)
+                return;
+
+            var roles = new List<string>
+            {
+                "token-public-key"
             };
 
             var permissions = context.Permissions.AsNoTracking()

@@ -47,6 +47,14 @@ namespace Family.Accounts.Api.Seeds
                 Status = StatusEnum.Active
             });
 
+            apps.Add(new App{
+                Code = 5,
+                Type = AppTypeEnum.Api,
+                Name = "Family file - API",
+                Slug = "family-file-api",
+                Status = StatusEnum.Active
+            });
+
             var appsDb = context.Apps.AsNoTracking().ToList();
 
             foreach(var app in apps)

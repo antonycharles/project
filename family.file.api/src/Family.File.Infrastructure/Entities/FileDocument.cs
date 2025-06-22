@@ -9,6 +9,7 @@ namespace Family.File.Infrastructure.Entities
     public class FileDocument
     {
         public Guid Id { get; set; }
+        public Guid AppId { get; set; }
 
         [Required]
         public string Name { get; set; }

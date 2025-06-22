@@ -29,6 +29,14 @@ namespace Family.Accounts.Api.Seeds
                 Status = StatusEnum.Active
             });
 
+
+            clients.Add(new Client{
+                Id = new Guid("9bc91fc4-e79a-4f68-9b9a-693ddf61a7e3"),
+                Name = "Family file - API",
+                Password = passwordProvider.HashPassword("123456"),
+                Status = StatusEnum.Active
+            });
+
             var clientsDb = context.Clients.AsNoTracking().ToList();
 
             foreach(var client in clients)

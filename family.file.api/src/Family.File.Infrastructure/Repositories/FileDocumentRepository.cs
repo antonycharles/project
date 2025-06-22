@@ -33,8 +33,8 @@ namespace Family.File.Infrastructure.Repositories
         public async Task AddAsync(FileDocument document)
         {
             const string sql = @"
-                INSERT INTO FileDocument (Id, Name, Url, Path, ContentType, Size, CreatedAt, Active)
-                VALUES (@Id, @Name, @Url, @Path,@ContentType, @Size, @CreatedAt, @Active)";
+                INSERT INTO FileDocument (Id,AppId, Name, Url, Path, ContentType, Size, CreatedAt, Active)
+                VALUES (@Id, @AppId, @Name, @Url, @Path,@ContentType, @Size, @CreatedAt, @Active)";
 
             if (document.Id == Guid.Empty)
                 document.Id = Guid.NewGuid();

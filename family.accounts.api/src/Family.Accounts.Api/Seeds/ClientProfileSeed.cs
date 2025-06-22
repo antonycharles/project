@@ -23,6 +23,12 @@ namespace Family.Accounts.Api.Seeds
                 ProfileId =  context.Profiles.AsNoTracking().FirstOrDefault(w => w.App.Slug == "family-accounts-api" && w.Slug == "admin").Id
             });
 
+
+            clientProfiles.Add(new ClientProfile{
+                ClientId = new Guid("9bc91fc4-e79a-4f68-9b9a-693ddf61a7e3"),
+                ProfileId =  context.Profiles.AsNoTracking().FirstOrDefault(w => w.App.Slug == "family-accounts-api" && w.Slug == "public-token").Id
+            });
+
             var clientProfileDb = context.ClientProfiles.AsNoTracking().ToList();
 
             foreach(var clientProfile in clientProfiles)

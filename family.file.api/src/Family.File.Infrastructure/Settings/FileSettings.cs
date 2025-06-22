@@ -18,5 +18,14 @@ namespace Family.File.Infrastructure.Settings
         public required string DatabaseUser { get; set; }
         [Required]
         public required string DatabasePassword { get; set; }
+
+        [Required]
+        public required string FamilyAccountsApiUrl { get; set; }
+        [Required]
+        public required string AppFamilyAccountsApiSlug { get; set; }
+        [Required]
+        public required string ClientId { get; set; }
+        [Required]
+        public required string ClientSecret { get; set; }
     }
 }

@@ -29,6 +29,7 @@ namespace Family.Accounts.Api.Seeds
 
             profiles.Add(new Profile { Name = "Admin", AppId = app.Id, Slug = "admin", Type = Core.Enums.ProfileTypeEnum.System });
             profiles.Add(new Profile { Name = "Login", AppId = app.Id, Slug = "login", Type = Core.Enums.ProfileTypeEnum.System });
+            profiles.Add(new Profile { Name = "Public token", AppId = app.Id, Slug = "public-token", Type = Core.Enums.ProfileTypeEnum.System });
 
             var profilesDb = context.Profiles.AsNoTracking().Where(w => w.AppId == app.Id).ToList();
 

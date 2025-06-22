@@ -5,11 +5,13 @@ using System.Threading.Tasks;
 using Family.File.Api.Helpers;
 using Family.File.Infrastructure.Entities;
 using Family.File.Infrastructure.interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Family.File.Api.Controllers
 {
     [ApiController]
+    [Authorize]
     [Route("[controller]")]
     public class UploadController : ControllerBase
     {
@@ -36,6 +38,7 @@ namespace Family.File.Api.Controllers
                     throw new Exception("Nenhum arquivo enviado.");
 
                 document = await _uploadHelper.UploadFileAsync(file, this.GetUrlBase());
+                document.AppId = User.GetId();
                 await _fileDocumentRepository.AddAsync(document);
 
                 return Ok(document);
@@ -65,7 +68,8 @@ namespace Family.File.Api.Controllers
             FileDocument document = new FileDocument();
             try
             {
-                var fileUpload = await _uploadHelper.UploadBase64FileAsync(base64, fileName, contentType, this.GetUrlBase());
+                document = await _uploadHelper.UploadBase64FileAsync(base64, fileName, contentType, this.GetUrlBase());
+                document.AppId = User.GetId();
                 await _fileDocumentRepository.AddAsync(document);
 
                 return Ok(document);
