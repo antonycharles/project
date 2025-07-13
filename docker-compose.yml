@@ -75,6 +75,23 @@ services:
             - dbpostgresql
             - message.broker.rabbitmq
             - redis
+    familyapi:
+        build:
+            context: ./family.api
+            dockerfile: Dockerfile
+        container_name: family-api
+        ports:
+            - "9503:8080"
+        networks: 
+            - family-network
+        environment:
+            - ASPNETCORE_ENVIRONMENT=Development
+        volumes:
+            - uploads:/app/Uploads
+        depends_on:
+            - dbpostgresql
+            - message.broker.rabbitmq
+            - redis
 
     familyaccountsloginweb:
         build:

@@ -5,11 +5,13 @@ WORKDIR /app
 COPY *.sln .
 COPY src/Family.Accounts.Login.Web/*.csproj ./src/Family.Accounts.Login.Web/
 COPY src/Family.Accounts.Login.Infra/*.csproj ./src/Family.Accounts.Login.Infra/
+COPY test/Family.Accounts.Login.Infra.Tests/*.csproj ./test/Family.Accounts.Login.Infra.Tests/
 
 RUN dotnet restore
 
 COPY src/Family.Accounts.Login.Web/. ./src/Family.Accounts.Login.Web/
 COPY src/Family.Accounts.Login.Infra/. ./src/Family.Accounts.Login.Infra/
+COPY test/Family.Accounts.Login.Infra.Tests/. ./test/Family.Accounts.Login.Infra.Tests/
 
 WORKDIR /app/src/Family.Accounts.Login.Web
 RUN dotnet publish -c Release -o /app/publish
