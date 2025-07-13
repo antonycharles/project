@@ -9,6 +9,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Family.Accounts.Login.Web",
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Family.Accounts.Login.Infra", "src\Family.Accounts.Login.Infra\Family.Accounts.Login.Infra.csproj", "{F8FAED4D-6F04-4940-BCBE-BF38D9E4B4C0}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{9F13BF78-90A2-4134-8627-7A7C60AA4F8F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Family.Accounts.Login.Infra.Tests", "test\Family.Accounts.Login.Infra.Tests\Family.Accounts.Login.Infra.Tests.csproj", "{98FBB26C-1F47-4267-B9D2-2047E8EAD327}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -26,9 +30,14 @@ Global
 		{F8FAED4D-6F04-4940-BCBE-BF38D9E4B4C0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F8FAED4D-6F04-4940-BCBE-BF38D9E4B4C0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F8FAED4D-6F04-4940-BCBE-BF38D9E4B4C0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{98FBB26C-1F47-4267-B9D2-2047E8EAD327}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{98FBB26C-1F47-4267-B9D2-2047E8EAD327}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{98FBB26C-1F47-4267-B9D2-2047E8EAD327}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{98FBB26C-1F47-4267-B9D2-2047E8EAD327}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{34BC7AB8-47EA-40E1-98B2-29C104D206A4} = {A201E3AC-98AF-4CD2-85C2-3CCA5650F817}
 		{F8FAED4D-6F04-4940-BCBE-BF38D9E4B4C0} = {A201E3AC-98AF-4CD2-85C2-3CCA5650F817}
+		{98FBB26C-1F47-4267-B9D2-2047E8EAD327} = {9F13BF78-90A2-4134-8627-7A7C60AA4F8F}
 	EndGlobalSection
 EndGlobal

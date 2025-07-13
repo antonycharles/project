@@ -22,5 +22,11 @@ namespace Family.Accounts.Login.Infra.Settings
 
         [Required]
         public string RedisUrl { get; set; }
+
+        [Required]
+        public string FamilyFileApiUrl { get; set; }
+
+        [Required]
+        public string FamilyFileApiSlug { get; set; }
     }
 }
