@@ -9,6 +9,8 @@ using Family.Accounts.Core.Enums;
 using Family.Accounts.Core.Handlers;
 using Family.Accounts.Core.Requests;
 using Family.Accounts.Core.Responses;
+using Family.Accounts.Infrastructure.Data;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.JsonWebTokens;
 using Microsoft.IdentityModel.Tokens;
 
@@ -17,17 +19,30 @@ namespace Family.Accounts.Application.Handlers
     public class TokenHandler : ITokenHandler
     {
         private const string T_ISSUER = "family.accounts.api";
-        private const string T_AUDIENCE = "family.accounts.api";
 
+        private readonly AccountsContext _context;
         private readonly ITokenKeyHandler _tokenKeyHandler;
 
-        public TokenHandler(ITokenKeyHandler tokenKeyHandler)
+        public TokenHandler(ITokenKeyHandler tokenKeyHandler, AccountsContext context)
         {
             _tokenKeyHandler = tokenKeyHandler;
+            _context = context;
         }
 
-        public AuthenticationResponse GenerateToken(Client client)
+        public async Task<AuthenticationResponse> GenerateClientTokenAsync(Guid clientId, string appSlug)
         {
+            var client = await _context.Clients.AsNoTracking()
+                .Include(i => i.ClientProfiles.Where(w => w.Status == StatusEnum.Active && w.IsDeleted == false))
+                .ThenInclude(i => i.Profile)
+                .ThenInclude(i => i.ProfilePermissions.Where(w => w.Status == StatusEnum.Active && w.IsDeleted == false))
+                .ThenInclude(i => i.Permission)
+                .Include(i => i.ClientProfiles.Where(w => w.Status == StatusEnum.Active && w.IsDeleted == false))
+                .ThenInclude(i => i.Profile)
+                .ThenInclude(i => i.App)
+                .FirstOrDefaultAsync(w => w.Id == clientId);
+
+            client.ClientProfiles = client.ClientProfiles.Where(w => w.Profile.App.Slug == appSlug).ToList();
+
             var profile = client.ClientProfiles
                 .Select(s => s.Profile).FirstOrDefault();
 
@@ -44,15 +59,25 @@ namespace Family.Accounts.Application.Handlers
                 claims.Add(new Claim(CustomClaimTypes.Role, profile.App.Code + "-" + role));
 
 
-            return GenerationAuthenticationResponse(claims, client.Id, profile.App);
+            return GenerationAuthenticationResponse(claims, client.Id, UserTypeEnum.client, profile.App);
         }
 
 
-        public AuthenticationResponse GenerateToken(User user, UserAuthenticationRequest request)
+        public async Task<AuthenticationResponse> GenerateUserTokenAsync(Guid userId, string appSlug)
         {
-            var profile = user.UserProfiles
+            var user = await _context.Users.AsNoTracking()
+                .Include(i => i.UserProfiles.Where(w => w.Status == StatusEnum.Active && w.IsDeleted == false))
+                .ThenInclude(i => i.Profile)
+                .ThenInclude(i => i.App)
+                .Include(i => i.UserProfiles.Where(w => w.Status == StatusEnum.Active && w.IsDeleted == false))
+                .ThenInclude(i => i.Profile)
+                .ThenInclude(i => i.ProfilePermissions.Where(w => w.Status == StatusEnum.Active && w.IsDeleted == false))
+                .ThenInclude(i => i.Permission)
+                .FirstOrDefaultAsync(w => w.Id == userId);
+
+            var profile = user?.UserProfiles?
                 .Where(w => w.Status == StatusEnum.Active)
-                .Where(w => w.Profile.App.Slug == request.AppSlug && w.Profile.Status == StatusEnum.Active)
+                .Where(w => w.Profile?.App?.Slug == appSlug && w.Profile.Status == StatusEnum.Active)
                 .Select(s => s.Profile).FirstOrDefault();
 
             var roles = GetRoles(profile);
@@ -70,12 +95,12 @@ namespace Family.Accounts.Application.Handlers
                 claims.Add(new Claim(CustomClaimTypes.Role, profile.App.Code + "-" + role));
 
             
-            return GenerationAuthenticationResponse(claims, user.Id, profile?.App);
+            return GenerationAuthenticationResponse(claims, user.Id, UserTypeEnum.user, profile?.App);
         }
 
-        private AuthenticationResponse GenerationAuthenticationResponse(List<Claim> claims, Guid authId, App? app)
+        private AuthenticationResponse GenerationAuthenticationResponse(List<Claim> claims, Guid authId, UserTypeEnum userType, App? app)
         {
-            SecurityTokenDescriptor jwt = GetSecurityTokenDescriptor(claims);
+            SecurityTokenDescriptor jwt = GetSecurityTokenDescriptor(claims, app?.Slug);
 
             var tokenHandler = new JsonWebTokenHandler();
 
@@ -86,20 +111,23 @@ namespace Family.Accounts.Application.Handlers
 
             return new AuthenticationResponse
             {
-                ExpiresIn = jwt.Expires.Value.AddMinutes(-3),
+                ExpiresIn = jwt.Expires?.AddMinutes(-3),
                 CallbackUrl = app?.CallbackUrl,
                 Token = lastJws,
-                AuthId = authId
+                AuthId = authId,
+                AppSlug = app?.Slug,
+                UserType = userType,
+                RefrashToken = Guid.NewGuid().ToString()
             };
         }
 
 
-        private SecurityTokenDescriptor GetSecurityTokenDescriptor(List<Claim> claims)
+        private SecurityTokenDescriptor GetSecurityTokenDescriptor(List<Claim> claims, string? appSlug = null)
         {
             return new SecurityTokenDescriptor
             {
                 Issuer = T_ISSUER,
-                Audience = T_AUDIENCE,
+                Audience = appSlug ?? T_ISSUER,
                 IssuedAt = DateTime.Now,
                 NotBefore = DateTime.Now,
                 Expires = DateTime.Now.AddHours(2).AddMinutes(3),
@@ -116,7 +144,7 @@ namespace Family.Accounts.Application.Handlers
 
             var rolesProfile = profile.ProfilePermissions
                 .Where(w => w.Permission != null && w.Permission.Role != null && w.Status == StatusEnum.Active && w.Permission.Status == StatusEnum.Active)
-                .Select(s => s.Permission.Role);
+                .Select(s => s.Permission?.Role);
 
             roles.AddRange(rolesProfile);
 
@@ -135,8 +163,7 @@ namespace Family.Accounts.Application.Handlers
                 IssuerSigningKey = key,
                 ValidateIssuer = true,
                 ValidIssuer = T_ISSUER,
-                ValidateAudience = true,
-                ValidAudience = T_AUDIENCE,
+                ValidateAudience = false,
                 ValidateLifetime = true,
                 ClockSkew = TimeSpan.Zero
             };

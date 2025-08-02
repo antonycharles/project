@@ -4,13 +4,15 @@ using System.Linq;
 using System.Threading.Tasks;
 using Family.Accounts.Api.Helpers;
 using Family.Accounts.Core.Handlers;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.IdentityModel.Tokens;
 
 namespace Family.Accounts.Api.Controllers
 {
     [ApiController]
-    [Route("[controller]")]
+    [Route("v{version:apiVersion}/.well-known")]
+    [ApiVersion("1.0")]
     public class TokenController : ControllerBase
     {
         private readonly ILogger<TokenController> _logger;
@@ -24,8 +26,8 @@ namespace Family.Accounts.Api.Controllers
             _tokenKeyHandler = tokenKeyHandler;
         }
 
-        [HttpGet("public-key")]
-        [AuthorizeRole(RoleConstants.TokenRole.PublicKey)]
+        [HttpGet("jwks.json")]
+        [AllowAnonymous]
         [ProducesResponseType(typeof(JsonWebKey), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
         public async Task<IActionResult> GetPublicKeys()
@@ -34,12 +36,15 @@ namespace Family.Accounts.Api.Controllers
             {
                 var result = _tokenKeyHandler.GetPublicKeys();
 
-                return Ok(result);  
+                return Ok(new
+                {
+                    Keys = result
+                });
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 return Problem(ex.Message, statusCode: StatusCodes.Status500InternalServerError);
-            } 
+            }
         }
     }
 }

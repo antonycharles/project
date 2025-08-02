@@ -42,14 +42,14 @@ namespace Family.Accounts.Application.Handlers
                 .ThenInclude(i => i.Profile)
                 .ThenInclude(i => i.ProfilePermissions.Where(w => w.Status == StatusEnum.Active && w.IsDeleted == false))
                 .ThenInclude(i => i.Permission)
-                .FirstOrDefaultAsync(w => (w.Email == request.Email && request.UserId == null) || (w.Id == request.UserId && request.Email == null));
+                .FirstOrDefaultAsync(w => w.Email == request.Email);
 
             if(user == null)
                 throw new BusinessException(MSG_USER_OR_PASSAWORD_INVALID);
 
             var passwordHash = request.Password != null ? _passwordProvider.HashPassword(request.Password) : Guid.NewGuid().ToString();
 
-            if(user.Password != passwordHash && request.UserId != user.Id)
+            if(user.Password != passwordHash)
                 throw new BusinessException(MSG_USER_OR_PASSAWORD_INVALID);
 
             if(user.Status != StatusEnum.Active || user.IsDeleted == true)
@@ -61,7 +61,7 @@ namespace Family.Accounts.Application.Handlers
                 user.UserProfiles.Add(userProfile);
             }
 
-            return _tokenHandler.GenerateToken(user,request);
+            return await _tokenHandler.GenerateUserTokenAsync(user.Id, request.AppSlug);
         }
 
         private async Task<UserProfile> GetUserProfileAsync(User user, UserAuthenticationRequest request)

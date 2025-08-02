@@ -10,8 +10,8 @@ namespace Family.Accounts.Core.Handlers
 {
     public interface ITokenHandler
     {
-        AuthenticationResponse GenerateToken(Client client);
-        AuthenticationResponse GenerateToken(User user, UserAuthenticationRequest request);
+        Task<AuthenticationResponse> GenerateClientTokenAsync(Guid clientId, string appSlug);
+        Task<AuthenticationResponse> GenerateUserTokenAsync(Guid userId, string? appSlug);
         bool ValidateToken(string token);
     }
 }

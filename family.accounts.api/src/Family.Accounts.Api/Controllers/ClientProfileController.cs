@@ -15,7 +15,8 @@ using StackExchange.Redis;
 namespace Family.Accounts.Api.Controllers
 {
     [ApiController]
-    [Route("[controller]")]
+    [Route("v{version:apiVersion}/[controller]")]
+    [ApiVersion("1.0")]
     public class ClientProfileController : ControllerBase
     {
         private readonly ILogger<ClientProfileController> _logger;

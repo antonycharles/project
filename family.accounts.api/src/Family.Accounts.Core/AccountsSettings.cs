@@ -14,5 +14,7 @@ namespace Family.Accounts.Core
         public string RedisConnection { get; set; }
         [Required]
         public string FamilyFileApiUrl { get; set; }
+        [Required]
+        public string? RedisInstanceName { get; set; }
     }
 }

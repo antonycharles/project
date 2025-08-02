@@ -65,9 +65,8 @@ namespace Family.Accounts.Application.Handlers
                 throw new BusinessException(MSG_CLIENT_NOT_HAVE_PROFILE);
 
 
-            client.ClientProfiles = client.ClientProfiles.Where(w => w.Profile.App.Slug == request.AppSlug).ToList();
 
-            return _tokenHandler.GenerateToken(client);
+            return await _tokenHandler.GenerateClientTokenAsync(client.Id, request.AppSlug);
         }
     }
 }

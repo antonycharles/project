@@ -14,7 +14,8 @@ namespace Family.Accounts.Api.Controllers
 {
     [ApiController]
     [Authorize]
-    [Route("[controller]")]
+    [Route("v{version:apiVersion}/[controller]")]
+    [ApiVersion("1.0")]
     public class UserController : ControllerBase
     {
         private readonly ILogger<UserController> _logger;

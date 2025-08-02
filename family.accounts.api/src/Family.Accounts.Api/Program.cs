@@ -1,6 +1,7 @@
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using Family.Accounts.Api.Configurations;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -11,13 +12,27 @@ var settings = builder.GetSettings();
 
 builder.AddDependence();
 
-builder.Services.AddControllers().AddJsonOptions(o =>
+builder.Services.AddApiVersioning(options =>
 {
-o.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
-o.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
+    options.AssumeDefaultVersionWhenUnspecified = true;
+    options.DefaultApiVersion = new ApiVersion(1, 0);
+    options.ReportApiVersions = true;
+    options.ApiVersionReader = new Microsoft.AspNetCore.Mvc.Versioning.QueryStringApiVersionReader("api-version");
+});
+
+builder.Services.AddControllers().AddJsonOptions(o =>
+    {
+    o.JsonSerializerOptions.PropertyNamingPolicy = JsonNamingPolicy.CamelCase;
+    o.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
 });
 
 builder.Services.AddEndpointsApiExplorer();
+
+builder.Services.AddVersionedApiExplorer(options =>
+{
+    options.GroupNameFormat = "'v'VVV";
+    options.SubstituteApiVersionInUrl = true;
+});
 
 builder.Services.AddSwaggerGen(c =>
 {
@@ -58,6 +73,7 @@ builder.AddDataBase(settings);
 builder.Services.AddStackExchangeRedisCache(options =>
 {
     options.Configuration = settings.RedisConnection;
+    options.InstanceName = settings.RedisInstanceName;
 });
 
 var app = builder.Build();

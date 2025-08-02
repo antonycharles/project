@@ -12,7 +12,8 @@ using Microsoft.AspNetCore.Mvc;
 namespace Family.Accounts.Api.Controllers
 {
     [ApiController]
-    [Route("[controller]")]
+    [Route("v{version:apiVersion}/[controller]")]
+    [ApiVersion("1.0")]
     public class ClientController : ControllerBase
     {
         private readonly ILogger<ClientController> _logger;
