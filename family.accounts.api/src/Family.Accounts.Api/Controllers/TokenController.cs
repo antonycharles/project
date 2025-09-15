@@ -46,5 +46,27 @@ namespace Family.Accounts.Api.Controllers
                 return Problem(ex.Message, statusCode: StatusCodes.Status500InternalServerError);
             }
         }
+
+        [HttpGet("openid-configuration")]
+        [AllowAnonymous]
+        public IActionResult GetOpenIdConfiguration()
+        {
+            // Ajuste o issuer conforme o endereço público da sua API
+            var issuer = $"{Request.Scheme}://{Request.Host}/v1";
+
+            var config = new
+            {
+                issuer = issuer,
+                authorization_endpoint = $"{issuer}/OAuth/authentication",
+                token_endpoint = $"{issuer}/OAuth/token",
+                userinfo_endpoint = $"{issuer}/OAuth/userinfo",
+                jwks_uri = $"{issuer}/.well-known/jwks.json",
+                response_types_supported = new[] { "code", "token", "id_token" },
+                subject_types_supported = new[] { "public" },
+                id_token_signing_alg_values_supported = new[] { "ES256" }
+            };
+
+            return Ok(config);
+        }
     }
 }
