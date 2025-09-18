@@ -5,13 +5,13 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "Family.Accounts.Gestao.Web",
+            "name": "Team.Accounts.Gestao.Web",
             "type": "coreclr",
             "request": "launch",
-            "preLaunchTask": "buildfamilyaccountsmanagementweb",
-            "program": "${workspaceFolder}/family.accounts.management.web/src/Family.Accounts.Management.Web/bin/Debug/net8.0/Family.Accounts.Management.Web.dll",
+            "preLaunchTask": "buildteamaccountsmanagementweb",
+            "program": "${workspaceFolder}/team.accounts.management.web/src/Team.Accounts.Management.Web/bin/Debug/net8.0/Team.Accounts.Management.Web.dll",
             "args": [],
-            "cwd": "${workspaceFolder}/family.accounts.management.web",
+            "cwd": "${workspaceFolder}/team.accounts.management.web",
             "stopAtEntry": false,
             "serverReadyAction": {
                 "action": "openExternally",
@@ -21,17 +21,17 @@
                 "ASPNETCORE_ENVIRONMENT": "Development"
             },
             "sourceFileMap": {
-                "/Views": "${workspaceFolder}/family.accounts.management.web/src/Family.Accounts.Management.Web/Views"
+                "/Views": "${workspaceFolder}/team.accounts.management.web/src/Team.Accounts.Management.Web/Views"
             }
         },
         {
-            "name": "Family.Accounts.Api",
+            "name": "Team.Accounts.Api",
             "type": "coreclr",
             "request": "launch",
-            "preLaunchTask": "buildfamilyaccountsapi",
-            "program": "${workspaceFolder}/family.accounts.api/src/Family.Accounts.Api/bin/Debug/net8.0/Family.Accounts.Api.dll",
+            "preLaunchTask": "buildteamaccountsapi",
+            "program": "${workspaceFolder}/team.accounts.api/src/Team.Accounts.Api/bin/Debug/net8.0/Team.Accounts.Api.dll",
             "args": [],
-            "cwd": "${workspaceFolder}/family.accounts.api/src/Family.Accounts.Api/",
+            "cwd": "${workspaceFolder}/team.accounts.api/src/Team.Accounts.Api/",
             "stopAtEntry": false,
             "serverReadyAction": {
                 "action": "openExternally",
@@ -41,7 +41,7 @@
                 "ASPNETCORE_ENVIRONMENT": "Development"
             },
             "sourceFileMap": {
-                "/Views": "${workspaceFolder}/family.accounts.api/src/Family.Accounts.Api/Views"
+                "/Views": "${workspaceFolder}/team.accounts.api/src/Team.Accounts.Api/Views"
             }
         },
         {
@@ -54,8 +54,8 @@
     {
       "name": "Accounts",
       "configurations": [
-        "Family.Accounts.Gestao.Web",
-        "Family.Accounts.Api"
+        "Team.Accounts.Gestao.Web",
+        "Team.Accounts.Api"
       ],
       "stopAll": true
     }

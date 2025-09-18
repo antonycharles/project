@@ -1,0 +1,12 @@
+using System.ComponentModel.DataAnnotations;
+
+namespace src.Team.Accounts.Management.Infrastructure.Enums
+{
+    public enum StatusEnum
+    {
+        [Display(Name = "Inactive")]
+        Inactive = 0,
+        [Display(Name = "Active")]
+        Active = 1,
+    }
+}

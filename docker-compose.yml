@@ -12,7 +12,7 @@ services:
             - db_postgresql:/var/lib/postgresql/data
         container_name: dbpostgresql
         networks:
-            - family-network
+            - team-network
         ports:
             - "5432:5432"
         environment:
@@ -25,7 +25,7 @@ services:
             - "5672:5672"
             - "15672:15672"
         networks:
-            - family-network
+            - team-network
 
     redis:
         image: redis:6.2-alpine
@@ -36,21 +36,21 @@ services:
                     cpus: '0.50'
                     memory: 50M
         networks:
-            - family-network
+            - team-network
         ports:
             - '6379:6379'
         volumes: 
             - cache:/data
 
-    familyaccountsapi:
+    teamaccountsapi:
         build:
-            context: ./family.accounts.api
+            context: ./team.accounts.api
             dockerfile: Dockerfile
-        container_name: family-accounts-api
+        container_name: team-accounts-api
         ports:
             - "9501:8080"
         networks: 
-            - family-network
+            - team-network
         environment:
             - ASPNETCORE_ENVIRONMENT=Development
         depends_on:
@@ -60,13 +60,13 @@ services:
 
     fileuploadapi:
         build:
-            context: ./family.file.api
+            context: ./team.file.api
             dockerfile: Dockerfile
-        container_name: family-file-api
+        container_name: team-file-api
         ports:
             - "9502:8080"
         networks: 
-            - family-network
+            - team-network
         environment:
             - ASPNETCORE_ENVIRONMENT=Development
         volumes:
@@ -75,15 +75,15 @@ services:
             - dbpostgresql
             - message.broker.rabbitmq
             - redis
-    familyapi:
+    teamapi:
         build:
-            context: ./family.api
+            context: ./team.api
             dockerfile: Dockerfile
-        container_name: family-api
+        container_name: team-api
         ports:
             - "9503:8080"
         networks: 
-            - family-network
+            - team-network
         environment:
             - ASPNETCORE_ENVIRONMENT=Development
         volumes:
@@ -93,39 +93,39 @@ services:
             - message.broker.rabbitmq
             - redis
 
-    familyaccountsloginweb:
+    teamaccountsloginweb:
         build:
-            context: ./family.accounts.login.web
+            context: ./team.accounts.login.web
             dockerfile: Dockerfile
-        container_name: family.accounts.login.web
+        container_name: team.accounts.login.web
         ports:
             - "9001:8080"
         networks: 
-            - family-network
+            - team-network
         environment:
             - ASPNETCORE_ENVIRONMENT=Development
         depends_on:
             - dbpostgresql
             - message.broker.rabbitmq
             - redis
-            - familyaccountsapi
+            - teamaccountsapi
 
-    familyaccountsmanagementweb:
+    teamaccountsmanagementweb:
         build:
-            context: ./family.accounts.management.web
+            context: ./team.accounts.management.web
             dockerfile: Dockerfile
-        container_name: family.accounts.management.web
+        container_name: team.accounts.management.web
         ports:
             - "9002:8080"
         networks: 
-            - family-network
+            - team-network
         environment:
             - ASPNETCORE_ENVIRONMENT=Development
         depends_on:
             - dbpostgresql
             - message.broker.rabbitmq
             - redis
-            - familyaccountsloginweb
+            - teamaccountsloginweb
 
 volumes:
     cache:
@@ -136,5 +136,5 @@ volumes:
         driver: local
         
 networks:
-  family-network:
+  team-network:
     driver: bridge

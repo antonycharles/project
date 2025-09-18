@@ -1,0 +1,32 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - Team.Accounts</title>
+      <link rel="icon" type="image/x-icon" href="~/imgs/logo-team.ico">
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/Team.Accounts.Login.Web.styles.css" asp-append-version="true" />
+</head>
+<body class="text-center">
+    <main class="form-signin">
+        <div>
+            <img class="mb-4" src="~/imgs/logo-team.png" alt="" width="72">
+            <div>
+                @RenderBody()
+            </div>
+            <footer>
+
+                <p class="mt-5 mb-3 text-muted">© 2024–2025</p>
+            </footer>
+        </div>
+    </main>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+    @await Html.PartialAsync("_ModalSuccessResponse")
+    @await Html.PartialAsync("_ModalErrorResponse")
+</body>
+</html>

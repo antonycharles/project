@@ -1,6 +1,0 @@
-@Family.File.Api_HostAddress = http://localhost:5002
-
-GET {{Family.File.Api_HostAddress}}/weatherforecast/
-Accept: application/json
-
-###
