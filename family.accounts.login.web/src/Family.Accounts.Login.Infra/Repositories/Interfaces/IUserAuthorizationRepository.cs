@@ -5,11 +5,12 @@ using System.Threading.Tasks;
 using Family.Accounts.Login.Infra.Requests;
 using Family.Accounts.Login.Infra.Responses;
 
-namespace Family.Accounts.Login.Infra.Repositories
+namespace Family.Accounts.Login.Infra.Repositories.Interfaces
 {
     public interface IUserAuthorizationRepository
     {
         Task<AuthenticationResponse> AuthenticateAsync(UserAuthenticationRequest request);
-        Task<UserResponse> GetUserInfoByIdAsync(string userId);
+        Task<AuthenticationResponse> RefreshTokenAsync(string tokenRefresh, string appSlug = "");
+        Task<UserResponse> GetUserInfoByTokenAsync(string token);
     }
 }

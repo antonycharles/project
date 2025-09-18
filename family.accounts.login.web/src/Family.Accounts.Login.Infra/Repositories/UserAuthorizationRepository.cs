@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
+using Family.Accounts.Login.Infra.Exceptions;
+using Family.Accounts.Login.Infra.Repositories.Interfaces;
 using Family.Accounts.Login.Infra.Requests;
 using Family.Accounts.Login.Infra.Responses;
 using Family.Accounts.Login.Infra.Settings;
@@ -25,7 +27,16 @@ namespace Family.Accounts.Login.Infra.Repositories
         public async Task<AuthenticationResponse> AuthenticateAsync(UserAuthenticationRequest request)
         {
             await AddToken();
-            return await base.PostAsync<AuthenticationResponse>("/UserAuthorization", request);
+            var code = await base.PostAsync<AuthenticationCodeResponse>("OAuth/Authentication", request);
+
+            if (code == null || string.IsNullOrWhiteSpace(code.Code))
+                throw new ExternalApiException("Error to get authentication code.");
+
+            return await base.PostFormDataAsync<AuthenticationResponse>("OAuth/token", new Dictionary<string, string>
+            {
+                { "code", code.Code },
+                { "GrantType", "authorization_code" }
+            });
         }
 
         protected async Task AddToken()
@@ -36,10 +47,21 @@ namespace Family.Accounts.Login.Infra.Repositories
                 _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token.Token);
         }
 
-        public async Task<UserResponse> GetUserInfoByIdAsync(string userId)
+        public async Task<UserResponse> GetUserInfoByTokenAsync(string token)
+        {
+            _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token);
+            return await base.GetAsync<UserResponse>($"OAuth/userInfo");
+        }
+
+        public async Task<AuthenticationResponse> RefreshTokenAsync(string tokenRefresh, string appSlug = "")
         {
             await AddToken();
-            return await base.GetAsync<UserResponse>($"/UserAuthorization/userInfo/{userId}");
+            return await base.PostFormDataAsync<AuthenticationResponse>("OAuth/token", new Dictionary<string, string>
+            {
+                { "RefreshToken", tokenRefresh },
+                { "GrantType", "refresh_token" },
+                { "AppSlug", appSlug }
+            });
         }
     }
 }

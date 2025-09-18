@@ -6,6 +6,7 @@ using Microsoft.Extensions.Options;
 using Family.Accounts.Login.Infra.Requests;
 using Family.Accounts.Login.Infra.Responses;
 using Family.Accounts.Login.Infra.Settings;
+using Family.Accounts.Login.Infra.Repositories.Interfaces;
 
 namespace Family.Accounts.Login.Infra.Repositories
 {
@@ -25,10 +26,12 @@ namespace Family.Accounts.Login.Infra.Repositories
             if(authenticationResponse != null && authenticationResponse.ExpiresIn > DateTime.Now)
                 return authenticationResponse;
 
-            authenticationResponse = await base.PostAsync<AuthenticationResponse>("/ClientAuthorization", new ClientAuthenticationRequest{
-                ClientId = Guid.Parse(_options.ClientId),
-                AppSlug = _options.AppFamilyAccountsApiSlug,
-                ClientSecret = _options.ClientSecret
+            authenticationResponse = await base.PostFormDataAsync<AuthenticationResponse>("OAuth/token", new Dictionary<string, string>
+            {
+                { "ClientId", _options.ClientId },
+                { "AppSlug", _options.AppFamilyAccountsApiSlug },
+                { "ClientSecret", _options.ClientSecret },
+                { "GrantType", "client_credentials" }
             });
 
             return authenticationResponse;

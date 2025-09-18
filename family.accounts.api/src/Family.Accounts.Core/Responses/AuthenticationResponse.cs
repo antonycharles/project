@@ -13,7 +13,7 @@ namespace Family.Accounts.Core.Responses
         public DateTime? ExpiresIn { get; set; }
         public string Token { get; set; }
         public string? CallbackUrl { get; set; }
-        public string RefrashToken { get; set; }
+        public string RefreshToken { get; set; }
         public UserTypeEnum UserType { get; set; }
     }
 }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Family.Accounts.Login.Infra.Repositories;
+using Family.Accounts.Login.Infra.Repositories.Interfaces;
 
 namespace Family.Accounts.Login.Web.Configurations
 {

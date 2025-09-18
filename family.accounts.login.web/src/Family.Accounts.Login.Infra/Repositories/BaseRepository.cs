@@ -145,6 +145,35 @@ namespace Family.Accounts.Login.Infra.Repositories
             }
         }
 
+        protected async Task<T> PostFormDataAsync<T>(string url, Dictionary<string, string> formData)
+        {
+            try
+            {
+                using var content = new MultipartFormDataContent();
+                foreach (var kvp in formData)
+                {
+                    content.Add(new StringContent(kvp.Value), kvp.Key);
+                }
+
+                var response = await _httpClient.PostAsync(url, content);
+
+                if (!response.IsSuccessStatusCode)
+                    await GenerateErrorException(response);
+
+
+                var responseContent = await response.Content.ReadAsStringAsync();
+                return JsonSerializer.Deserialize<T>(responseContent, GetJsonSerializerOptions());
+            }
+            catch (ExternalApiException ex)
+            {
+                throw ex;
+            }
+            catch (Exception ex)
+            {
+                throw new ExternalApiException($"Error in request: {ex.Message}", ex);
+            }
+        }
+
         private static async Task GenerateErrorException(HttpResponseMessage response)
         {
             var errorContent = await response.Content.ReadAsStringAsync();

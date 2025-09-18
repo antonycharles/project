@@ -10,8 +10,8 @@ namespace Family.Accounts.Management.Infrastructure.Refits
 {
     public interface IClientAuthorizationRefit
     {
-        [Post("/ClientAuthorization")]
-        Task<AuthenticationResponse> AuthorizationAsync(ClientAuthenticationRequest request);
-        
+        [Post("/OAuth/Token")]
+        Task<AuthenticationResponse> AuthorizationAsync([Body(BodySerializationMethod.UrlEncoded)] Dictionary<string, object> formData);
+
     }
 }

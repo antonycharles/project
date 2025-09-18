@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Family.Accounts.Login.Infra.Exceptions;
 using Family.Accounts.Login.Infra.Repositories;
+using Family.Accounts.Login.Infra.Repositories.Interfaces;
 using Family.Accounts.Login.Infra.Requests;
 using Family.Accounts.Login.Web.Helpers;
 using Microsoft.AspNetCore.Mvc;

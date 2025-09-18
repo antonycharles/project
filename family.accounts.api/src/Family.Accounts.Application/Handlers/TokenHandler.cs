@@ -117,7 +117,7 @@ namespace Family.Accounts.Application.Handlers
                 AuthId = authId,
                 AppSlug = app?.Slug,
                 UserType = userType,
-                RefrashToken = Guid.NewGuid().ToString()
+                RefreshToken = Guid.NewGuid().ToString()
             };
         }
 

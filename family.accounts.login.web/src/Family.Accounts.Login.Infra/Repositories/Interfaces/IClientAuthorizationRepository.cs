@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 using Family.Accounts.Login.Infra.Requests;
 using Family.Accounts.Login.Infra.Responses;
 
-namespace Family.Accounts.Login.Infra.Repositories
+namespace Family.Accounts.Login.Infra.Repositories.Interfaces
 {
     public interface IClientAuthorizationRepository
     {

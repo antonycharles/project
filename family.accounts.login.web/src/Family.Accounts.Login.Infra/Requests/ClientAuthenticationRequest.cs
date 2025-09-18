@@ -10,11 +10,12 @@ namespace Family.Accounts.Login.Infra.Requests
     {
         [Required]
         public Guid ClientId { get; set; }
-        
+
         [Required]
         public string AppSlug { get; set; }
 
         [Required]
         public string ClientSecret { get; set; }   
+        public string GrantType { get; set; }
     }
 }

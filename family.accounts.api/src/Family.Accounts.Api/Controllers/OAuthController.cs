@@ -69,18 +69,6 @@ public class OAuthController : ControllerBase
             {
                 return await RefreshTokenAsync(request);
             }
-
-            /*if (request.GrantType == "password")
-            {
-                if (request.Username != "admin" || request.Password != "123")
-                    return Unauthorized();
-
-                var result = CriarToken("admin", "api.read", true);
-                refreshTokens[result.RefreshToken] = "admin";
-                return Ok(result);
-            }
-            */
-
         }
         catch (BusinessException ex)
         {
@@ -106,13 +94,13 @@ public class OAuthController : ControllerBase
 
         if(result.UserType == UserTypeEnum.client )
         {
-            var client = await _tokenHandler.GenerateClientTokenAsync(result.AuthId, result.AppSlug);
+            var client = await _tokenHandler.GenerateClientTokenAsync(result.AuthId, request.AppSlug ?? result.AppSlug);
             if (client == null)
                 return BadRequest("Client not found");
         }
         else if(result.UserType == UserTypeEnum.user)
         {
-            var user = await _tokenHandler.GenerateUserTokenAsync(result.AuthId, result.AppSlug);
+            var user = await _tokenHandler.GenerateUserTokenAsync(result.AuthId, request.AppSlug ?? result.AppSlug);
             if (user == null)
                 return BadRequest("User not found");
         }
@@ -136,11 +124,11 @@ public class OAuthController : ControllerBase
     private async Task AddCacheRefreshToken(AuthenticationResponse? result)
     {
         await _distributedCache.SetStringAsync(
-            result.RefrashToken,
+            result.RefreshToken,
             JsonSerializer.Serialize(result),
             new DistributedCacheEntryOptions
             {
-                AbsoluteExpirationRelativeToNow = TimeSpan.FromDays(3)
+                AbsoluteExpirationRelativeToNow = TimeSpan.FromDays(5)
             });
     }
 

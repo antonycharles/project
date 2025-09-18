@@ -44,11 +44,14 @@ namespace Family.Accounts.Management.Web.Handlers
                     return _token;
                 
                 // Request a new token
-                var response = await _httpContextAccessor.AuthorizationAsync(new ClientAuthenticationRequest{
-                    ClientId = new Guid(_settings.ClientId),
-                    AppSlug = _settings.FamilyAccountsApiSlug,
-                    ClientSecret = _settings.ClientSecret,
-                });
+                var response = await _httpContextAccessor.AuthorizationAsync(
+                    new Dictionary<string, object>
+                    {
+                        { "GrantType", "client_credentials" },
+                        { "ClientId", new Guid(_settings.ClientId)},
+                        { "ClientSecret", _settings.ClientSecret },
+                        { "AppSlug", _settings.FamilyAccountsApiSlug }
+                    });
 
                 if (response != null && response.Token != null)
                 {

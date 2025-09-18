@@ -7,8 +7,10 @@ using System.Text.Json;
 using System.Threading.Tasks;
 using Family.Accounts.Login.Infra.Exceptions;
 using Family.Accounts.Login.Infra.Repositories;
+using Family.Accounts.Login.Infra.Repositories.Interfaces;
 using Family.Accounts.Login.Infra.Requests;
 using Family.Accounts.Login.Infra.Responses;
+using Family.Accounts.Login.Web.Extensions;
 using Family.Accounts.Login.Web.Models;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Mvc;
@@ -40,30 +42,18 @@ namespace Family.Accounts.Login.Web.Controllers
         {
             try
             {
-                if (User.Identity.IsAuthenticated)
+                //if (User.Identity.IsAuthenticated && User.GetRefreshToken() != null)
+                //{
+                //    var result = await _userAuthorizationRepository.RefreshTokenAsync(User.GetRefreshToken(), AppSlug);
+                //    return await GenerateCode(result);
+                //}
+
+                return View(new UserAuthenticationRequest
                 {
-                    var result = await _userAuthorizationRepository.AuthenticateAsync(new UserAuthenticationRequest
-                    {
-                        AppSlug = AppSlug,
-                        UserId = new Guid(User.FindFirst(ClaimTypes.Sid)?.Value)
-                    });
-
-                    var code = Guid.NewGuid().ToString();
-
-                    await _cache.SetStringAsync(
-                        code,
-                        JsonSerializer.Serialize(result),
-                        new DistributedCacheEntryOptions { AbsoluteExpirationRelativeToNow = _cacheExpiry }
-                    );
-
-                    if(result.CallbackUrl != null && result.CallbackUrl != "")
-                        return Redirect($"{result.CallbackUrl}?code={code}");
-                    else
-                        return Redirect(Url.Action("Index", "Home"));
-                    
-                }
+                    AppSlug = AppSlug
+                });
             }
-            catch(ExternalApiException ex)
+            catch (ExternalApiException ex)
             {
                 base.AddModelError(ex);
             }
@@ -87,22 +77,11 @@ namespace Family.Accounts.Login.Web.Controllers
                     return View(request);
                 
                 var result = await _userAuthorizationRepository.AuthenticateAsync(request);
-                var userInfo = await _userAuthorizationRepository.GetUserInfoByIdAsync(result.AuthId.ToString());
+                var userInfo = await _userAuthorizationRepository.GetUserInfoByTokenAsync(result.Token);
 
                 await AddCookieAuthentication(result, userInfo);
 
-                var code = Guid.NewGuid().ToString();
-
-                await _cache.SetStringAsync(
-                    code, 
-                    JsonSerializer.Serialize(result),
-                    new DistributedCacheEntryOptions { AbsoluteExpirationRelativeToNow = _cacheExpiry }
-                );
-
-                if(result.CallbackUrl != null && result.CallbackUrl != "")
-                    return Redirect($"{result.CallbackUrl}?code={code}");
-                else
-                    return Redirect(Url.Action("Index", "Home"));
+                return await GenerateCode(result);
             }
             catch(ExternalApiException ex)
             {
@@ -156,13 +135,30 @@ namespace Family.Accounts.Login.Web.Controllers
             }
         }
 
+        private async Task<IActionResult> GenerateCode(AuthenticationResponse result)
+        {
+            var code = Guid.NewGuid().ToString();
+
+            await _cache.SetStringAsync(
+                code,
+                JsonSerializer.Serialize(result),
+                new DistributedCacheEntryOptions { AbsoluteExpirationRelativeToNow = _cacheExpiry }
+            );
+
+            if (result.CallbackUrl != null && result.CallbackUrl != "")
+                return Redirect($"{result.CallbackUrl}?code={code}");
+            else
+                return Redirect(Url.Action("Index", "Home"));
+        }
+        
         private async Task AddCookieAuthentication(AuthenticationResponse auth, UserResponse userInfo)
         {
             var claims = new List<Claim>
             {
                 new Claim(ClaimTypes.Sid, userInfo.Id.ToString()),
                 new Claim(ClaimTypes.Name, userInfo.Name),
-                new Claim(ClaimTypes.Email, userInfo.Email)
+                new Claim(ClaimTypes.Email, userInfo.Email),
+                new Claim("RefreshToken", auth.RefreshToken)
             };
 
             var identity = new ClaimsIdentity(claims, "CookieAuth");

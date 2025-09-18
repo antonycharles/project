@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
+using Family.Accounts.Login.Infra.Repositories.Interfaces;
 using Family.Accounts.Login.Infra.Requests;
 using Family.Accounts.Login.Infra.Settings;
 using Microsoft.Extensions.Options;
