@@ -64,7 +64,7 @@ List of tasks to be performed in projects
 - [x] Upload file
 - [x] Show file
 
-## Team api
+## api
 
 - [x] Create layered project 
     - .Net 8

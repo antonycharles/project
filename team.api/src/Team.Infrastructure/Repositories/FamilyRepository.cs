@@ -19,7 +19,7 @@ namespace Team.Infrastructure.Repositories
             _connectionString = configuration.GetConnectionString("DefaultConnection");
         }
 
-        public async Task<Domain.Entities.Team> GetByIdAsync(Guid id)
+        public async Task<Domain.Entities.Project> GetByIdAsync(Guid id)
         {
             using var connection = new NpgsqlConnection(_connectionString);
             await connection.OpenAsync();
@@ -40,9 +40,9 @@ namespace Team.Infrastructure.Repositories
             return null;
         }
 
-        public async Task<IEnumerable<Domain.Entities.Team>> GetAllAsync()
+        public async Task<IEnumerable<Domain.Entities.Project>> GetAllAsync()
         {
-            var families = new List<Domain.Entities.Team>();
+            var families = new List<Domain.Entities.Project>();
 
             using var connection = new NpgsqlConnection(_connectionString);
             await connection.OpenAsync();
@@ -60,9 +60,9 @@ namespace Team.Infrastructure.Repositories
             return families;
         }
 
-        public async Task<IEnumerable<Domain.Entities.Team>> GetByUserIdAsync(Guid userId)
+        public async Task<IEnumerable<Domain.Entities.Project>> GetByUserIdAsync(Guid userId)
         {
-            var families = new List<Domain.Entities.Team>();
+            var families = new List<Domain.Entities.Project>();
 
             using var connection = new NpgsqlConnection(_connectionString);
             await connection.OpenAsync();
@@ -83,7 +83,7 @@ namespace Team.Infrastructure.Repositories
             return families;
         }
 
-        public async Task AddAsync(Domain.Entities.Team team)
+        public async Task AddAsync(Domain.Entities.Project team)
         {
             using var connection = new NpgsqlConnection(_connectionString);
             await connection.OpenAsync();
@@ -104,7 +104,7 @@ namespace Team.Infrastructure.Repositories
             await command.ExecuteNonQueryAsync();
         }
 
-        public async Task UpdateAsync(Domain.Entities.Team team)
+        public async Task UpdateAsync(Domain.Entities.Project team)
         {
             using var connection = new NpgsqlConnection(_connectionString);
             await connection.OpenAsync();
@@ -140,9 +140,9 @@ namespace Team.Infrastructure.Repositories
             await command.ExecuteNonQueryAsync();
         }
 
-        private Domain.Entities.Team MapTeam(NpgsqlDataReader reader)
+        private Domain.Entities.Project MapTeam(NpgsqlDataReader reader)
         {
-            return new Domain.Entities.Team
+            return new Domain.Entities.Project
             {
                 Id = reader.GetGuid(0),
                 Name = reader.GetString(1),

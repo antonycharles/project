@@ -12,7 +12,7 @@ services:
             - db_postgresql:/var/lib/postgresql/data
         container_name: dbpostgresql
         networks:
-            - team-network
+            - project-network
         ports:
             - "5432:5432"
         environment:
@@ -25,7 +25,7 @@ services:
             - "5672:5672"
             - "15672:15672"
         networks:
-            - team-network
+            - project-network
 
     redis:
         image: redis:6.2-alpine
@@ -36,21 +36,21 @@ services:
                     cpus: '0.50'
                     memory: 50M
         networks:
-            - team-network
+            - project-network
         ports:
             - '6379:6379'
         volumes: 
             - cache:/data
 
-    teamaccountsapi:
+    accountsapi:
         build:
-            context: ./team.accounts.api
+            context: ./accounts.api
             dockerfile: Dockerfile
-        container_name: team-accounts-api
+        container_name: accounts-api
         ports:
             - "9501:8080"
         networks: 
-            - team-network
+            - project-network
         environment:
             - ASPNETCORE_ENVIRONMENT=Development
         depends_on:
@@ -58,15 +58,15 @@ services:
             - message.broker.rabbitmq
             - redis
 
-    fileuploadapi:
+    fileapi:
         build:
-            context: ./team.file.api
+            context: ./file.api
             dockerfile: Dockerfile
-        container_name: team-file-api
+        container_name: file-api
         ports:
             - "9502:8080"
         networks: 
-            - team-network
+            - project-network
         environment:
             - ASPNETCORE_ENVIRONMENT=Development
         volumes:
@@ -79,11 +79,11 @@ services:
         build:
             context: ./team.api
             dockerfile: Dockerfile
-        container_name: team-api
+        container_name: api
         ports:
             - "9503:8080"
         networks: 
-            - team-network
+            - project-network
         environment:
             - ASPNETCORE_ENVIRONMENT=Development
         volumes:
@@ -93,39 +93,39 @@ services:
             - message.broker.rabbitmq
             - redis
 
-    teamaccountsloginweb:
+    accountsloginweb:
         build:
-            context: ./team.accounts.login.web
+            context: ./accounts.login.web
             dockerfile: Dockerfile
-        container_name: team.accounts.login.web
+        container_name: accounts.login.web
         ports:
             - "9001:8080"
         networks: 
-            - team-network
+            - project-network
         environment:
             - ASPNETCORE_ENVIRONMENT=Development
         depends_on:
             - dbpostgresql
             - message.broker.rabbitmq
             - redis
-            - teamaccountsapi
+            - accountsapi
 
-    teamaccountsmanagementweb:
+    accountsmanagementweb:
         build:
-            context: ./team.accounts.management.web
+            context: ./accounts.management.web
             dockerfile: Dockerfile
-        container_name: team.accounts.management.web
+        container_name: accounts.management.web
         ports:
             - "9002:8080"
         networks: 
-            - team-network
+            - project-network
         environment:
             - ASPNETCORE_ENVIRONMENT=Development
         depends_on:
             - dbpostgresql
             - message.broker.rabbitmq
             - redis
-            - teamaccountsloginweb
+            - accountsloginweb
 
 volumes:
     cache:
@@ -136,5 +136,5 @@ volumes:
         driver: local
         
 networks:
-  team-network:
+  project-network:
     driver: bridge

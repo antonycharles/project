@@ -5,13 +5,13 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "Team.Accounts.Gestao.Web",
+            "name": "Accounts.Gestao.Web",
             "type": "coreclr",
             "request": "launch",
-            "preLaunchTask": "buildteamaccountsmanagementweb",
-            "program": "${workspaceFolder}/team.accounts.management.web/src/Team.Accounts.Management.Web/bin/Debug/net8.0/Team.Accounts.Management.Web.dll",
+            "preLaunchTask": "buildaccountsmanagementweb",
+            "program": "${workspaceFolder}/.accounts.management.web/src/Accounts.Management.Web/bin/Debug/net8.0/Accounts.Management.Web.dll",
             "args": [],
-            "cwd": "${workspaceFolder}/team.accounts.management.web",
+            "cwd": "${workspaceFolder}/.accounts.management.web",
             "stopAtEntry": false,
             "serverReadyAction": {
                 "action": "openExternally",
@@ -21,17 +21,17 @@
                 "ASPNETCORE_ENVIRONMENT": "Development"
             },
             "sourceFileMap": {
-                "/Views": "${workspaceFolder}/team.accounts.management.web/src/Team.Accounts.Management.Web/Views"
+                "/Views": "${workspaceFolder}/.accounts.management.web/src/Accounts.Management.Web/Views"
             }
         },
         {
-            "name": "Team.Accounts.Api",
+            "name": "Accounts.Api",
             "type": "coreclr",
             "request": "launch",
-            "preLaunchTask": "buildteamaccountsapi",
-            "program": "${workspaceFolder}/team.accounts.api/src/Team.Accounts.Api/bin/Debug/net8.0/Team.Accounts.Api.dll",
+            "preLaunchTask": "buildaccountsapi",
+            "program": "${workspaceFolder}/.accounts.api/src/Accounts.Api/bin/Debug/net8.0/Accounts.Api.dll",
             "args": [],
-            "cwd": "${workspaceFolder}/team.accounts.api/src/Team.Accounts.Api/",
+            "cwd": "${workspaceFolder}/.accounts.api/src/Accounts.Api/",
             "stopAtEntry": false,
             "serverReadyAction": {
                 "action": "openExternally",
@@ -41,7 +41,7 @@
                 "ASPNETCORE_ENVIRONMENT": "Development"
             },
             "sourceFileMap": {
-                "/Views": "${workspaceFolder}/team.accounts.api/src/Team.Accounts.Api/Views"
+                "/Views": "${workspaceFolder}/.accounts.api/src/Accounts.Api/Views"
             }
         },
         {
@@ -54,8 +54,8 @@
     {
       "name": "Accounts",
       "configurations": [
-        "Team.Accounts.Gestao.Web",
-        "Team.Accounts.Api"
+        "Accounts.Gestao.Web",
+        "Accounts.Api"
       ],
       "stopAll": true
     }

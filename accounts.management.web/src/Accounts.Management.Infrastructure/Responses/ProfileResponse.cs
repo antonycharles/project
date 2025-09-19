@@ -1,0 +1,19 @@
+using System;
+using Accounts.Management.Infrastructure.Enums;
+using src.Accounts.Management.Infrastructure.Enums;
+
+namespace Accounts.Management.Infrastructure.Responses
+{
+    public class ProfileResponse
+    {
+        public Guid Id { get; set; }
+        public Guid AppId { get; set; }
+        public string AppName { get; set; }
+        public string Name { get; set; }
+        public ProfileTypeEnum? Type { get; set; }
+        public bool IsDefault { get; set; } 
+        public StatusEnum? Status { get; set; }
+        public IList<PermissionResponse>? Permissions { get; set; }
+        public string Slug { get; set; }
+    }
+}

@@ -2,24 +2,24 @@
     "version": "2.0.0",
     "tasks": [
         {
-            "label": "buildteamaccountsmanagementweb",
+            "label": "buildaccountsmanagementweb",
             "command": "dotnet",
             "type": "process",
             "args": [
                 "build",
-                "${workspaceFolder}/team.accounts.management.web/src/Team.Accounts.Management.Web/Team.Accounts.Management.Web.csproj",
+                "${workspaceFolder}/.accounts.management.web/src/Accounts.Management.Web/Accounts.Management.Web.csproj",
                 "/property:GenerateFullPaths=true",
                 "/consoleloggerparameters:NoSummary"
             ],
             "problemMatcher": "$msCompile"
         },
         {
-            "label": "buildteamaccountsapi",
+            "label": "buildaccountsapi",
             "command": "dotnet",
             "type": "process",
             "args": [
                 "build",
-                "${workspaceFolder}/team.accounts.api/src/Team.Accounts.Api/Team.Accounts.Api.csproj",
+                "${workspaceFolder}/.accounts.api/src/Accounts.Api/Accounts.Api.csproj",
                 "/property:GenerateFullPaths=true",
                 "/consoleloggerparameters:NoSummary"
             ],

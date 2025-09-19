@@ -65,7 +65,7 @@ namespace Team.Application.Services
         }
 
 
-        private static void MapUpdate(UpdateTeamDto dto, Domain.Entities.Team team)
+        private static void MapUpdate(UpdateTeamDto dto, Domain.Entities.Project team)
         {
             team.Name = dto.Name;
             team.Description = dto.Description;
@@ -73,9 +73,9 @@ namespace Team.Application.Services
             team.UpdatedAt = DateTime.UtcNow;
         }
 
-        private Domain.Entities.Team MapToNewTeam(CreateTeamDto dto)
+        private Domain.Entities.Project MapToNewTeam(CreateTeamDto dto)
         {
-            return new Team.Domain.Entities.Team
+            return new Team.Domain.Entities.Project
             {
                 Id = Guid.NewGuid(),
                 Name = dto.Name,
@@ -86,7 +86,7 @@ namespace Team.Application.Services
             };
         }
 
-        private TeamDto MapToDto(Team.Domain.Entities.Team team)
+        private TeamDto MapToDto(Team.Domain.Entities.Project team)
         {
             return new TeamDto
             {
