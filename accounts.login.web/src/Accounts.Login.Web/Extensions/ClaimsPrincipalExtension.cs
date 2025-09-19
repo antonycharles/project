@@ -21,6 +21,12 @@ namespace Accounts.Login.Web.Extensions
             return nameClaim?.Value ?? "Unknown User";
         }
 
+        public static string GetEmail(this ClaimsPrincipal claimsPrincipal)
+        {
+            var emailClaim = claimsPrincipal.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email);
+            return emailClaim?.Value ?? "Unknown Email";
+        }
+
         public static string? GetRefreshToken(this ClaimsPrincipal claimsPrincipal)
         {
             var refreshTokenClaim = claimsPrincipal.Claims.FirstOrDefault(c => c.Type == "RefreshToken");

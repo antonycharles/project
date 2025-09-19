@@ -3,11 +3,10 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
-using Accounts.Core.Enums;
 
-namespace Accounts.Core.Requests
+namespace Accounts.Login.Web.Models
 {
-    public class UserUpdateRequest
+    public class UserUpdateViewModel
     {
         [Required(ErrorMessage = "Name is required")]
         public string Name { get; set; }
@@ -15,7 +14,5 @@ namespace Accounts.Core.Requests
         [Required(ErrorMessage = "Email is required")]
         [EmailAddress]
         public string Email { get; set; }
-
-        public string? Password { get; set; }
     }
 }

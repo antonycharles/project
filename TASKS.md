@@ -38,6 +38,7 @@ List of tasks to be performed in projects
 - [x] Sign up
 - [ ] Update user/photo
 - [ ] App store redirect
+- [ ] Reset password
 
 ## Accounts Management web
 

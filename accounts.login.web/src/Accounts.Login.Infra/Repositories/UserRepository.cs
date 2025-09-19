@@ -26,7 +26,7 @@ namespace Accounts.Login.Infra.Repositories
         public async Task<UserResponse> CreateAsync(UserRequest request)
         {
             await AddToken();
-            return await base.PostAsync<UserResponse>("/User", request);
+            return await base.PostAsync<UserResponse>("User", request);
         }
 
         private async Task AddToken()
@@ -37,10 +37,10 @@ namespace Accounts.Login.Infra.Repositories
                 _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token.Token);
         }
         
-        public async Task UpdateAsync(Guid userId, UserRequest request)
+        public async Task UpdateAsync(Guid userId, UserUpdateRequest request)
         {
             await AddToken();
-            await base.PutAsync("/User", request);
+            await base.PutAsync($"User/{userId}", request);
         }
     }
 }

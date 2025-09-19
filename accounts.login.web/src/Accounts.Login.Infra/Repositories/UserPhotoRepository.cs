@@ -26,7 +26,7 @@ namespace Accounts.Login.Infra.Repositories
         public async Task UpdateAsync(UserPhotoRequest request)
         {
             await AddToken();
-            await base.PostAsync("/UserPhoto", request);
+            await base.PostAsync("UserPhoto", request);
         }
         
         private async Task AddToken()

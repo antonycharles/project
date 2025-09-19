@@ -2,7 +2,7 @@
     ViewData["Title"] = "Log In";
 }
 
-<h1>Olá, @User.GetName()</h1>
-<p><a href="@Url.Action("Index", "User")">Update</a></p>
+<h3>Olá, @User.GetName()</h3>
+<p><a class="btn btn-link" href="@Url.Action("Update", "User")">Update</a></p>
 <hr/>
 <p><a href="@Url.Action("Logout", "Logout")">Logout</a></p>
