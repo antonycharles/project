@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Accounts.Application.Mappers;
 using Accounts.Application.Providers;
+using Accounts.Core;
 using Accounts.Core.Entities;
 using Accounts.Core.Enums;
 using Accounts.Core.Exceptions;
@@ -12,6 +13,7 @@ using Accounts.Core.Requests;
 using Accounts.Core.Responses;
 using Accounts.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 
 namespace Accounts.Application.Handlers
 {
@@ -19,12 +21,17 @@ namespace Accounts.Application.Handlers
     {
         private readonly AccountsContext _context;
         private readonly IPasswordProvider _passwordProvider;
+        private readonly AccountsSettings _settings;
 
         public UserHandler(
             AccountsContext context,
-            IPasswordProvider passwordProvider){
+            IPasswordProvider passwordProvider,
+            IOptions<AccountsSettings> settings
+            )
+        {
             _context = context;
             _passwordProvider = passwordProvider;
+            _settings = settings.Value;
         }
 
         public async Task<UserResponse> CreateAsync(UserRequest request)
@@ -82,12 +89,13 @@ namespace Accounts.Application.Handlers
                 .Include(i => i.UserProfiles.Where(w => w.Status == StatusEnum.Active && w.IsDeleted == false))
                 .ThenInclude(i => i.Profile)
                 .ThenInclude(i => i.App)
+                .Include(i => i.UserPhoto)
                 .FirstOrDefaultAsync(w => w.Id == id && w.IsDeleted == false);
 
             if(user == null)
                 throw new NotFoundException("User not found");
 
-            return user.ToUserResponse();
+            return user.ToUserResponse(_settings.FileApiUrl);
         }
 
         public async Task UpdateAsync(Guid id, UserUpdateRequest request)

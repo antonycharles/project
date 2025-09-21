@@ -43,3 +43,21 @@ body {
   list-style: none;
   padding: 0px;
 }
+
+
+.user-image {
+  height: 128px;
+  width: 128px;
+  margin: auto;
+  background-size: cover;
+  background-color:#cbcbcb;
+  background-position: center;
+  border-radius: 50%;
+}
+.user-image p{
+  text-align: center;
+  line-height: 128px;
+  font-size: 85px;
+  color: white;
+  font-weight: bold;
+}

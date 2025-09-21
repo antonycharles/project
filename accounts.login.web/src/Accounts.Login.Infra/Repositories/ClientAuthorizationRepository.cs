@@ -13,15 +13,15 @@ namespace Accounts.Login.Infra.Repositories
     public class ClientAuthorizationRepository : BaseRepository, IClientAuthorizationRepository
     {
         private static AuthenticationResponse? authenticationResponse;
-
         private readonly AccountsLoginSettings _options;
+        
         public ClientAuthorizationRepository(HttpClient httpClient, IOptions<AccountsLoginSettings> options) : base(httpClient)
         {
             _options = options.Value;
             _httpClient.BaseAddress = new Uri(options.Value.AccountsApiUrl);
         }
 
-        public async Task<AuthenticationResponse> AuthenticateAsync()
+        public async Task<AuthenticationResponse> AuthenticateAsync(string apiSlug)
         {
             if(authenticationResponse != null && authenticationResponse.ExpiresIn > DateTime.Now)
                 return authenticationResponse;

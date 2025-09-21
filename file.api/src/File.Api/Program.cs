@@ -8,6 +8,7 @@ using File.Infrastructure.Repositories;
 using File.Infrastructure.Repositories.External;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.FileProviders;
+using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -28,14 +29,26 @@ builder.Services.AddSingleton(new Npgsql.NpgsqlConnection(dbInitializer.GetConne
 
 builder.Services.AddScoped<IFileDocumentRepository, FileDocumentRepository>();
 
-builder.Services.AddScoped<ITokenHandler, TokenHandler>();
-builder.Services.AddScoped<ITokenRepository, TokenRepository>();
+//builder.Services.AddScoped<ITokenHandler, TokenHandler>();
+//builder.Services.AddScoped<ITokenRepository, TokenRepository>();
 builder.Services.AddScoped<IClientAuthorizationRepository, ClientAuthorizationRepository>();
 
+
+
+
 builder.Services.AddAuthentication("Bearer")
-    .AddScheme<JwtBearerOptions, CustomJwtBearerHandler>("Bearer", options => { });
-
-
+    .AddJwtBearer("Bearer", options =>
+    {
+        options.Authority = settings.AccountsApiUrl;
+        options.RequireHttpsMetadata = false;
+        options.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateAudience = false,
+            ValidateIssuer = false,
+            ValidateIssuerSigningKey = true
+        };
+    });
+    
 builder.Services.AddHttpClient();
 
 builder.Services.AddControllers();

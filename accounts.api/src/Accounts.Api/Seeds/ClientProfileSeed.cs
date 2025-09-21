@@ -18,6 +18,12 @@ namespace Accounts.Api.Seeds
                 ProfileId =  context.Profiles.AsNoTracking().FirstOrDefault(w => w.App.Slug == "accounts-api" && w.Slug == "login").Id
             });
 
+
+            clientProfiles.Add(new ClientProfile{
+                ClientId = new Guid("d3b0f1a2-4c5e-4b8c-9f7e-1a2b3c4d5e6f"),
+                ProfileId =  context.Profiles.AsNoTracking().FirstOrDefault(w => w.App.Slug == "file-api" && w.Slug == "public").Id
+            });
+
             clientProfiles.Add(new ClientProfile{
                 ClientId = new Guid("e7f8a9b0-1c2d-3e4f-5a6b-7c8d9e0f1a2b"),
                 ProfileId =  context.Profiles.AsNoTracking().FirstOrDefault(w => w.App.Slug == "accounts-api" && w.Slug == "admin").Id

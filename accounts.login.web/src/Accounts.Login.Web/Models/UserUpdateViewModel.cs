@@ -14,5 +14,6 @@ namespace Accounts.Login.Web.Models
         [Required(ErrorMessage = "Email is required")]
         [EmailAddress]
         public string Email { get; set; }
+        public IFormFile? Image { get; set; }
     }
 }

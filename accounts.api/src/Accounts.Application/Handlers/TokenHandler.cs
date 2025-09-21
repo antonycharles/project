@@ -4,6 +4,7 @@ using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using Accounts.Application.Extensions;
+using Accounts.Core;
 using Accounts.Core.Entities;
 using Accounts.Core.Enums;
 using Accounts.Core.Handlers;
@@ -11,6 +12,7 @@ using Accounts.Core.Requests;
 using Accounts.Core.Responses;
 using Accounts.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.JsonWebTokens;
 using Microsoft.IdentityModel.Tokens;
 
@@ -22,11 +24,13 @@ namespace Accounts.Application.Handlers
 
         private readonly AccountsContext _context;
         private readonly ITokenKeyHandler _tokenKeyHandler;
+        private readonly AccountsSettings _settings;
 
-        public TokenHandler(ITokenKeyHandler tokenKeyHandler, AccountsContext context)
+        public TokenHandler(ITokenKeyHandler tokenKeyHandler, AccountsContext context, IOptions<AccountsSettings> settings)
         {
             _tokenKeyHandler = tokenKeyHandler;
             _context = context;
+            _settings = settings.Value;
         }
 
         public async Task<AuthenticationResponse> GenerateClientTokenAsync(Guid clientId, string appSlug)
@@ -73,6 +77,7 @@ namespace Accounts.Application.Handlers
                 .ThenInclude(i => i.Profile)
                 .ThenInclude(i => i.ProfilePermissions.Where(w => w.Status == StatusEnum.Active && w.IsDeleted == false))
                 .ThenInclude(i => i.Permission)
+                .Include(i => i.UserPhoto)
                 .FirstOrDefaultAsync(w => w.Id == userId);
 
             var profile = user?.UserProfiles?
@@ -88,6 +93,7 @@ namespace Accounts.Application.Handlers
                 new Claim(CustomClaimTypes.Name, user.Name),
                 new Claim(CustomClaimTypes.Email, user.Email),
                 new Claim(CustomClaimTypes.Type, UserTypeEnum.user.ToString()),
+                new Claim(CustomClaimTypes.Image, user.UserPhoto != null ? _settings.FileApiUrl + "/File/" + user.UserPhoto.DocumentId : "")
             };
 
 

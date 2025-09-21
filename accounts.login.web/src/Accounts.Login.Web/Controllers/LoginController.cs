@@ -158,7 +158,8 @@ namespace Accounts.Login.Web.Controllers
                 new Claim(ClaimTypes.Sid, userInfo.Id.ToString()),
                 new Claim(ClaimTypes.Name, userInfo.Name),
                 new Claim(ClaimTypes.Email, userInfo.Email),
-                new Claim("RefreshToken", auth.RefreshToken)
+                new Claim("RefreshToken", auth.RefreshToken),
+                new Claim("image", userInfo.ImageUrl ?? ""),
             };
 
             var identity = new ClaimsIdentity(claims, "CookieAuth");

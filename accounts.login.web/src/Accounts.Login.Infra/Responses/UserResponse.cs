@@ -11,6 +11,7 @@ namespace Accounts.Login.Infra.Responses
         public Guid Id { get; set; }
         public string Name { get; set; }
         public string Email { get; set; }
+        public string? ImageUrl { get; set; }
         public StatusEnum Status { get; set; }
     }
 }

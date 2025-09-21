@@ -1,6 +1,11 @@
 @{
     ViewData["Title"] = "Log In";
 }
+<div class="mt-2 mb-2">
+<figure class="user-image" style="background-image: url('@(@User.GetImage()?.Length > 5 ? User.GetImage() : "")');">
+<p>@(User.GetImage()?.Length == 1 ? User.GetImage() : "")</p>
+</figure>
+</div>
 
 <h3>Olá, @User.GetName()</h3>
 <p><a class="btn btn-link" href="@Url.Action("Update", "User")">Update</a></p>

@@ -5,6 +5,7 @@ using System.Text.Json;
 using System.Text.Json.Nodes;
 using System.Threading.Tasks;
 using Accounts.Login.Infra.Exceptions;
+using Microsoft.AspNetCore.Http;
 
 namespace Accounts.Login.Infra.Repositories
 {
@@ -160,6 +161,45 @@ namespace Accounts.Login.Infra.Repositories
                 if (!response.IsSuccessStatusCode)
                     await GenerateErrorException(response);
 
+
+                var responseContent = await response.Content.ReadAsStringAsync();
+                return JsonSerializer.Deserialize<T>(responseContent, GetJsonSerializerOptions());
+            }
+            catch (ExternalApiException ex)
+            {
+                throw ex;
+            }
+            catch (Exception ex)
+            {
+                throw new ExternalApiException($"Error in request: {ex.Message}", ex);
+            }
+        }
+
+        protected async Task<T> PostFileAsync<T>(string url, IFormFile file, Dictionary<string, string>? formData = null)
+        {
+            try
+            {
+                using var content = new MultipartFormDataContent();
+
+                if (formData != null)
+                {
+                    foreach (var kvp in formData)
+                    {
+                        content.Add(new StringContent(kvp.Value), kvp.Key);
+                    }
+                }
+
+                if (file != null)
+                {
+                    var streamContent = new StreamContent(file.OpenReadStream());
+                    streamContent.Headers.ContentType = new System.Net.Http.Headers.MediaTypeHeaderValue(file.ContentType);
+                    content.Add(streamContent, "file", file.FileName);
+                }
+
+                var response = await _httpClient.PostAsync(url, content);
+
+                if (!response.IsSuccessStatusCode)
+                    await GenerateErrorException(response);
 
                 var responseContent = await response.Content.ReadAsStringAsync();
                 return JsonSerializer.Deserialize<T>(responseContent, GetJsonSerializerOptions());

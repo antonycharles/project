@@ -180,6 +180,8 @@ public class OAuthController : ControllerBase
     }
 
     [HttpGet("userInfo")]
+    [ProducesResponseType(typeof(UserResponse), StatusCodes.Status200OK)]
+    [ProducesResponseType(typeof(ClientResponse), StatusCodes.Status200OK)]
     public async Task<IActionResult> UserInfoAsync()
     {
         try

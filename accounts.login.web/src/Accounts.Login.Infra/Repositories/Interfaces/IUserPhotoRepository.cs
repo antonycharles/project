@@ -8,6 +8,6 @@ namespace Accounts.Login.Infra.Repositories.Interfaces
 {
     public interface IUserPhotoRepository
     {
-        Task UpdateAsync(UserPhotoRequest request);
+        Task AddUserPhotoAsync(UserPhotoRequest request);
     }
 }

@@ -18,11 +18,12 @@ namespace Accounts.Application.Mappers
         };
 
 
-        public static UserResponse ToUserResponse(this User user) => new UserResponse{
+        public static UserResponse ToUserResponse(this User user, string? fileUrl = "") => new UserResponse{
             Id = user.Id,
             Name = user.Name,
             Email = user.Email,
             Status = user.Status,
+            ImageUrl = user.UserPhoto != null ? fileUrl + "/File/" + user.UserPhoto.DocumentId.ToString() : null,
             Profiles = user.UserProfiles?.Where(w => w.Profile != null).Select(s => s.Profile.ToProfileResponse()).ToList(),
         };
 

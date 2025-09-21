@@ -12,5 +12,6 @@ namespace Accounts.Application.Extensions
         public static string Email = "email";
         public static string Role = "roles";
         public static string Type = "type";
+        public static string Image = "image";
     }
 }

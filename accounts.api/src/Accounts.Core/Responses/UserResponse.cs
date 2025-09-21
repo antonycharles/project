@@ -13,5 +13,6 @@ namespace Accounts.Core.Responses
         public string Email { get; set; }
         public List<ProfileResponse>? Profiles { get; set; } 
         public StatusEnum Status { get; set; }
+        public string? ImageUrl { get; set; }
     }
 }

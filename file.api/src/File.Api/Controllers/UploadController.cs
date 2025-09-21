@@ -109,9 +109,9 @@ namespace File.Api.Controllers
         {
             var uriBuilder = new UriBuilder
             {
-                Scheme = Request.Scheme,
-                Host = Request.Host.Host,
-                Port = Request.Host.Port ?? (Request.Scheme == "https" ? 443 : 80)
+                Scheme = "http", //Request.Scheme,
+                Host = "localhost", //Request.Host.Host,
+                Port = 9502 //Request.Host.Port ?? (Request.Scheme == "https" ? 443 : 80)
             };
 
             return uriBuilder.Uri.ToString();

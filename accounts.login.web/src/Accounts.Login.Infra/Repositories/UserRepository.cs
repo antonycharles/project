@@ -14,11 +14,14 @@ namespace Accounts.Login.Infra.Repositories
     public class UserRepository : BaseRepository, IUserRepository
     {
         private readonly IClientAuthorizationRepository _clientAuthorizationRepository;
+        private readonly AccountsLoginSettings _options;
+
         public UserRepository(
-            HttpClient httpClient, 
+            HttpClient httpClient,
             IClientAuthorizationRepository clientAuthorizationRepository,
             IOptions<AccountsLoginSettings> options) : base(httpClient)
         {
+            _options = options.Value;
             _httpClient.BaseAddress = new Uri(options.Value.AccountsApiUrl);
             _clientAuthorizationRepository = clientAuthorizationRepository;
         }
@@ -31,7 +34,7 @@ namespace Accounts.Login.Infra.Repositories
 
         private async Task AddToken()
         {
-            var token = await _clientAuthorizationRepository.AuthenticateAsync();
+            var token = await _clientAuthorizationRepository.AuthenticateAsync(_options.AppAccountsApiSlug);
 
             if (token != null)
                 _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", token.Token);

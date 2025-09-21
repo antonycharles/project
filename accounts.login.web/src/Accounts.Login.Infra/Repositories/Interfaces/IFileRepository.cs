@@ -4,11 +4,12 @@ using System.Linq;
 using System.Threading.Tasks;
 using Accounts.Login.Infra.Requests;
 using Accounts.Login.Infra.Responses;
+using Microsoft.AspNetCore.Http;
 
 namespace Accounts.Login.Infra.Repositories.Interfaces
 {
-    public interface IClientAuthorizationRepository
+    public interface IFileRepository
     {
-        Task<AuthenticationResponse> AuthenticateAsync(string apiSlug);
+        Task<FileDocumentResponse> UploadAsync(IFormFile file);
     }
 }

@@ -10,19 +10,21 @@ namespace Accounts.Api.Seeds
 {
     public class ProfileSeed
     {
-        
-        public static void Seeder(AccountsContext context){
+
+        public static void Seeder(AccountsContext context)
+        {
             SeederAccountsApi(context);
             SeederAccountsManagement(context);
+            SeederFileApi(context);
 
             context.SaveChanges();
-        } 
+        }
 
         private static void SeederAccountsApi(AccountsContext context)
         {
             var app = context.Apps.AsNoTracking().FirstOrDefault(w => w.Slug == "accounts-api");
 
-            if(app == null)
+            if (app == null)
                 return;
 
             var profiles = new List<Profile>();
@@ -33,9 +35,9 @@ namespace Accounts.Api.Seeds
 
             var profilesDb = context.Profiles.AsNoTracking().Where(w => w.AppId == app.Id).ToList();
 
-            foreach(var profile in profiles)
+            foreach (var profile in profiles)
             {
-                if(!profilesDb.Any(w => w.Slug == profile.Slug))
+                if (!profilesDb.Any(w => w.Slug == profile.Slug))
                     context.Profiles.Add(profile);
             }
         }
@@ -44,13 +46,33 @@ namespace Accounts.Api.Seeds
         {
             var app = context.Apps.AsNoTracking().FirstOrDefault(w => w.Slug == "accounts-management");
 
-            if(app == null)
+            if (app == null)
                 return;
 
             var profiles = new List<Profile>();
 
             profiles.Add(new Profile { Name = "Admin", AppId = app.Id, Slug = "admin" });
             profiles.Add(new Profile { Name = "User", AppId = app.Id, Slug = "user", IsDefault = true });
+
+            var profilesDb = context.Profiles.AsNoTracking().Where(w => w.AppId == app.Id).ToList();
+
+            foreach (var profile in profiles)
+            {
+                if (!profilesDb.Any(w => w.Slug == profile.Slug))
+                    context.Profiles.Add(profile);
+            }
+        }
+        
+        private static void SeederFileApi(AccountsContext context)
+        {
+            var app = context.Apps.AsNoTracking().FirstOrDefault(w => w.Slug == "file-api");
+
+            if(app == null)
+                return;
+
+            var profiles = new List<Profile>();
+
+            profiles.Add(new Profile { Name = "Public", AppId = app.Id, Slug = "public" });
 
             var profilesDb = context.Profiles.AsNoTracking().Where(w => w.AppId == app.Id).ToList();
 
