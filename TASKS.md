@@ -36,7 +36,7 @@ List of tasks to be performed in projects
 - [x] Login/logout
 - [x] Reset password
 - [x] Sign up
-- [ ] Update user/photo
+- [x] Update user/photo
 - [ ] App store redirect
 - [ ] Reset password
 
