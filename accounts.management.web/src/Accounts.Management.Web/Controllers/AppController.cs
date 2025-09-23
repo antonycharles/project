@@ -10,6 +10,7 @@ using Accounts.Management.Infrastructure.Repositories.Interfaces;
 using Accounts.Management.Infrastructure.Requests;
 using Accounts.Management.Infrastructure.Responses;
 using Accounts.Management.Web.Helpers;
+using Accounts.Management.Web.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
@@ -60,14 +61,21 @@ namespace Accounts.Management.Web.Controllers
         [HttpPost]
         [AuthorizeRole(RoleConstants.AppRole.Create)]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> CreateAsync(AppRequest request)
+        public async Task<IActionResult> CreateAsync(AppViewModel request)
         {
             try
             {
                 if(!ModelState.IsValid)
                     return View();
 
-                await _appRepository.CreateAsync(request);
+                await _appRepository.CreateAsync(new AppRequest{
+                    Code = request.Code.Value,
+                    Name = request.Name,
+                    Slug = request.Slug,
+                    CallbackUrl = request.CallbackUrl,
+                    FaviconUrl = request.FaviconUrl,
+                    Status = request.Status.Value
+                });
                 HttpContext.AddMessageSuccess("App created success!");
                 return RedirectToAction("Index");
             }
@@ -87,7 +95,14 @@ namespace Accounts.Management.Web.Controllers
             try
             {
                 var app = await _appRepository.GetByIdAsync(id);
-                return View(app.ToAppRequest());
+                return View(new AppViewModel{
+                    Code = app.Code,
+                    Name = app.Name,
+                    Slug = app.Slug,
+                    CallbackUrl = app.CallbackUrl,
+                    FaviconUrl = app.FaviconUrl,
+                    Status = app.Status
+                });
             }
             catch(Exception ex){
                 HttpContext.AddMessageError(ex.Message);
@@ -98,14 +113,21 @@ namespace Accounts.Management.Web.Controllers
         [HttpPost]
         [AuthorizeRole(RoleConstants.AppRole.Update)]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> EditAsync(Guid id, AppRequest request)
+        public async Task<IActionResult> EditAsync(Guid id, AppViewModel request)
         {
             try
             {
                 if(!ModelState.IsValid)
                     return View();
 
-                await _appRepository.UpdateAsync(id, request);
+                await _appRepository.UpdateAsync(id, new AppRequest{
+                    Code = request.Code.Value,
+                    Name = request.Name,
+                    Slug = request.Slug,
+                    CallbackUrl = request.CallbackUrl,
+                    FaviconUrl = request.FaviconUrl,
+                    Status = request.Status.Value
+                });
 
                 HttpContext.AddMessageSuccess("App update success!");
                 return RedirectToAction("Index");

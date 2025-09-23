@@ -24,6 +24,9 @@ namespace Accounts.Management.Infrastructure.Settings
 
         [Required]
         public string AccountsApiSlug { get; set; }
+
+        [Required]
+        public string FileApiSlug { get; set; }
         
         [Required]
         public string AccountsManagementSlug { get; set; }

@@ -65,7 +65,7 @@ List of tasks to be performed in projects
 - [x] Upload file
 - [x] Show file
 
-## api
+## Project api
 
 - [x] Create layered project 
     - .Net 8
@@ -73,7 +73,7 @@ List of tasks to be performed in projects
     - ADO.NET (PostgreSQL e tables created by code)
     - Docker (dockerfile)
     - Authentication Accounts.API
-- [ ] CRUD Family
+- [ ] CRUD Project
 - [ ] CRUD Member
 
 ## Note api

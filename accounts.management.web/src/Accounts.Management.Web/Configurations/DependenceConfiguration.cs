@@ -17,7 +17,7 @@ namespace Accounts.Management.Web.Configurations
     {
         public static void AddDependence(this WebApplicationBuilder builder, AccountsManagementSettings settings)
         {
-            builder.Services.AddScoped<AuthHeaderHandler>();
+            builder.Services.AddScoped<AccountsApiAuthHeaderHandler>();
             builder.Services.AddScoped<IClaimsTransformation, ClaimsTranformer>();
             builder.Services.AddScoped<IAppRepository, AppRepository>();
             builder.Services.AddScoped<IUserRepository, UserRepository>();
@@ -30,30 +30,30 @@ namespace Accounts.Management.Web.Configurations
             {
                 c.BaseAddress = new  Uri(settings.AccountsApiUrl);
             })
-            .AddHttpMessageHandler<AuthHeaderHandler>();
+            .AddHttpMessageHandler<AccountsApiAuthHeaderHandler>();
 
             builder.Services.AddRefitClient<IProfileRefit>().ConfigureHttpClient(c =>
             {
                 c.BaseAddress = new  Uri(settings.AccountsApiUrl);
             })
-            .AddHttpMessageHandler<AuthHeaderHandler>();
+            .AddHttpMessageHandler<AccountsApiAuthHeaderHandler>();
 
             builder.Services.AddRefitClient<IPermissionRefit>().ConfigureHttpClient(c =>
             {
                 c.BaseAddress = new  Uri(settings.AccountsApiUrl);
             })
-            .AddHttpMessageHandler<AuthHeaderHandler>();
+            .AddHttpMessageHandler<AccountsApiAuthHeaderHandler>();
 
             builder.Services.AddRefitClient<IUserRefit>().ConfigureHttpClient(c => {
                 c.BaseAddress = new Uri(settings.AccountsApiUrl);
             })
-            .AddHttpMessageHandler<AuthHeaderHandler>();
+            .AddHttpMessageHandler<AccountsApiAuthHeaderHandler>();
 
 
             builder.Services.AddRefitClient<IClientRefit>().ConfigureHttpClient(c => {
                 c.BaseAddress = new Uri(settings.AccountsApiUrl);
             })
-            .AddHttpMessageHandler<AuthHeaderHandler>();
+            .AddHttpMessageHandler<AccountsApiAuthHeaderHandler>();
             
             builder.Services.AddRefitClient<IClientAuthorizationRefit>().ConfigureHttpClient(c =>
             {

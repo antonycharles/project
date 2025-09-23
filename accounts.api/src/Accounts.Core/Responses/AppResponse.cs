@@ -14,5 +14,6 @@ namespace Accounts.Core.Responses
         public StatusEnum Status { get; set; }
         public string? CallbackUrl { get; set; }
         public string Slug { get; set; }
+        public string? FaviconUrl { get; set; }
     }
 }

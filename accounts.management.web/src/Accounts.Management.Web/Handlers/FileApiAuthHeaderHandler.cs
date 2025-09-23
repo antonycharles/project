@@ -11,14 +11,14 @@ using Microsoft.Extensions.Options;
 
 namespace Accounts.Management.Web.Handlers
 {
-    public class AuthHeaderHandler : DelegatingHandler
+    public class FileApiAuthHeaderHandler : DelegatingHandler
     {
         private readonly IClientAuthorizationRefit _httpContextAccessor;
         private readonly AccountsManagementSettings  _settings;
         private static DateTime? _tokenExpirationTime;
         private static string _token;
 
-        public AuthHeaderHandler(IClientAuthorizationRefit httpContextAccessor, IOptions<AccountsManagementSettings> settings)
+        public FileApiAuthHeaderHandler(IClientAuthorizationRefit httpContextAccessor, IOptions<AccountsManagementSettings> settings)
         {
             _settings = settings.Value;
             _httpContextAccessor = httpContextAccessor;
@@ -50,7 +50,7 @@ namespace Accounts.Management.Web.Handlers
                         { "GrantType", "client_credentials" },
                         { "ClientId", new Guid(_settings.ClientId)},
                         { "ClientSecret", _settings.ClientSecret },
-                        { "AppSlug", _settings.AccountsApiSlug }
+                        { "AppSlug", _settings.FileApiSlug }
                     });
 
                 if (response != null && response.Token != null)

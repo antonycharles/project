@@ -39,7 +39,7 @@ namespace File.Api.Helpers
             {
                 Id = id,
                 Name = file.FileName,
-                Url = new Uri(new Uri(urlBase), fileUrl).ToString(),
+                Url = new Uri(new Uri(urlBase), "File/" + id).ToString(),
                 Path = filePath,
                 ContentType = file.ContentType,
                 Size = file.Length,
@@ -98,7 +98,7 @@ namespace File.Api.Helpers
             {
                 Id = id,
                 Name = originalFileName,
-                Url = new Uri(new Uri(urlBase), fileUrl).ToString(),
+                Url = new Uri(new Uri(urlBase), "File/" + id).ToString(),
                 Path = filePath,
                 ContentType = contentType,
                 Size = fileBytes.Length,

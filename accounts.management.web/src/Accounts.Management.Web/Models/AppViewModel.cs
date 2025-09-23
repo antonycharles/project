@@ -5,10 +5,11 @@ using System.Linq;
 using System.Threading.Tasks;
 using src.Accounts.Management.Infrastructure.Enums;
 
-namespace Accounts.Management.Infrastructure.Requests
+namespace Accounts.Management.Web.Models
 {
-    public class AppRequest
+    public class AppViewModel
     {
+        
         [Required]
         public int? Code { get; set; }
         [Required]
@@ -17,6 +18,7 @@ namespace Accounts.Management.Infrastructure.Requests
         public string Slug { get; set; }
         public string? CallbackUrl { get; set; }
         public string? FaviconUrl { get; set; }
+        public IFormFile? Favicon { get; set; }
         [Required]
         public StatusEnum? Status { get; set; }
     }

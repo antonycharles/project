@@ -17,6 +17,7 @@ namespace Accounts.Application.Mappers
             Code = request.Code.Value,
             Slug = request.Slug.Trim(),
             CallbackUrl = request.CallbackUrl?.Trim(),
+            FaviconUrl = request.FaviconUrl?.Trim(),
             Status = request.Status ?? StatusEnum.Active,
         };
 
@@ -26,6 +27,7 @@ namespace Accounts.Application.Mappers
             Name = app.Name,
             Slug = app.Slug,
             CallbackUrl = app.CallbackUrl,
+            FaviconUrl = app.FaviconUrl,
             Status = app.Status
         };
 
@@ -36,6 +38,7 @@ namespace Accounts.Application.Mappers
             app.Slug = request.Slug.Trim();
             app.Status = request.Status.Value;
             app.CallbackUrl = request.CallbackUrl?.Trim();
+            app.FaviconUrl = request.FaviconUrl?.Trim();
             app.UpdatedAt = DateTime.UtcNow;
         }
     }

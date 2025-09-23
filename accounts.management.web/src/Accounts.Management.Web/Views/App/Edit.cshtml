@@ -1,4 +1,4 @@
-@model AppRequest
+@model AppViewModel
 @{
     ViewData["Title"] = "App edit";
 }
@@ -10,6 +10,7 @@
 
 <form asp-action="Edit" method="post">
   <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+  <input type="hidden" asp-for="FaviconUrl" />
   <div class="mb-3">
     <label asp-for="Code" class="form-label">Code</label>
     <input asp-for="Code" class="form-control">
