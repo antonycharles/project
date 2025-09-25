@@ -8,6 +8,7 @@ namespace Accounts.Core.Handlers
     {
         Task<PaginatedResponse<AppResponse>> GetAppsAsync(PaginatedRequest request);
         Task<AppResponse> GetByIdAsync(Guid id);
+        Task<IList<AppResponse>> GetPublicByUserIdAsync(Guid userId);
         Task<AppResponse> CreateAsync(AppRequest request);
         Task UpdateAsync(Guid id, AppRequest request);
         Task DeleteAsync(Guid id);

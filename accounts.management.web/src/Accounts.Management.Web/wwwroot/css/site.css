@@ -1,6 +1,15 @@
 html {
   font-size: 14px;
 }
+body,a,i,b,span,li,label{
+  font-family: Verdana, Geneva, sans-serif;
+  color:gray;
+}
+
+h1,h2,h3,h4,h5,h6 {
+  font-family: 'Orbitron', sans-serif;
+  color:#818181
+}
 
 @media (min-width: 768px) {
   html {

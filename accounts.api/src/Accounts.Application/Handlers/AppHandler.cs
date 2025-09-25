@@ -80,6 +80,22 @@ namespace Accounts.Application.Handlers
             return app.ToAppResponse();
         }
 
+        public async Task<IList<AppResponse>> GetPublicByUserIdAsync(Guid userId)
+        {
+            var apps = await _context.UserProfiles.AsNoTracking()
+                .Where(w =>
+                    w.UserId == userId && w.Status == StatusEnum.Active && w.IsDeleted == false &&
+                    w.Profile.Status == StatusEnum.Active && w.Profile.IsDeleted == false)
+                .Include(i => i.Profile)
+                .ThenInclude(i => i.App)
+                .Select(s => s.Profile.App)
+                .Where(w => w.IsPublic == true && w.IsDeleted == false && w.Status == StatusEnum.Active)
+                .Distinct()
+                .ToListAsync();
+
+            return apps.Select(s => s.ToAppResponse()).ToList();
+        }
+
         public async Task UpdateAsync(Guid id, AppRequest request)
         {
             var app = await _context.Apps

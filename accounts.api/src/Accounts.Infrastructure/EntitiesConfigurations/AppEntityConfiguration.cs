@@ -16,6 +16,10 @@ namespace Accounts.Infrastructure.EntitiesConfigurations
             builder
                 .Property(s => s.Status)
                 .HasDefaultValue(StatusEnum.Active);
+                
+            builder
+                .Property(s => s.IsPublic)
+                .HasDefaultValue(false);
 
             builder
                 .HasIndex(s => s.Code)

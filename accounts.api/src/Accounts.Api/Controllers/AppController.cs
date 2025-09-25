@@ -44,6 +44,24 @@ public class AppController : ControllerBase
             return Problem(ex.Message, statusCode: StatusCodes.Status500InternalServerError);
         } 
     }
+
+    [HttpGet("public/{userId}")]
+    [Authorize]
+    [ProducesResponseType(typeof(IList<AppResponse>), StatusCodes.Status200OK)]
+    [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+    public async Task<IActionResult> GetPublicByUserIdAsync(Guid userId)
+    {
+        try
+        {
+            var apps = await _appHandler.GetPublicByUserIdAsync(userId);
+
+            return Ok(apps);
+        }
+        catch(Exception ex)
+        {
+            return Problem(ex.Message, statusCode: StatusCodes.Status500InternalServerError);
+        }
+    }
     
     [HttpGet("{id}")]
     [AuthorizeRole(RoleConstants.AppRole.List)]

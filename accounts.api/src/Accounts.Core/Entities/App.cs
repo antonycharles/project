@@ -14,6 +14,7 @@ namespace Accounts.Core.Entities
         public string Slug { get; set; }
         public string? CallbackUrl { get; set; }
         public string? FaviconUrl { get; set; }
+        public bool IsPublic { get; set; }
         public ICollection<Permission> Permissions { get; set; }
 
     }

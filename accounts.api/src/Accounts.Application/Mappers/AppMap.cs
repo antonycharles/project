@@ -19,16 +19,19 @@ namespace Accounts.Application.Mappers
             CallbackUrl = request.CallbackUrl?.Trim(),
             FaviconUrl = request.FaviconUrl?.Trim(),
             Status = request.Status ?? StatusEnum.Active,
+            IsPublic = request.IsPublic ?? false,
         };
 
-        public static AppResponse ToAppResponse(this App app) => new AppResponse{
+        public static AppResponse ToAppResponse(this App app) => new AppResponse
+        {
             Id = app.Id,
             Code = app.Code,
             Name = app.Name,
             Slug = app.Slug,
             CallbackUrl = app.CallbackUrl,
             FaviconUrl = app.FaviconUrl,
-            Status = app.Status
+            Status = app.Status,
+            IsPublic = app.IsPublic,
         };
 
         public static void Update(this App app, AppRequest request)
@@ -40,6 +43,7 @@ namespace Accounts.Application.Mappers
             app.CallbackUrl = request.CallbackUrl?.Trim();
             app.FaviconUrl = request.FaviconUrl?.Trim();
             app.UpdatedAt = DateTime.UtcNow;
+            app.IsPublic = request.IsPublic ?? app.IsPublic;
         }
     }
 }
