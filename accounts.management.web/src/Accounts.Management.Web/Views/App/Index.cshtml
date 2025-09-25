@@ -18,6 +18,7 @@
 <table class="table">
   <thead>
     <tr>
+      <th scope="col"></th>
       <th scope="col">Code</th>
       <th scope="col">Name</th>
       <th scope="col">Slug</th>
@@ -30,6 +31,11 @@
         @foreach(var app in Model.Items.OrderBy(o => o.Name))
         {
             <tr>
+                <td class="align-middle">
+                  @if(!string.IsNullOrEmpty(app.FaviconUrl)){
+                    <img src="@app.FaviconUrl" alt="@app.Name" style="max-height: 40px; max-width: 40px;" />
+                  }
+                </td>
                 <td class="align-middle">@app.Code</td>
                 <td class="align-middle">@app.Name</td>
                 <td class="align-middle">@app.Slug</td>

@@ -38,6 +38,7 @@ List of tasks to be performed in projects
 - [x] Sign up
 - [x] Update user/photo
 - [ ] App store redirect
+    - App flag public or private in Accounts.api
 - [ ] Reset password
 
 ## Accounts Management web
@@ -49,6 +50,7 @@ List of tasks to be performed in projects
     - Docker (dockerfile)
 - [x] Login redirect/callback
 - [x] App
+    - [x] Upload/show favicon
 - [x] Client
 - [x] Permission
 - [x] Profile

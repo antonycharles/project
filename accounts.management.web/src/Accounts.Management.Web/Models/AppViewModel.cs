@@ -18,7 +18,7 @@ namespace Accounts.Management.Web.Models
         public string Slug { get; set; }
         public string? CallbackUrl { get; set; }
         public string? FaviconUrl { get; set; }
-        public IFormFile? Favicon { get; set; }
+        public IFormFile? FaviconFile { get; set; }
         [Required]
         public StatusEnum? Status { get; set; }
     }

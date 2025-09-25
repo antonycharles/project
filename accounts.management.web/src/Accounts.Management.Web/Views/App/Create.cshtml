@@ -1,4 +1,4 @@
-@model AppRequest
+@model AppViewModel
 @{
     ViewData["Title"] = "App create";
 }
@@ -8,7 +8,7 @@
   </div>
 </nav>
 
-<form asp-action="Create" method="post">
+<form asp-action="Create" method="post" enctype="multipart/form-data" >
   <div asp-validation-summary="ModelOnly" class="text-danger"></div>
   <div class="mb-3">
     <label asp-for="Code" class="form-label">Code</label>
@@ -36,6 +36,11 @@
       <option selected value="">Select...</option>
     </select>
     <span asp-validation-for="Status" class="text-danger"></span>
+  </div>
+  <div class="mb-3">
+    <label asp-for="FaviconFile" class="form-label">Favicon</label>
+    <input asp-for="FaviconFile" type="file" class="form-control">
+    <span asp-validation-for="FaviconFile" class="text-danger"></span>
   </div>
   <a asp-action="Index" class="btn btn-light">Return</a>
   <button type="submit" class="btn btn-primary">Submit</button>

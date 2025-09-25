@@ -22,13 +22,16 @@ namespace Accounts.Management.Web.Controllers
     {
         private readonly ILogger<AppController> _logger;
         private readonly IAppRepository _appRepository;
+        private readonly IFileRepository _fileRepository;
 
         public AppController(
             ILogger<AppController> logger,
-            IAppRepository appRepository)
+            IAppRepository appRepository,
+            IFileRepository fileRepository)
         {
             _logger = logger;
             _appRepository = appRepository;
+            _fileRepository = fileRepository;
         }
 
         [AuthorizeRole(RoleConstants.AppRole.List)]
@@ -65,10 +68,13 @@ namespace Accounts.Management.Web.Controllers
         {
             try
             {
-                if(!ModelState.IsValid)
+                if (!ModelState.IsValid)
                     return View();
 
-                await _appRepository.CreateAsync(new AppRequest{
+                await AddFavicon(request);
+
+                await _appRepository.CreateAsync(new AppRequest
+                {
                     Code = request.Code.Value,
                     Name = request.Name,
                     Slug = request.Slug,
@@ -79,13 +85,22 @@ namespace Accounts.Management.Web.Controllers
                 HttpContext.AddMessageSuccess("App created success!");
                 return RedirectToAction("Index");
             }
-            catch(ExternalApiException ex){
+            catch (ExternalApiException ex){
                 ModelState.AddModelError(string.Empty, ex.Message);
                 return View();
             }
             catch(Exception ex){
                 ModelState.AddModelError(string.Empty, ex.Message);
                 return View();
+            }
+        }
+
+        private async Task AddFavicon(AppViewModel request)
+        {
+            if (request.FaviconFile != null)
+            {
+                var uploadResult = await _fileRepository.UploadAsync(request.FaviconFile);
+                request.FaviconUrl = uploadResult.Url;
             }
         }
 
@@ -120,7 +135,10 @@ namespace Accounts.Management.Web.Controllers
                 if(!ModelState.IsValid)
                     return View();
 
-                await _appRepository.UpdateAsync(id, new AppRequest{
+                await AddFavicon(request);
+                
+                await _appRepository.UpdateAsync(id, new AppRequest
+                {
                     Code = request.Code.Value,
                     Name = request.Name,
                     Slug = request.Slug,
