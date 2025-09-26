@@ -17,6 +17,8 @@ namespace Accounts.Management.Infrastructure.Requests
         public string Slug { get; set; }
         public string? CallbackUrl { get; set; }
         public string? FaviconUrl { get; set; }
+        public bool IsPublic { get; set; }
+
         [Required]
         public StatusEnum? Status { get; set; }
     }

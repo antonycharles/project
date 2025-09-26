@@ -80,6 +80,7 @@ namespace Accounts.Management.Web.Controllers
                     Slug = request.Slug,
                     CallbackUrl = request.CallbackUrl,
                     FaviconUrl = request.FaviconUrl,
+                    IsPublic = request.IsPublic,
                     Status = request.Status.Value
                 });
                 HttpContext.AddMessageSuccess("App created success!");
@@ -116,7 +117,8 @@ namespace Accounts.Management.Web.Controllers
                     Slug = app.Slug,
                     CallbackUrl = app.CallbackUrl,
                     FaviconUrl = app.FaviconUrl,
-                    Status = app.Status
+                    Status = app.Status,
+                    IsPublic = app.IsPublic
                 });
             }
             catch(Exception ex){
@@ -144,7 +146,8 @@ namespace Accounts.Management.Web.Controllers
                     Slug = request.Slug,
                     CallbackUrl = request.CallbackUrl,
                     FaviconUrl = request.FaviconUrl,
-                    Status = request.Status.Value
+                    Status = request.Status.Value,
+                    IsPublic = request.IsPublic
                 });
 
                 HttpContext.AddMessageSuccess("App update success!");

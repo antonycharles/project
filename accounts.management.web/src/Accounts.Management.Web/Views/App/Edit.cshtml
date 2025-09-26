@@ -38,6 +38,11 @@
     </select>
     <span asp-validation-for="Status" class="text-danger"></span>
   </div>
+  <div class="mb-3 form-check">
+    <input asp-for="IsPublic" class="form-check-input" type="checkbox" />
+    <label asp-for="IsPublic" class="form-check-label">Is Public</label>
+    <span asp-validation-for="IsPublic" class="text-danger"></span>
+  </div>
   <div class="mb-3">
     <label asp-for="FaviconFile" class="form-label">Favicon</label>
     <input asp-for="FaviconFile" type="file" class="form-control">

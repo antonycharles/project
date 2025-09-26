@@ -20,6 +20,8 @@ namespace Accounts.Management.Web.Models
         public string? FaviconUrl { get; set; }
         public IFormFile? FaviconFile { get; set; }
         [Required]
+        public bool IsPublic { get; set; }
+        [Required]
         public StatusEnum? Status { get; set; }
     }
 }

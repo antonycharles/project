@@ -22,6 +22,7 @@
       <th scope="col">Code</th>
       <th scope="col">Name</th>
       <th scope="col">Slug</th>
+      <th scope="col">Public</th>
       <th scope="col">Status</th>
       <th scope="col"></th>
     </tr>
@@ -39,6 +40,7 @@
                 <td class="align-middle">@app.Code</td>
                 <td class="align-middle">@app.Name</td>
                 <td class="align-middle">@app.Slug</td>
+                <td class="align-middle">@((app.IsPublic) ? "Yes" : "No")</td>
                 <td class="align-middle">@app.Status.GetDisplayName()</td>
                 <td class="d-flex flex-row-reverse">
                     <div class="btn-group" role="group" aria-label="Basic example">

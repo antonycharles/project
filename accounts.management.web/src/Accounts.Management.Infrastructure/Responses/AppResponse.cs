@@ -15,5 +15,6 @@ namespace Accounts.Management.Infrastructure.Responses
         public string? CallbackUrl { get; set; }
         public StatusEnum Status { get; set; }
         public string? FaviconUrl { get; set; }
+        public bool IsPublic { get; set; }
     }
 }
