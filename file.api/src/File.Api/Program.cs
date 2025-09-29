@@ -10,6 +10,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.FileProviders;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using Npgsql;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -25,7 +26,12 @@ Directory.CreateDirectory(uploadDir);
 
 var dbInitializer = new DatabaseInitializer(settings.DatabaseHost, settings.DatabasePort, settings.DatabaseUser, settings.DatabasePassword);
 dbInitializer.Initialize();
-builder.Services.AddSingleton(new Npgsql.NpgsqlConnection(dbInitializer.GetConnectionString()));
+
+builder.Services.AddSingleton<NpgsqlDataSource>(_ =>
+{
+    var dataSourceBuilder = new NpgsqlDataSourceBuilder(dbInitializer.GetConnectionString());
+    return dataSourceBuilder.Build();
+});
 
 builder.Services.AddScoped<IFileDocumentRepository, FileDocumentRepository>();
 

@@ -92,17 +92,24 @@ public class OAuthController : ControllerBase
 
         var result = JsonSerializer.Deserialize<AuthenticationResponse>(jsonFromCache);
 
-        if(result.UserType == UserTypeEnum.client )
+        if (result.UserType == UserTypeEnum.client)
         {
             var client = await _tokenHandler.GenerateClientTokenAsync(result.AuthId, request.AppSlug ?? result.AppSlug);
             if (client == null)
                 return BadRequest("Client not found");
+
+            return Ok(client);
         }
-        else if(result.UserType == UserTypeEnum.user)
+        else if (result.UserType == UserTypeEnum.user)
         {
             var user = await _tokenHandler.GenerateUserTokenAsync(result.AuthId, request.AppSlug ?? result.AppSlug);
             if (user == null)
                 return BadRequest("User not found");
+
+            _distributedCache.Remove(request.Code);
+            await AddCacheRefreshToken(user);
+
+            return Ok(user);
         }
 
         return BadRequest("User type not supported");

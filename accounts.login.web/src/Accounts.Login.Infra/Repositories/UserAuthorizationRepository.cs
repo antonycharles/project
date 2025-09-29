@@ -60,7 +60,7 @@ namespace Accounts.Login.Infra.Repositories
             await AddToken();
             return await base.PostFormDataAsync<AuthenticationResponse>("OAuth/token", new Dictionary<string, string>
             {
-                { "RefreshToken", tokenRefresh },
+                { "Code", tokenRefresh },
                 { "GrantType", "refresh_token" },
                 { "AppSlug", appSlug }
             });

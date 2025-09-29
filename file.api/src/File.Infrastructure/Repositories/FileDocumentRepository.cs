@@ -11,23 +11,25 @@ namespace File.Infrastructure.Repositories
 {
     public class FileDocumentRepository : IFileDocumentRepository
     {
-        private readonly NpgsqlConnection _connection;
+        private readonly NpgsqlDataSource _dataSource;
 
-        public FileDocumentRepository(NpgsqlConnection connection)
+        public FileDocumentRepository(NpgsqlDataSource connection)
         {
-            _connection = connection;
+            _dataSource = connection;
         }
 
         public async Task<IEnumerable<FileDocument>> GetAllAsync()
         {
             const string sql = "SELECT * FROM FileDocument WHERE Active = TRUE";
-            return await _connection.QueryAsync<FileDocument>(sql);
+            await using var connection = await _dataSource.OpenConnectionAsync();
+            return await connection.QueryAsync<FileDocument>(sql);
         }
 
         public async Task<FileDocument?> GetByIdAsync(Guid id)
         {
             const string sql = "SELECT * FROM FileDocument WHERE Id = @Id and Active = TRUE";
-            return await _connection.QueryFirstOrDefaultAsync<FileDocument>(sql, new { Id = id });
+            await using var connection = await _dataSource.OpenConnectionAsync();
+            return await connection.QueryFirstOrDefaultAsync<FileDocument>(sql, new { Id = id });
         }
 
         public async Task AddAsync(FileDocument document)
@@ -39,7 +41,8 @@ namespace File.Infrastructure.Repositories
             if (document.Id == Guid.Empty)
                 document.Id = Guid.NewGuid();
 
-            await _connection.ExecuteAsync(sql, document);
+            await using var connection = await _dataSource.OpenConnectionAsync();
+            await connection.ExecuteAsync(sql, document);
         }
 
         public async Task UpdateAsync(FileDocument document)
@@ -54,13 +57,15 @@ namespace File.Infrastructure.Repositories
                     Active = @Active
                 WHERE Id = @Id";
 
-            await _connection.ExecuteAsync(sql, document);
+            await using var connection = await _dataSource.OpenConnectionAsync();
+            await connection.ExecuteAsync(sql, document);
         }
 
         public async Task DeleteAsync(Guid id)
         {
             const string sql = "UPDATE FileDocument SET Active = FALSE WHERE Id = @Id";
-            await _connection.ExecuteAsync(sql, new { Id = id });
+            await using var connection = await _dataSource.OpenConnectionAsync();
+            await connection.ExecuteAsync(sql, new { Id = id });
         }
     }
 }

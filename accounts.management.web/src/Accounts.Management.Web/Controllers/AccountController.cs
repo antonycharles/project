@@ -70,7 +70,7 @@ namespace Accounts.Management.Web.Controllers
         public async Task<IActionResult> Logout()
         {
             await HttpContext.SignOutAsync("CookieManagement");
-            return RedirectToAction("Login", "Account");
+            return Redirect(_settings.AccountsLoginRedirectUrl);
         }
 
         [HttpGet("AccessDenied")]

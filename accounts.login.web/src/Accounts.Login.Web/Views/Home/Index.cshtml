@@ -15,13 +15,13 @@
             </div>
         </div>
         <div class="col-auto ms-auto">
-            <a class="btn btn-primary btn-sm me-2" href="@Url.Action("Update", "User")">Atualizar Perfil</a>
+            <a class="btn btn-primary btn-sm me-2" href="@Url.Action("Update", "User")">Update user</a>
             <a class="btn btn-link btn-sm" href="@Url.Action("Logout", "Logout")">Logout</a>
         </div>
     </div>
     <hr />
     <br />
-    <h5>Aplicativos</h5>
+    <h5>Applications</h5>
     <div class="row">
         @foreach (var app in Model.Apps)
         {
@@ -31,7 +31,7 @@
                     </div>
                     <div class="card-body text-center">
                         <h6 class="card-title">@app.Name</h6>
-                        <a href="@app.IsPublic" class="btn btn-outline-primary btn-sm w-100">Acessar</a>
+                        <a asp-controller="Login" asp-action="Index" asp-route-appSlug="@app.Slug" class="btn btn-outline-primary btn-sm w-100">Acessar</a>
                     </div>
                 </div>
             </div>

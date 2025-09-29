@@ -42,11 +42,13 @@ namespace Accounts.Login.Web.Controllers
         {
             try
             {
-                //if (User.Identity.IsAuthenticated && User.GetRefreshToken() != null)
-                //{
-                //    var result = await _userAuthorizationRepository.RefreshTokenAsync(User.GetRefreshToken(), AppSlug);
-                //    return await GenerateCode(result);
-                //}
+                if (User.Identity.IsAuthenticated && User.GetRefreshToken() != null && AppSlug != null && AppSlug != "")
+                {
+                    var result = await _userAuthorizationRepository.RefreshTokenAsync(User.GetRefreshToken(), AppSlug);
+                    var userInfo = await _userAuthorizationRepository.GetUserInfoByTokenAsync(result.Token);
+                    await AddCookieAuthentication(result, userInfo);
+                    return await GenerateCode(result);
+                }
 
                 return View(new UserAuthenticationRequest
                 {
