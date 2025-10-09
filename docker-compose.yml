@@ -75,9 +75,9 @@ services:
             - dbpostgresql
             - message.broker.rabbitmq
             - redis
-    teamapi:
+    projectapi:
         build:
-            context: ./team.api
+            context: ./project.api
             dockerfile: Dockerfile
         container_name: api
         ports:

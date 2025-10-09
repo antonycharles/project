@@ -37,7 +37,7 @@ List of tasks to be performed in projects
 - [x] Reset password
 - [x] Sign up
 - [x] Update user/photo
-- [ ] App store redirect
+- [x] App store redirect
     - App flag public or private in Accounts.api
 - [ ] Reset password
 
