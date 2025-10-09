@@ -79,7 +79,7 @@ services:
         build:
             context: ./project.api
             dockerfile: Dockerfile
-        container_name: api
+        container_name: project-api
         ports:
             - "9503:8080"
         networks: 
