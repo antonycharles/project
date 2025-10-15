@@ -47,11 +47,30 @@ namespace Accounts.Api.Seeds
                 Status = StatusEnum.Active
             });
 
-            apps.Add(new App{
+            apps.Add(new App
+            {
                 Code = 5,
                 Type = AppTypeEnum.Api,
                 Name = "file - API",
                 Slug = "file-api",
+                Status = StatusEnum.Active
+            });
+
+
+            apps.Add(new App
+            {
+                Code = 6,
+                Type = AppTypeEnum.Api,
+                Name = "Notification - Api",
+                Slug = "notification-api",
+                Status = StatusEnum.Active
+            });
+            
+            apps.Add(new App{
+                Code = 7,
+                Type = AppTypeEnum.Api,
+                Name = "Project - API",
+                Slug = "project-api",
                 Status = StatusEnum.Active
             });
 
