@@ -6,7 +6,7 @@ namespace Accounts.Core.Handlers
 {
     public interface IUserProfileHandler
     {
-        Task<UserProfile> CreateAsync(UserProfileRequest request);
+        Task<UserProfileResponse> CreateAsync(UserProfileRequest request);
         Task DeleteAsync(Guid id);
     }
 }

@@ -37,7 +37,7 @@ namespace Project.Application.Services
 
         public async Task<IEnumerable<ProjectDto>> GetByUserIdAsync(Guid userId)
         {
-            var families = await _ProjectRepository.GetByUserIdAsync(userId);
+            var families = await _ProjectRepository.GetByCompanyIdAsync(userId);
             return families.Select(MapToDto);
         }
 

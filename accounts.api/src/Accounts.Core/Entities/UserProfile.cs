@@ -11,5 +11,7 @@ namespace Accounts.Core.Entities
         public User? User { get; set; }
         public Guid ProfileId { get; set; }
         public Profile? Profile { get; set; }
+        public Guid CompanyId { get; set; }
+        public Company? Company { get; set; }
     }
 }

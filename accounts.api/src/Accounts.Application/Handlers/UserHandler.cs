@@ -46,7 +46,6 @@ namespace Accounts.Application.Handlers
             await _context.SaveChangesAsync();
 
             return user.ToUserResponse();
-
         }
 
         public async Task DeleteAsync(Guid id)

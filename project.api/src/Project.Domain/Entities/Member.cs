@@ -10,7 +10,6 @@ namespace Project.Domain.Entities
     {
         public Guid ProjectId { get; set; }
         public Guid UserId { get; set; }
-        public ProfileEnum Profile { get; set; }
         public StatusEnum Status { get; set; }
     }
 }

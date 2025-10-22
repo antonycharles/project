@@ -3,6 +3,8 @@ CREATE TABLE Project (
     Id UUID PRIMARY KEY,
     CreatedAt TIMESTAMP WITHOUT TIME ZONE NOT NULL DEFAULT NOW(),
     UpdatedAt TIMESTAMP WITHOUT TIME ZONE NOT NULL DEFAULT NOW(),
+    DeletedAt TIMESTAMP WITHOUT TIME ZONE NULL,
+    CompanyId UUID NOT NULL,
     Name VARCHAR(255) NOT NULL,
     Description TEXT,
     UserCreatedId UUID NOT NULL
@@ -12,10 +14,10 @@ CREATE TABLE Member (
     Id UUID PRIMARY KEY,
     CreatedAt TIMESTAMP WITHOUT TIME ZONE NOT NULL DEFAULT NOW(),
     UpdatedAt TIMESTAMP WITHOUT TIME ZONE NOT NULL DEFAULT NOW(),
+    DeletedAt TIMESTAMP WITHOUT TIME ZONE NULL,
     ProjectId UUID NOT NULL,
     UserId UUID NOT NULL,
-    Profile INT NOT NULL, -- Enum mapeado como inteiro
-    Status INT NOT NULL   -- Enum mapeado como inteiro
+    Status INT NOT NULL  
 );
 
 ALTER TABLE Member

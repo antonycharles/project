@@ -51,7 +51,7 @@ namespace Project.Infrastructure.Data
                 var command = new NpgsqlCommand(sql, connection, transaction);
                 await command.ExecuteNonQueryAsync();
 
-                var insert = new NpgsqlCommand("INSERT INTO \"Migrations\" (\"MigrationName\") VALUES (@name)", connection, transaction);
+                var insert = new NpgsqlCommand("INSERT INTO \"_Migrations\" (\"MigrationName\") VALUES (@name)", connection, transaction);
                 insert.Parameters.AddWithValue("@name", scriptName);
                 await insert.ExecuteNonQueryAsync();
 
@@ -75,7 +75,7 @@ namespace Project.Infrastructure.Data
         await connection.OpenAsync();
 
         var command = new NpgsqlCommand(@"
-            CREATE TABLE IF NOT EXISTS ""Migrations"" (
+            CREATE TABLE IF NOT EXISTS ""_Migrations"" (
                 ""Id"" SERIAL PRIMARY KEY,
                 ""MigrationName"" VARCHAR(200) NOT NULL,
                 ""AppliedOn"" TIMESTAMP NOT NULL DEFAULT NOW()
@@ -91,7 +91,7 @@ namespace Project.Infrastructure.Data
         using var connection = new NpgsqlConnection(_connectionString);
         await connection.OpenAsync();
 
-        var command = new NpgsqlCommand("SELECT \"MigrationName\" FROM \"Migrations\"", connection);
+        var command = new NpgsqlCommand("SELECT \"MigrationName\" FROM \"_Migrations\"", connection);
         using var reader = await command.ExecuteReaderAsync();
         while (await reader.ReadAsync())
         {

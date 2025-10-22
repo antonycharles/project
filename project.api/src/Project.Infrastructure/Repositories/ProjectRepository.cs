@@ -27,7 +27,7 @@ namespace Project.Infrastructure.Repositories
             var command = new NpgsqlCommand(@"
                 SELECT ""Id"", ""Name"", ""Description"", ""UserCreatedId"", ""CreatedAt"", ""UpdatedAt""
                 FROM ""Project""
-                WHERE ""Id"" = @id", connection);
+                WHERE ""Id"" = @id AND ""DeletedAt"" IS NULL", connection);
 
             command.Parameters.AddWithValue("@id", id);
 
@@ -42,7 +42,7 @@ namespace Project.Infrastructure.Repositories
 
         public async Task<IEnumerable<Domain.Entities.Project>> GetAllAsync()
         {
-            var families = new List<Domain.Entities.Project>();
+            var projects = new List<Domain.Entities.Project>();
 
             using var connection = new NpgsqlConnection(_connectionString);
             await connection.OpenAsync();
@@ -54,33 +54,33 @@ namespace Project.Infrastructure.Repositories
             using var reader = await command.ExecuteReaderAsync();
             while (await reader.ReadAsync())
             {
-                families.Add(MapProject(reader));
+                projects.Add(MapProject(reader));
             }
 
-            return families;
+            return projects;
         }
 
-        public async Task<IEnumerable<Domain.Entities.Project>> GetByUserIdAsync(Guid userId)
+        public async Task<IEnumerable<Domain.Entities.Project>> GetByCompanyIdAsync(Guid companyId)
         {
-            var families = new List<Domain.Entities.Project>();
+            var projects = new List<Domain.Entities.Project>();
 
             using var connection = new NpgsqlConnection(_connectionString);
             await connection.OpenAsync();
 
             var command = new NpgsqlCommand(@"
-                SELECT ""Id"", ""Name"", ""Description"", ""UserCreatedId"", ""CreatedAt"", ""UpdatedAt""
+                SELECT ""Id"", ""Name"", ""Description"", ""UserCreatedId"", ""CreatedAt"", ""UpdatedAt"", ""CompanyId"", ""Status""
                 FROM ""Project""
-                WHERE ""UserCreatedId"" = @userId", connection);
+                WHERE ""CompanyId"" = @companyId", connection);
 
-            command.Parameters.AddWithValue("@userId", userId);
+            command.Parameters.AddWithValue("@companyId", companyId);
 
             using var reader = await command.ExecuteReaderAsync();
             while (await reader.ReadAsync())
             {
-                families.Add(MapProject(reader));
+                projects.Add(MapProject(reader));
             }
 
-            return families;
+            return projects;
         }
 
         public async Task AddAsync(Domain.Entities.Project Project)
@@ -90,9 +90,9 @@ namespace Project.Infrastructure.Repositories
 
             var command = new NpgsqlCommand(@"
                 INSERT INTO ""Project"" 
-                (""Id"", ""Name"", ""Description"", ""UserCreatedId"", ""CreatedAt"", ""UpdatedAt"")
+                (""Id"", ""Name"", ""Description"", ""UserCreatedId"", ""CreatedAt"", ""UpdatedAt"", ""CompanyId"", ""Status"")
                 VALUES
-                (@id, @name, @description, @userCreatedId, @createdAt, @updatedAt)", connection);
+                (@id, @name, @description, @userCreatedId, @createdAt, @updatedAt, @companyId, @status)", connection);
 
             command.Parameters.AddWithValue("@id", Project.Id);
             command.Parameters.AddWithValue("@name", Project.Name);
@@ -100,6 +100,8 @@ namespace Project.Infrastructure.Repositories
             command.Parameters.AddWithValue("@userCreatedId", Project.UserCreatedId);
             command.Parameters.AddWithValue("@createdAt", Project.CreatedAt);
             command.Parameters.AddWithValue("@updatedAt", Project.UpdatedAt);
+            command.Parameters.AddWithValue("@companyId", Project.CompanyId);
+            command.Parameters.AddWithValue("@status", Project.Status);
 
             await command.ExecuteNonQueryAsync();
         }
@@ -113,14 +115,13 @@ namespace Project.Infrastructure.Repositories
                 UPDATE ""Project""
                 SET ""Name"" = @name,
                     ""Description"" = @description,
-                    ""UserCreatedId"" = @userCreatedId,
+                    ""Status"" = @status,
                     ""UpdatedAt"" = @updatedAt
                 WHERE ""Id"" = @id", connection);
 
             command.Parameters.AddWithValue("@id", Project.Id);
             command.Parameters.AddWithValue("@name", Project.Name);
             command.Parameters.AddWithValue("@description", (object?)Project.Description ?? DBNull.Value);
-            command.Parameters.AddWithValue("@userCreatedId", Project.UserCreatedId);
             command.Parameters.AddWithValue("@updatedAt", Project.UpdatedAt);
 
             await command.ExecuteNonQueryAsync();
@@ -132,10 +133,12 @@ namespace Project.Infrastructure.Repositories
             await connection.OpenAsync();
 
             var command = new NpgsqlCommand(@"
-                DELETE FROM ""Project""
+                UPDATE ""Project""
+                SET ""DeletedAt"" = @deletedAt
                 WHERE ""Id"" = @id", connection);
 
             command.Parameters.AddWithValue("@id", id);
+            command.Parameters.AddWithValue("@deletedAt", DateTime.UtcNow);
 
             await command.ExecuteNonQueryAsync();
         }

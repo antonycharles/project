@@ -9,7 +9,7 @@ namespace Project.Domain.Interfaces
     {
         Task<Entities.Project> GetByIdAsync(Guid id);
         Task<IEnumerable<Entities.Project>> GetAllAsync();
-        Task<IEnumerable<Entities.Project>> GetByUserIdAsync(Guid userId);
+        Task<IEnumerable<Entities.Project>> GetByCompanyIdAsync(Guid companyId);
         Task AddAsync(Entities.Project Project);
         Task UpdateAsync(Entities.Project Project);
         Task DeleteAsync(Guid id);

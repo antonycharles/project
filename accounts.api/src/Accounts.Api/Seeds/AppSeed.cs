@@ -18,7 +18,7 @@ namespace Accounts.Api.Seeds
             apps.Add(new App{
                 Code = 1,
                 Type = AppTypeEnum.Api,
-                Name = "accounts - Api",
+                Name = "Accounts - Api",
                 Slug = "accounts-api",
                 Status = StatusEnum.Active
             });
@@ -26,16 +26,18 @@ namespace Accounts.Api.Seeds
             apps.Add(new App{
                 Code = 2,
                 Type = AppTypeEnum.Api,
-                Name = "money - Api",
+                Name = "Money - Web",
                 Slug = "money-api",
+                IsPublic = true,
                 Status = StatusEnum.Active
             });
 
             apps.Add(new App{
                 Code = 3,
                 Type = AppTypeEnum.Api,
-                Name = "task - Api",
+                Name = "Task - Web",
                 Slug = "task-api",
+                IsPublic = true,
                 Status = StatusEnum.Active
             });
             
@@ -44,6 +46,7 @@ namespace Accounts.Api.Seeds
                 Type = AppTypeEnum.Web,
                 Name = "accounts - Management",
                 Slug = "accounts-management",
+                IsPublic = true,
                 Status = StatusEnum.Active
             });
 
@@ -69,8 +72,9 @@ namespace Accounts.Api.Seeds
             apps.Add(new App{
                 Code = 7,
                 Type = AppTypeEnum.Api,
-                Name = "Project - API",
+                Name = "Project - Web",
                 Slug = "project-api",
+                IsPublic = true,
                 Status = StatusEnum.Active
             });
 

@@ -22,7 +22,7 @@ namespace Accounts.Application.Handlers
             _context = context;
         }
 
-        public async Task<UserProfile> CreateAsync(UserProfileRequest request)
+        public async Task<UserProfileResponse> CreateAsync(UserProfileRequest request)
         {
             var userProfile = request.ToUserProfile();
 
@@ -42,7 +42,7 @@ namespace Accounts.Application.Handlers
 
             await _context.SaveChangesAsync();
 
-            return userProfile;
+            return userProfile.ToUserProfileResponse();
         }
 
         public async Task DeleteAsync(Guid id)

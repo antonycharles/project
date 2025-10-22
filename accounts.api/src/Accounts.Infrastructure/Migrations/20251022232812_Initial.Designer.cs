@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Accounts.Infrastructure.Migrations
 {
     [DbContext(typeof(AccountsContext))]
-    [Migration("20250925231444_DbAppAddPublicColumn")]
-    partial class DbAppAddPublicColumn
+    [Migration("20251022232812_Initial")]
+    partial class Initial
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -143,6 +143,37 @@ namespace Accounts.Infrastructure.Migrations
                     b.HasIndex("ProfileId");
 
                     b.ToTable("ClientProfiles");
+                });
+
+            modelBuilder.Entity("Accounts.Core.Entities.Company", b =>
+                {
+                    b.Property<Guid>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("uuid");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.Property<bool>("IsDeleted")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("boolean")
+                        .HasDefaultValue(false);
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<int>("Status")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("integer")
+                        .HasDefaultValue(1);
+
+                    b.Property<DateTime?>("UpdatedAt")
+                        .HasColumnType("timestamp with time zone");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Companies");
                 });
 
             modelBuilder.Entity("Accounts.Core.Entities.Permission", b =>
@@ -280,6 +311,9 @@ namespace Accounts.Infrastructure.Migrations
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("boolean");
 
+                    b.Property<Guid?>("LastCompanyId")
+                        .HasColumnType("uuid");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(150)
@@ -300,6 +334,8 @@ namespace Accounts.Infrastructure.Migrations
 
                     b.HasIndex("Email")
                         .IsUnique();
+
+                    b.HasIndex("LastCompanyId");
 
                     b.ToTable("Users");
                 });
@@ -347,6 +383,9 @@ namespace Accounts.Infrastructure.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("uuid");
 
+                    b.Property<Guid>("CompanyId")
+                        .HasColumnType("uuid");
+
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("timestamp with time zone");
 
@@ -366,6 +405,8 @@ namespace Accounts.Infrastructure.Migrations
                         .HasColumnType("uuid");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("CompanyId");
 
                     b.HasIndex("ProfileId");
 
@@ -479,6 +520,15 @@ namespace Accounts.Infrastructure.Migrations
                     b.Navigation("Profile");
                 });
 
+            modelBuilder.Entity("Accounts.Core.Entities.User", b =>
+                {
+                    b.HasOne("Accounts.Core.Entities.Company", "LastCompany")
+                        .WithMany()
+                        .HasForeignKey("LastCompanyId");
+
+                    b.Navigation("LastCompany");
+                });
+
             modelBuilder.Entity("Accounts.Core.Entities.UserPhoto", b =>
                 {
                     b.HasOne("Accounts.Core.Entities.User", "User")
@@ -492,6 +542,12 @@ namespace Accounts.Infrastructure.Migrations
 
             modelBuilder.Entity("Accounts.Core.Entities.UserProfile", b =>
                 {
+                    b.HasOne("Accounts.Core.Entities.Company", "Company")
+                        .WithMany()
+                        .HasForeignKey("CompanyId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
                     b.HasOne("Accounts.Core.Entities.Profile", "Profile")
                         .WithMany()
                         .HasForeignKey("ProfileId")
@@ -503,6 +559,8 @@ namespace Accounts.Infrastructure.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
+
+                    b.Navigation("Company");
 
                     b.Navigation("Profile");
 

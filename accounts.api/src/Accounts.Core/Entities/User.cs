@@ -18,7 +18,8 @@ namespace Accounts.Core.Entities
         [Required]
         [MaxLength(200)]
         public string Password { get; set; }
-
+        public Guid? LastCompanyId { get; set; }
+        public Company? LastCompany { get; set; }
         public UserPhoto? UserPhoto { get; set; }
         public ICollection<UserProfile>? UserProfiles { get; set; }
     }
