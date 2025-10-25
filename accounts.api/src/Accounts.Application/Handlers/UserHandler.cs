@@ -117,6 +117,26 @@ namespace Accounts.Application.Handlers
             await _context.SaveChangesAsync();
         }
 
+        public async Task UpdateLastCompanyAsync(Guid id, Guid companyId)
+        {
+            var user = await _context.Users.Include(i => i.UserProfiles.Where(w => w.Status == StatusEnum.Active && w.IsDeleted == false))
+                .FirstOrDefaultAsync(w => w.Id == id && w.IsDeleted == false);
+
+            if (user == null)
+                throw new NotFoundException("User not found");
+                
+            if(user.UserProfiles.Any(a => a.CompanyId == companyId))
+            {
+                user.LastCompanyId = companyId;
+            }
+            else
+            {
+                throw new BusinessException("User does not have access to this company");
+            }
+
+            await _context.SaveChangesAsync();
+        }
+
         private async Task ValidExistsAsync(User user)
         {
             var exist = await _context.Users.AsNoTracking()

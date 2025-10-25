@@ -57,6 +57,7 @@ namespace Accounts.Api.Seeds
                 "token-public-key",
                 "user-create",
                 "user-update",
+                "company-list"
             };
 
             var permissions = context.Permissions.AsNoTracking()

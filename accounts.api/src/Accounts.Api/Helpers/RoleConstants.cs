@@ -30,7 +30,8 @@ namespace Accounts.Api.Helpers
             public const string Delete = $"{code}-{prefix}-{delete}";
         }
 
-        public class ClientProfileRole{
+        public class ClientProfileRole
+        {
             private const string prefix = "client-profile";
             public const string List = $"{code}-{prefix}-{list}";
             public const string Create = $"{code}-{prefix}-{create}";
@@ -38,7 +39,17 @@ namespace Accounts.Api.Helpers
             public const string Delete = $"{code}-{prefix}-{delete}";
         }
 
-        public class PermissionRole{
+        public class CompanyRole
+        {
+            private const string prefix = "company";
+            public const string List = $"{code}-{prefix}-{list}";
+            public const string Create = $"{code}-{prefix}-{create}";
+            public const string Update = $"{code}-{prefix}-{update}";
+            public const string Delete = $"{code}-{prefix}-{delete}";
+        }
+
+        public class PermissionRole
+        {
             private const string prefix = "permission";
             public const string List = $"{code}-{prefix}-{list}";
             public const string Create = $"{code}-{prefix}-{create}";

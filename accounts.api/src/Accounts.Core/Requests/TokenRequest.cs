@@ -18,6 +18,9 @@ namespace Accounts.Core.Requests
         [RequiredIf(nameof(GrantType), "client_credentials", ErrorMessage = "ClientId is required when grant_type is client_credentials")]
         public Guid? ClientId { get; set; }
 
+        [JsonPropertyName("company_id")]
+        public Guid? CompanyId { get; set; }
+
         [JsonPropertyName("client_secret")]
         [RequiredIf(nameof(GrantType), "client_credentials", ErrorMessage = "ClientSecret is required when grant_type is client_credentials")]
         public string? ClientSecret { get; set; }

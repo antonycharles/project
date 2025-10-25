@@ -27,8 +27,20 @@ namespace Accounts.Api.Seeds
                 Status = StatusEnum.Active
             };
 
+            var companyTest = new Company
+            {
+                Id = new Guid("b1c2d3e4-f5a6-4789-0abc-def123456789"),
+                Name = "Project Test",
+                Status = StatusEnum.Active
+            };
+
             if (!context.Companies.AsNoTracking().Any(w => w.Id == company.Id))
                 context.Companies.Add(company);
+
+
+
+            if (!context.Companies.AsNoTracking().Any(w => w.Id == companyTest.Id))
+                context.Companies.Add(companyTest);
 
 
             var user = new User
@@ -54,12 +66,20 @@ namespace Accounts.Api.Seeds
                     ProfileId = context.Profiles.AsNoTracking().FirstOrDefault(w => w.Slug == "admin" && w.App.Slug == "accounts-management").Id,
                     CompanyId = company.Id,
                     Status = StatusEnum.Active
+                },
+                new UserProfile
+                {
+                    Id = Guid.NewGuid(),
+                    UserId = user.Id,
+                    ProfileId = context.Profiles.AsNoTracking().FirstOrDefault(w => w.Slug == "admin" && w.App.Slug == "accounts-management").Id,
+                    CompanyId = companyTest.Id,
+                    Status = StatusEnum.Active
                 }
             };
             
             foreach (var userProfile in userProfiles)
             {
-                if (!context.UserProfiles.AsNoTracking().Any(w => w.UserId == userProfile.UserId && w.ProfileId == userProfile.ProfileId))
+                if (!context.UserProfiles.AsNoTracking().Any(w => w.UserId == userProfile.UserId && w.ProfileId == userProfile.ProfileId && w.CompanyId == userProfile.CompanyId))
                     context.UserProfiles.Add(userProfile);
             }
 

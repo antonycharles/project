@@ -37,6 +37,7 @@ namespace Accounts.Api.Configurations
             builder.Services.AddTransient<IClientAuthorizationHandler, ClientAuthorizationHandler>();
             builder.Services.AddTransient<IUserAuthorizationHandler, UserAuthorizationHandler>();
             builder.Services.AddTransient<IUserPhotoHandler, UserPhotoHandler>();
+            builder.Services.AddTransient<ICompanyHandler, CompanyHandler>();
         }
     }
 }

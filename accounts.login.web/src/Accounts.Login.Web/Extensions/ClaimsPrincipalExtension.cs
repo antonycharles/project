@@ -15,6 +15,18 @@ namespace Accounts.Login.Web.Extensions
             return idClaim?.Value != null ? new Guid(idClaim.Value) : Guid.Empty;
         }
 
+        public static Guid CompanyId(this ClaimsPrincipal claimsPrincipal)
+        {
+            var companyIdClaim = claimsPrincipal.Claims.FirstOrDefault(c => c.Type == CustomClaimTypes.CompanyId);
+            return companyIdClaim?.Value != null ? new Guid(companyIdClaim.Value) : Guid.Empty;
+        }
+
+        public static string CompanyName(this ClaimsPrincipal claimsPrincipal)
+        {
+            var companyNameClaim = claimsPrincipal.Claims.FirstOrDefault(c => c.Type == CustomClaimTypes.CompanyName);
+            return companyNameClaim?.Value ?? "Unknown Company";
+        }
+
         public static string GetName(this ClaimsPrincipal claimsPrincipal)
         {
             var nameClaim = claimsPrincipal.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Name);
@@ -28,7 +40,7 @@ namespace Accounts.Login.Web.Extensions
         }
         public static string? GetImage(this ClaimsPrincipal claimsPrincipal)
         {
-            var imageClaim = claimsPrincipal.Claims.FirstOrDefault(c => c.Type == "image");
+            var imageClaim = claimsPrincipal.Claims.FirstOrDefault(c => c.Type == CustomClaimTypes.Image);
 
 
             if(imageClaim?.Value != null && imageClaim.Value.StartsWith("http", StringComparison.OrdinalIgnoreCase))
@@ -42,7 +54,7 @@ namespace Accounts.Login.Web.Extensions
 
         public static string? GetRefreshToken(this ClaimsPrincipal claimsPrincipal)
         {
-            var refreshTokenClaim = claimsPrincipal.Claims.FirstOrDefault(c => c.Type == "RefreshToken");
+            var refreshTokenClaim = claimsPrincipal.Claims.FirstOrDefault(c => c.Type == CustomClaimTypes.RefreshToken);
             return refreshTokenClaim?.Value ?? null;
         }
     }

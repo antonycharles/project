@@ -64,6 +64,7 @@ namespace Accounts.Api.Seeds
             BasicCRUD(context, app, permissions, "App", "app");
             BasicCRUD(context, app, permissions, "Client", "client");
             BasicCRUD(context, app, permissions, "Client profile", "client-profile");
+            BasicCRUD(context, app, permissions, "Company", "company");
             BasicCRUD(context, app, permissions, "Permission", "permission");
             BasicCRUD(context, app, permissions, "Profile", "profile");
             BasicCRUD(context, app, permissions, "User", "user");

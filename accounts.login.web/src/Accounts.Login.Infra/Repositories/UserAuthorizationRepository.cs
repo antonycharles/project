@@ -55,15 +55,22 @@ namespace Accounts.Login.Infra.Repositories
             return await base.GetAsync<UserResponse>($"OAuth/userInfo");
         }
 
-        public async Task<AuthenticationResponse> RefreshTokenAsync(string tokenRefresh, string appSlug = "")
+        public async Task<AuthenticationResponse> RefreshTokenAsync(string tokenRefresh, string appSlug = "", Guid? companyId = null)
         {
             await AddToken();
-            return await base.PostFormDataAsync<AuthenticationResponse>("OAuth/token", new Dictionary<string, string>
+
+            var dados = new Dictionary<string, string>
             {
                 { "Code", tokenRefresh },
                 { "GrantType", "refresh_token" },
-                { "AppSlug", appSlug }
-            });
+                { "AppSlug", appSlug },
+
+            };
+
+            if (companyId.HasValue)
+                dados.Add("CompanyId", companyId.Value.ToString());
+
+            return await base.PostFormDataAsync<AuthenticationResponse>("OAuth/token", dados);
         }
     }
 }

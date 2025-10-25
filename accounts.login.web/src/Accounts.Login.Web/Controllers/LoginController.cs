@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Security.Claims;
 using System.Text.Json;
@@ -26,25 +27,28 @@ namespace Accounts.Login.Web.Controllers
         private readonly IDistributedCache _cache;
         private readonly IUserAuthorizationRepository _userAuthorizationRepository;
         private readonly TimeSpan _cacheExpiry = TimeSpan.FromMinutes(5);
+        private readonly JwtSecurityTokenHandler _jwtSecurityTokenHandler;
 
         public LoginController(
             ILogger<LoginController> logger, 
             IUserAuthorizationRepository userAuthorizationRepository,
-            IDistributedCache cache)
+            IDistributedCache cache,
+            JwtSecurityTokenHandler jwtSecurityTokenHandler)
         {
             _userAuthorizationRepository = userAuthorizationRepository;
             _logger = logger;
             _cache = cache;
+            _jwtSecurityTokenHandler = jwtSecurityTokenHandler;
         }
 
         [HttpGet]
-        public async Task<IActionResult> IndexAsync(string? AppSlug = "")
+        public async Task<IActionResult> IndexAsync(string? AppSlug = "", Guid? companyId = null)
         {
             try
             {
                 if (User.Identity.IsAuthenticated && User.GetRefreshToken() != null && AppSlug != null && AppSlug != "")
                 {
-                    var result = await _userAuthorizationRepository.RefreshTokenAsync(User.GetRefreshToken(), AppSlug);
+                    var result = await _userAuthorizationRepository.RefreshTokenAsync(User.GetRefreshToken(), AppSlug, companyId);
                     var userInfo = await _userAuthorizationRepository.GetUserInfoByTokenAsync(result.Token);
                     await AddCookieAuthentication(result, userInfo);
                     return await GenerateCode(result);
@@ -155,13 +159,19 @@ namespace Accounts.Login.Web.Controllers
         
         private async Task AddCookieAuthentication(AuthenticationResponse auth, UserResponse userInfo)
         {
+
+            var jwt = _jwtSecurityTokenHandler.ReadJwtToken(auth.Token);
+
+
             var claims = new List<Claim>
             {
                 new Claim(ClaimTypes.Sid, userInfo.Id.ToString()),
                 new Claim(ClaimTypes.Name, userInfo.Name),
                 new Claim(ClaimTypes.Email, userInfo.Email),
-                new Claim("RefreshToken", auth.RefreshToken),
-                new Claim("image", userInfo.ImageUrl ?? ""),
+                new Claim(CustomClaimTypes.RefreshToken, auth.RefreshToken),
+                new Claim(CustomClaimTypes.Image, userInfo.ImageUrl ?? ""),
+                new Claim(CustomClaimTypes.CompanyId, jwt.Claims.FirstOrDefault(c => c.Type == CustomClaimTypes.CompanyId)?.Value ?? ""),
+                new Claim(CustomClaimTypes.CompanyName, jwt.Claims.FirstOrDefault(c => c.Type == CustomClaimTypes.CompanyName)?.Value ?? "")
             };
 
             var identity = new ClaimsIdentity(claims, "CookieAuth");
