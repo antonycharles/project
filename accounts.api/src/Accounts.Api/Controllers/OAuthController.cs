@@ -208,7 +208,7 @@ public class OAuthController : ControllerBase
             }
             else if(User.GetUserType() == UserTypeEnum.user.ToString())
             {
-                var user = await _userHandler.GetByIdAsync(User.GetId());
+                var user = await _userHandler.GetByIdAsync(User.GetId(), User.GetCompanyId());
                 return Ok(user);
             }
             

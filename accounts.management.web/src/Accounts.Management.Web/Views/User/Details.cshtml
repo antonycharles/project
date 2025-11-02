@@ -26,12 +26,12 @@
   </thead>
   <tbody>
     @if(Model.Profiles != null && Model.Profiles.Count > 0){
-        @foreach(var profile in Model.Profiles.OrderBy(o => o.Name))
+        @foreach(var profile in Model.Profiles.ToList())
         {
             <tr>
-                <td class="align-middle">@profile.Name</td>
-                <td class="align-middle">@profile.AppName</td>
-                <td class="align-middle">@profile.Status.GetDisplayName()</td>
+                <td class="align-middle">@profile.Profile?.Name</td>
+                <td class="align-middle">@profile.Profile?.AppName</td>
+                <td class="align-middle">@profile.Profile?.Status.GetDisplayName()</td>
             </tr>
         }
     }else{

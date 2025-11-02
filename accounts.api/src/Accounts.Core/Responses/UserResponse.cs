@@ -11,7 +11,7 @@ namespace Accounts.Core.Responses
         public Guid Id { get; set; }
         public string Name { get; set; }
         public string Email { get; set; }
-        public List<ProfileResponse>? Profiles { get; set; } 
+        public List<UserProfileResponse>? Profiles { get; set; }
         public StatusEnum Status { get; set; }
         public string? ImageUrl { get; set; }
     }

@@ -15,7 +15,55 @@ namespace Accounts.Api.Seeds
         public static void Seeder(AccountsContext context, IPasswordProvider passwordProvider)
         {
             AddAdmin(context, passwordProvider);
+            AddUser(context, passwordProvider);
         }
+
+
+        private static void AddUser(AccountsContext context, IPasswordProvider passwordProvider)
+        {
+            var company = new Company
+            {
+                Id = new Guid("c1d2e3f4-5a6b-4789-0abc-def123456789"),
+                Name = "Project Default",
+                Status = StatusEnum.Active
+            };
+
+            if (!context.Companies.AsNoTracking().Any(w => w.Id == company.Id))
+                context.Companies.Add(company);
+
+            var user = new User
+            {
+                Id = new Guid("e4b3c2d1-6f5e-4a8b-9f7e-1a2b3c4d5e6f"),
+                Name = "User Default",
+                Email = "user.default@team.com",
+                Password = passwordProvider.HashPassword("123456"),
+                LastCompanyId = company.Id,
+                Status = StatusEnum.Active
+            };
+
+            if (!context.Users.AsNoTracking().Any(w => w.Id == user.Id))
+                context.Users.Add(user);
+
+
+            var userProfiles = new List<UserProfile>
+            {
+                new UserProfile
+                {
+                    Id = Guid.NewGuid(),
+                    UserId = user.Id,
+                    ProfileId = context.Profiles.AsNoTracking().FirstOrDefault(w => w.Slug == "user" && w.App.Slug == "accounts-management").Id,
+                    CompanyId = company.Id,
+                    Status = StatusEnum.Active
+                }
+            };
+            
+            foreach (var userProfile in userProfiles)
+            {
+                if (!context.UserProfiles.AsNoTracking().Any(w => w.UserId == userProfile.UserId && w.ProfileId == userProfile.ProfileId && w.CompanyId == userProfile.CompanyId))
+                    context.UserProfiles.Add(userProfile);
+            }
+        }
+
 
         private static void AddAdmin(AccountsContext context, IPasswordProvider passwordProvider)
         {

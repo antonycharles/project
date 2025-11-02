@@ -24,7 +24,7 @@ namespace Accounts.Application.Mappers
             Email = user.Email,
             Status = user.Status,
             ImageUrl = user.UserPhoto != null ? fileUrl + "/File/" + user.UserPhoto.DocumentId.ToString() : null,
-            Profiles = user.UserProfiles?.Where(w => w.Profile != null).Select(s => s.Profile.ToProfileResponse()).ToList(),
+            Profiles = user.UserProfiles?.Select(s => s.ToUserProfileResponse()).ToList(),
         };
 
         public static void Update(this User user, UserUpdateRequest request){

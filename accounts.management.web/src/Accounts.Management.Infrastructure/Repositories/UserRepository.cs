@@ -77,11 +77,11 @@ namespace Accounts.Management.Infrastructure.Repositories
             }
         }
 
-        public Task<UserResponse> GetByIdAsync(Guid id)
+        public Task<UserResponse> GetByIdAsync(Guid id, Guid companyId)
         {
             try
             {
-                return _userRefit.GetByIdAsync(id);
+                return _userRefit.GetByIdAsync(id, companyId);
             }
             catch(ApiException ex) when (ex.StatusCode == System.Net.HttpStatusCode.NotFound)
             {

@@ -66,7 +66,12 @@ namespace Accounts.Application.Handlers
         public async Task<PaginatedResponse<UserResponse>> GetAsync(PaginatedRequest request)
         {
             var query = _context.Users.AsNoTracking()
-                .Where(w => w.IsDeleted == false);
+                .Include(i => i.UserProfiles.Where(w => w.Status == StatusEnum.Active && w.IsDeleted == false))
+                .ThenInclude(i => i.Profile)
+                .ThenInclude(i => i.App)
+                .Include(i => i.UserProfiles.Where(w => w.Status == StatusEnum.Active && w.IsDeleted == false))
+                .ThenInclude(i => i.Company)
+                .Where(w => w.IsDeleted == false && w.UserProfiles.Any(a => a.CompanyId == request.CompanyId));
 
             if(request.Search is not null)
                 query = query.Where(w => w.Name.ToLower() == request.Search.ToLower());
@@ -82,17 +87,22 @@ namespace Accounts.Application.Handlers
             return new PaginatedResponse<UserResponse>(response, totalItems, request.PageIndex, request.PageSize, request);
         }
 
-        public async Task<UserResponse> GetByIdAsync(Guid id)
+        public async Task<UserResponse> GetByIdAsync(Guid id, Guid companyId)
         {
             var user = await _context.Users.AsNoTracking()
-                .Include(i => i.UserProfiles.Where(w => w.Status == StatusEnum.Active && w.IsDeleted == false))
+                .Include(i => i.UserProfiles.Where(w => w.Status == StatusEnum.Active && w.IsDeleted == false && w.CompanyId == companyId))
                 .ThenInclude(i => i.Profile)
                 .ThenInclude(i => i.App)
+                .Include(i => i.UserProfiles.Where(w => w.Status == StatusEnum.Active && w.IsDeleted == false && w.CompanyId == companyId))
+                .ThenInclude(i => i.Company)
                 .Include(i => i.UserPhoto)
-                .FirstOrDefaultAsync(w => w.Id == id && w.IsDeleted == false);
+                .FirstOrDefaultAsync(w => w.Id == id  && w.IsDeleted == false);
 
-            if(user == null)
+            if (user == null)
                 throw new NotFoundException("User not found");
+                
+
+            user.UserProfiles = user.UserProfiles.Where(w => w.CompanyId == companyId).ToList();
 
             return user.ToUserResponse(_settings.FileApiUrl);
         }

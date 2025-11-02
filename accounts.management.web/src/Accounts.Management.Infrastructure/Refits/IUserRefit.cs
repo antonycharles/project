@@ -19,8 +19,8 @@ namespace Accounts.Management.Infrastructure.Refits
         [Delete("/User/{id}")]
         Task DeleteAsync(Guid id);
 
-        [Get("/User/{id}")]
-        Task<UserResponse> GetByIdAsync(Guid id);
+        [Get("/User/{id}/company/{companyId}")]
+        Task<UserResponse> GetByIdAsync(Guid id, Guid companyId);
 
         [Put("/User/{id}")]
         Task UpdateAsync(Guid id, UserRequest request);

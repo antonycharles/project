@@ -11,7 +11,7 @@ namespace Accounts.Management.Infrastructure.Repositories.Interfaces
     {
         Task CreateAsync(UserRequest request);
         Task<PaginatedResponse<UserResponse>> GetAsync(PaginatedRequest? request);
-        Task<UserResponse> GetByIdAsync(Guid id);
+        Task<UserResponse> GetByIdAsync(Guid id, Guid companyId);
         Task DeleteAsync(Guid id);
         Task UpdateAsync(Guid id, UserRequest request);
     }

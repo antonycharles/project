@@ -20,6 +20,7 @@
     <tr>
       <th scope="col">Name</th>
       <th scope="col">Email</th>
+      <th scope="col">Company</th>
       <th scope="col">Status</th>
       <th scope="col"></th>
     </tr>
@@ -31,6 +32,7 @@
             <tr>
                 <td class="align-middle">@user.Name</td>
                 <td class="align-middle">@user.Email</td>
+                <td class="align-middle">@user.Profiles?.FirstOrDefault()?.Company?.Name</td>
                 <td class="align-middle">@user.Status.GetDisplayName()</td>
                 <td class="d-flex flex-row-reverse">
                     <div class="btn-group" role="group" aria-label="Basic example">

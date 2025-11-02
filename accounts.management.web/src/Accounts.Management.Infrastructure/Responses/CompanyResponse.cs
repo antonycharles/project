@@ -6,12 +6,12 @@ using src.Accounts.Management.Infrastructure.Enums;
 
 namespace Accounts.Management.Infrastructure.Responses
 {
-    public class UserResponse
+    public class CompanyResponse
     {
         public Guid Id { get; set; }
         public string Name { get; set; }
-        public string Email { get; set; }
-        public List<UserProfileResponse>? Profiles { get; set; } 
-        public StatusEnum Status { get; set; }
+        public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+        public DateTime? UpdatedAt { get; set; }
+        public StatusEnum Status { get; set; } = StatusEnum.Active;
     }
 }

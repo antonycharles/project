@@ -20,8 +20,10 @@ namespace Accounts.Application.Mappers
         public static UserProfileResponse ToUserProfileResponse(this UserProfile entity) => new UserProfileResponse
         {
             UserId = entity.UserId,
-            ProfileId =  entity.ProfileId,
-            CompanyId = entity.CompanyId
+            ProfileId = entity.ProfileId,
+            Profile = entity.Profile != null ? entity.Profile.ToProfileResponse() : null,
+            CompanyId = entity.CompanyId,
+            Company = entity.Company != null ? entity.Company.ToCompanyResponse() : null
         };
     }
 }

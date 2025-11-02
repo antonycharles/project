@@ -12,6 +12,7 @@ using Accounts.Management.Web.Helpers;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using Accounts.Management.Infrastructure.Repositories.Interfaces;
+using Accounts.Management.Web.Extensions;
 
 namespace Accounts.Management.Web.Controllers
 {
@@ -34,6 +35,7 @@ namespace Accounts.Management.Web.Controllers
         {
             try
             {
+                request.CompanyId = User.CompanyId();
                 var users = await _userRepository.GetAsync(request);
                 return View(users);
 
@@ -55,7 +57,7 @@ namespace Accounts.Management.Web.Controllers
         public async Task<IActionResult> DetailsAsync(Guid id){
             try
             {
-                var user = await _userRepository.GetByIdAsync(id);
+                var user = await _userRepository.GetByIdAsync(id, User.CompanyId());
                 return View(user);
             }
             catch(Exception ex)
@@ -101,7 +103,7 @@ namespace Accounts.Management.Web.Controllers
         public async Task<IActionResult> EditAsync(Guid id){
             try
             {
-                var user = await _userRepository.GetByIdAsync(id);
+                var user = await _userRepository.GetByIdAsync(id, User.CompanyId());
                 return View(user.ToUserRequest());
             }
             catch(Exception ex){
@@ -141,7 +143,7 @@ namespace Accounts.Management.Web.Controllers
         public async Task<IActionResult> DeleteConfirmAsync(Guid id){
             try
             {
-                var app = await _userRepository.GetByIdAsync(id);
+                var app = await _userRepository.GetByIdAsync(id, User.CompanyId());
                 return View(app);
             }
             catch(Exception ex){
