@@ -44,7 +44,7 @@ namespace Accounts.Api.Seeds
             apps.Add(new App{
                 Code = 4,
                 Type = AppTypeEnum.Web,
-                Name = "accounts - Management",
+                Name = "Accounts - Management",
                 Slug = "accounts-management",
                 IsPublic = true,
                 Status = StatusEnum.Active
@@ -54,7 +54,7 @@ namespace Accounts.Api.Seeds
             {
                 Code = 5,
                 Type = AppTypeEnum.Api,
-                Name = "file - API",
+                Name = "File - API",
                 Slug = "file-api",
                 Status = StatusEnum.Active
             });
