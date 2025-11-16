@@ -17,8 +17,27 @@ namespace Accounts.Api.Seeds
             SeederAccountsManagementAdmin(context);
             SeederAccountsManagementUser(context);
             SeederAccountsApiPublicToken(context);
+            SeederProjectApiUser(context);
 
             context.SaveChanges();
+        }
+
+        private static void SeederProjectApiUser(AccountsContext context)
+        {
+            var app = context.Apps.AsNoTracking().FirstOrDefault(w => w.Slug == "project-api");
+
+            if(app == null)
+                return;
+
+            var profile = context.Profiles.AsNoTracking()
+                .FirstOrDefault(w => w.Slug == "user" && w.AppId == app.Id);
+
+            if(profile == null)
+                return;
+
+            var permissions = context.Permissions.AsNoTracking().Where(w => w.AppId == app.Id).ToList();
+
+            AddProfilePermission(context, profile, permissions);
         }
 
         private static void SeederAccountsManagementAdmin(AccountsContext context)

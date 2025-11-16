@@ -7,16 +7,19 @@ using Project.Application.DTOs;
 using Project.Domain.Interfaces;
 using Project.Domain.Entities;
 using Project.Domain.Exceptions;
+using Project.Domain.Enums;
 
 namespace Project.Application.Services
 {
     public class ProjectService : IProjectService
     {
         private readonly IProjectRepository _ProjectRepository;
+        private readonly IMemberService _memberService;
 
-        public ProjectService(IProjectRepository ProjectRepository)
+        public ProjectService(IProjectRepository ProjectRepository, IMemberService memberService)
         {
             _ProjectRepository = ProjectRepository;
+            _memberService = memberService;
         }
 
         public async Task<ProjectDto?> GetByIdAsync(Guid id)
@@ -25,7 +28,11 @@ namespace Project.Application.Services
 
             if (Project == null) throw new BusinessException("Project not found");
 
-            return MapToDto(Project);
+            var result = MapToDto(Project);
+
+            result.Members = await _memberService.GetByProjectIdAsync(id);
+
+            return result;
         }
 
         public async Task<IEnumerable<ProjectDto>> GetAllAsync()
@@ -35,32 +42,56 @@ namespace Project.Application.Services
             return families.Select(MapToDto);
         }
 
-        public async Task<IEnumerable<ProjectDto>> GetByUserIdAsync(Guid userId)
+        public async Task<IEnumerable<ProjectDto>> GetByCompanyIdAsync(Guid companyId)
         {
-            var families = await _ProjectRepository.GetByCompanyIdAsync(userId);
+            var families = await _ProjectRepository.GetByCompanyIdAsync(companyId);
             return families.Select(MapToDto);
         }
 
         public async Task<ProjectDto> AddAsync(ProjectCreateDto dto)
         {
-            var Project = MapToNewProject(dto);
+            var project = MapToNewProject(dto);
 
-            await _ProjectRepository.AddAsync(Project);
-            return MapToDto(Project);
+            var exist = await _ProjectRepository.ExistsByNameAndCompanyIdAsync(dto.Name, dto.CompanyId, Guid.Empty);
+            
+            if (exist) 
+                throw new BusinessException("A project with the same name already exists in the company.");
+
+            await _ProjectRepository.AddAsync(project);
+
+            await _memberService.AddAsync(new MemberCreateDto
+            {
+                UserId = dto.UserCreatedId,
+                ProjectId = project.Id
+            });
+
+            return MapToDto(project);
         }
 
         public async Task UpdateAsync(ProjectUpdateDto dto)
         {
-            var Project = await _ProjectRepository.GetByIdAsync(dto.Id);
+            var project = await _ProjectRepository.GetByIdAsync(dto.Id);
 
-            if (Project == null) throw new BusinessException("Project not found");
-            MapUpdate(dto, Project);
+            if (project == null || project.CompanyId != dto.CompanyId) 
+                throw new BusinessException("Project not found");
 
-            await _ProjectRepository.UpdateAsync(Project);
+            var exist = await _ProjectRepository.ExistsByNameAndCompanyIdAsync(dto.Name, dto.CompanyId, dto.Id);
+            
+            if (exist) 
+                throw new BusinessException("A project with the same name already exists in the company.");
+
+            MapUpdate(dto, project);
+
+            await _ProjectRepository.UpdateAsync(project);
         }
 
-        public async Task DeleteAsync(Guid id)
+        public async Task DeleteAsync(Guid id, Guid companyId)
         {
+            var project = await _ProjectRepository.GetByIdAsync(id);
+
+            if (project == null || project.CompanyId != companyId) 
+                throw new BusinessException("Project not found");
+                
             await _ProjectRepository.DeleteAsync(id);
         }
 
@@ -70,6 +101,7 @@ namespace Project.Application.Services
             Project.Name = dto.Name;
             Project.Description = dto.Description;
             Project.UserCreatedId = dto.UserCreatedId;
+            Project.Status = dto.Status;
             Project.UpdatedAt = DateTime.UtcNow;
         }
 
@@ -81,6 +113,8 @@ namespace Project.Application.Services
                 Name = dto.Name,
                 Description = dto.Description,
                 UserCreatedId = dto.UserCreatedId,
+                CompanyId = dto.CompanyId,
+                Status = StatusEnum.Active,
                 CreatedAt = DateTime.UtcNow,
                 UpdatedAt = DateTime.UtcNow
             };
@@ -95,7 +129,8 @@ namespace Project.Application.Services
                 Description = Project.Description,
                 UserCreatedId = Project.UserCreatedId,
                 CreatedAt = Project.CreatedAt,
-                UpdatedAt = Project.UpdatedAt
+                UpdatedAt = Project.UpdatedAt,
+                Status = Project.Status
             };
         }
     }

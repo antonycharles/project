@@ -10,9 +10,9 @@ namespace Project.Application.Interfaces
     {
         Task<ProjectDto?> GetByIdAsync(Guid id);
         Task<IEnumerable<ProjectDto>> GetAllAsync();
-        Task<IEnumerable<ProjectDto>> GetByUserIdAsync(Guid userId);
+        Task<IEnumerable<ProjectDto>> GetByCompanyIdAsync(Guid companyId);
         Task<ProjectDto> AddAsync(ProjectCreateDto dto);
         Task UpdateAsync(ProjectUpdateDto dto);
-        Task DeleteAsync(Guid id);
+        Task DeleteAsync(Guid id, Guid companyId);
     }
 }

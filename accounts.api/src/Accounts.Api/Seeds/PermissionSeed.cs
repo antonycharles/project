@@ -13,6 +13,7 @@ namespace Accounts.Api.Seeds
         public static void Seeder(AccountsContext context){
             SeederAccounts(context);
             SeederManagement(context);
+            SeederProjectApi(context);
 
             context.SaveChanges();
         } 
@@ -69,6 +70,27 @@ namespace Accounts.Api.Seeds
             BasicCRUD(context, app, permissions, "Profile", "profile");
             BasicCRUD(context, app, permissions, "User", "user");
             BasicCRUD(context, app, permissions, "User profile", "user-profile");
+        }
+
+
+        private static void SeederProjectApi(AccountsContext context)
+        {
+            var app = context.Apps.AsNoTracking().FirstOrDefault(w => w.Slug == "project-api");
+
+            if (app == null)
+                return;
+
+            var permissions = new List<Permission>();
+            BasicCRUD(context, app, permissions, "Project", "project");
+            BasicCRUD(context, app, permissions, "Member", "member");
+
+            var permissionsDb = context.Permissions.AsNoTracking().ToList();
+
+            foreach(var permission in permissions)
+            {
+                if(!permissionsDb.Any(w => w.Role == permission.Role && w.AppId == permission.AppId))
+                    context.Permissions.Add(permission);
+            }
         }
 
         private static void BasicCRUD(AccountsContext context, App app, List<Permission> permissions, string namePermission, string rolePermission)

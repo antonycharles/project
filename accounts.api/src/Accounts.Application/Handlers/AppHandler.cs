@@ -82,9 +82,14 @@ namespace Accounts.Application.Handlers
 
         public async Task<IList<AppResponse>> GetPublicByUserIdAsync(Guid userId)
         {
+            var lastCompanyId = await _context.Users.AsNoTracking()
+                .Where(w => w.Id == userId && w.IsDeleted == false)
+                .Select(s => s.LastCompanyId)
+                .FirstOrDefaultAsync();
+
             var apps = await _context.UserProfiles.AsNoTracking()
                 .Where(w =>
-                    w.UserId == userId && w.Status == StatusEnum.Active && w.IsDeleted == false &&
+                    w.UserId == userId && w.CompanyId == lastCompanyId && w.Status == StatusEnum.Active && w.IsDeleted == false &&
                     w.Profile.Status == StatusEnum.Active && w.Profile.IsDeleted == false)
                 .Include(i => i.Profile)
                 .ThenInclude(i => i.App)

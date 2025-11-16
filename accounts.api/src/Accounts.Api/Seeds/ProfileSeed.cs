@@ -16,6 +16,7 @@ namespace Accounts.Api.Seeds
             SeederAccountsApi(context);
             SeederAccountsManagement(context);
             SeederFileApi(context);
+            SeederProjectApi(context);
 
             context.SaveChanges();
         }
@@ -82,5 +83,26 @@ namespace Accounts.Api.Seeds
                     context.Profiles.Add(profile);
             }
         }
+
+        private static void SeederProjectApi(AccountsContext context)
+        {
+            var app = context.Apps.AsNoTracking().FirstOrDefault(w => w.Slug == "project-api");
+
+            if(app == null)
+                return;
+
+            var profiles = new List<Profile>();
+
+            profiles.Add(new Profile { Name = "User", AppId = app.Id, Slug = "user", IsDefault = true });
+
+            var profilesDb = context.Profiles.AsNoTracking().Where(w => w.AppId == app.Id).ToList();
+
+            foreach(var profile in profiles)
+            {
+                if(!profilesDb.Any(w => w.Slug == profile.Slug))
+                    context.Profiles.Add(profile);
+            }
+        }
+        
     }
 }

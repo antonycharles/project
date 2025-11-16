@@ -1,13 +1,17 @@
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Authorization;
 using Project.Application.Interfaces;
 using Project.Application.DTOs;
 using Project.Domain.Exceptions;
+using Project.Api.Helpers;
+using Project.Api.Extensions;
 
 namespace Project.Api.Controllers.V1;
 
 [ApiController]
 [Route("v1/[controller]")]
 [ApiVersion("1.0")]
+[Authorize]
 public class ProjectController : ControllerBase
 {
     private readonly ILogger<ProjectController> _logger;
@@ -22,16 +26,17 @@ public class ProjectController : ControllerBase
     [HttpGet]
     [ProducesResponseType(typeof(IEnumerable<ProjectDto>), 200)]
     [ProducesResponseType(500)]
+    [AuthorizeRole(RoleConstants.ProjectRole.List)]
     public async Task<ActionResult<IEnumerable<ProjectDto>>> GetAll()
     {
         try
         {
-            var families = await _ProjectService.GetAllAsync();
-            return Ok(families);
+            var projects = await _ProjectService.GetByCompanyIdAsync(User.CompanyId());
+            return Ok(projects);
         }
         catch (Exception ex)
         {
-            _logger.LogError(ex, "Error fetching families");
+            _logger.LogError(ex, "Error fetching projects");
             return StatusCode(500, "Internal server error");
         }
     }
@@ -40,11 +45,13 @@ public class ProjectController : ControllerBase
     [ProducesResponseType(typeof(ProjectDto), 200)]
     [ProducesResponseType(404)]
     [ProducesResponseType(500)]
+    [AuthorizeRole(RoleConstants.ProjectRole.List)]
     public async Task<ActionResult<ProjectDto>> GetById(Guid id)
     {
         try
         {
             var Project = await _ProjectService.GetByIdAsync(id);
+            
             if (Project == null)
                 return NotFound("Project not found");
             return Ok(Project);
@@ -61,33 +68,20 @@ public class ProjectController : ControllerBase
         }
     }
 
-    [HttpGet("user/{userId:guid}")]
-    [ProducesResponseType(typeof(IEnumerable<ProjectDto>), 200)]
-    [ProducesResponseType(500)]
-    public async Task<ActionResult<IEnumerable<ProjectDto>>> GetByUserId(Guid userId)
-    {
-        try
-        {
-            var families = await _ProjectService.GetByUserIdAsync(userId);
-            return Ok(families);
-        }
-        catch (Exception ex)
-        {
-            _logger.LogError(ex, "Error fetching families by userId");
-            return StatusCode(500, "Internal server error");
-        }
-    }
-
     [HttpPost]
     [ProducesResponseType(typeof(ProjectDto), 201)]
     [ProducesResponseType(400)]
     [ProducesResponseType(500)]
+    [AuthorizeRole(RoleConstants.ProjectRole.Create)]
     public async Task<ActionResult<ProjectDto>> Create([FromBody] ProjectCreateDto dto)
     {
         try
         {
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
+
+            dto.UserCreatedId = User.UserId();
+            dto.CompanyId = User.CompanyId();
 
             var created = await _ProjectService.AddAsync(dto);
 
@@ -110,6 +104,7 @@ public class ProjectController : ControllerBase
     [ProducesResponseType(400)]
     [ProducesResponseType(404)]
     [ProducesResponseType(500)]
+    [AuthorizeRole(RoleConstants.ProjectRole.Update)]
     public async Task<IActionResult> Update(Guid id, [FromBody] ProjectUpdateDto dto)
     {
         try
@@ -119,6 +114,9 @@ public class ProjectController : ControllerBase
 
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
+
+            dto.UserCreatedId = User.UserId();
+            dto.CompanyId = User.CompanyId();
 
             await _ProjectService.UpdateAsync(dto);
             
@@ -140,11 +138,12 @@ public class ProjectController : ControllerBase
     [ProducesResponseType(204)]
     [ProducesResponseType(404)]
     [ProducesResponseType(500)]
+    [AuthorizeRole(RoleConstants.ProjectRole.Delete)]
     public async Task<IActionResult> Delete(Guid id)
     {
         try
         {
-            await _ProjectService.DeleteAsync(id);
+            await _ProjectService.DeleteAsync(id, User.CompanyId());
             return NoContent();
         }
         catch (BusinessException ex)
