@@ -1,0 +1,34 @@
+@page "/auth/callback"
+@using Project.Web.Services
+@inject NavigationManager Nav
+@inject IJSRuntime JS
+@inject HttpClient Http
+@inject AuthApiService AuthApi
+
+<h3>Processando autenticação…</h3>
+
+@code {
+    protected override async Task OnInitializedAsync()
+    {
+        var uri = Nav.ToAbsoluteUri(Nav.Uri);
+
+        var query = System.Web.HttpUtility.ParseQueryString(uri.Query);
+        var code = query["code"];
+        var state = query["state"];
+
+        if (string.IsNullOrEmpty(code))
+        {
+            Console.WriteLine("Nenhum code encontrado");
+            return;
+        }
+
+        // Troca code por JWT usando o serviço
+        var token = await AuthApi.ExchangeCodeForJwtAsync(code);
+
+        // Salva no localStorage
+        await JS.InvokeVoidAsync("localStorage.setItem", "jwt", token);
+
+        // Redireciona para home
+        Nav.NavigateTo("/");
+    }
+}

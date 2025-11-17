@@ -1,0 +1,33 @@
+@page "/projects"
+@using Project.Web.DTOs
+@using Project.Web.Services
+@inject ProjectService projectsService
+
+<h3>Projetos</h3>
+
+@if (list is null)
+{
+    <p>Carregando…</p>
+}
+else
+{
+    <a href="/projects/create">Novo Projeto</a>
+
+    <ul>
+        @foreach (var p in list)
+        {
+            <li>
+                <a href="/projects/@p.Id">@p.Name</a>
+            </li>
+        }
+    </ul>
+}
+
+@code {
+    List<ProjectDto> list;
+
+    protected override async Task OnInitializedAsync()
+    {
+        list = await projectsService.GetAll();
+    }
+}
