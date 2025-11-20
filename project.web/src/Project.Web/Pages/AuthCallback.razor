@@ -2,7 +2,6 @@
 @using Project.Web.Services
 @inject NavigationManager Nav
 @inject IJSRuntime JS
-@inject HttpClient Http
 @inject AuthApiService AuthApi
 
 <h3>Processando autenticação…</h3>
@@ -10,12 +9,13 @@
 @code {
     protected override async Task OnInitializedAsync()
     {
-        var uri = Nav.ToAbsoluteUri(Nav.Uri);
+        Uri? uri = Nav.ToAbsoluteUri(Nav.Uri);
+        Console.WriteLine("URI completa: " + uri.ToString());
 
         var query = System.Web.HttpUtility.ParseQueryString(uri.Query);
         var code = query["code"];
         var state = query["state"];
-
+        
         if (string.IsNullOrEmpty(code))
         {
             Console.WriteLine("Nenhum code encontrado");

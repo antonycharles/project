@@ -14,6 +14,7 @@ using Accounts.Login.Infra.Responses;
 using Accounts.Login.Web.Extensions;
 using Accounts.Login.Web.Models;
 using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.Logging;
@@ -102,7 +103,8 @@ namespace Accounts.Login.Web.Controllers
             return View(request);
         }
 
-        [HttpGet("Token")]
+        [HttpGet("token")]
+        [EnableCors("AllowBlazor")]
         public async Task<IActionResult> TokenAsync(string code)
         {
             try

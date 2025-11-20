@@ -15,21 +15,23 @@ namespace Project.Web.Services
 
         public async Task<string> ExchangeCodeForJwtAsync(string code)
         {
-            var response = await _httpClient.PostAsJsonAsync("/oauth/token", new
-            {
-                code,
-                grant_type = "authorization_code"
-            });
+            var url = $"/Login/token?code={code}";
+
+            var response = await _httpClient.GetAsync(url);
 
             response.EnsureSuccessStatusCode();
 
             var json = await response.Content.ReadFromJsonAsync<OAuthResponse>();
-            return json?.AccessToken ?? string.Empty;
+            return json?.Token ?? string.Empty;
         }
 
         public class OAuthResponse
         {
-            public string AccessToken { get; set; }
+            public Guid AuthId { get; set; }
+            public DateTime? ExpiresIn { get; set; }
+            public string Token { get; set; }
+            public string RefreshToken { get; set; }
+            public string? CallbackUrl { get; set; }
         }
     }
 }

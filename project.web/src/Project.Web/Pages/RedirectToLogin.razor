@@ -1,0 +1,10 @@
+@inject NavigationManager Nav
+@page "/redirect/login"
+
+
+@code {
+    protected override void OnInitialized()
+    {
+        Nav.NavigateTo("http://localhost:9001/login?appSlug=project-api");
+    }
+}

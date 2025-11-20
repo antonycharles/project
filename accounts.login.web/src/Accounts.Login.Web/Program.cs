@@ -32,6 +32,16 @@ builder.Services.AddControllersWithViews()
         x.JsonSerializerOptions.PropertyNameCaseInsensitive = true;
     });
 
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowBlazor",
+        policy => policy
+            .AllowAnyHeader()
+            .AllowAnyMethod()
+            .AllowCredentials()
+            .WithOrigins("http://localhost:5062", "https://localhost:5001"));
+});
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -46,7 +56,7 @@ app.UseHttpsRedirection();
 app.UseStaticFiles();
 
 app.UseRouting();
-
+app.UseCors("AllowBlazor"); 
 app.UseAuthorization();
 
 app.MapControllerRoute(
