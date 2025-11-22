@@ -1,8 +1,10 @@
 @page "/auth/callback"
+@using Blazored.LocalStorage
+@using Project.Web.Responses
 @using Project.Web.Services
 @inject NavigationManager Nav
-@inject IJSRuntime JS
-@inject AuthApiService AuthApi
+@inject ILocalStorageService localStorage
+@inject LoginWebService AuthApi
 
 <h3>Processando autenticação…</h3>
 
@@ -22,13 +24,11 @@
             return;
         }
 
-        // Troca code por JWT usando o serviço
         var token = await AuthApi.ExchangeCodeForJwtAsync(code);
 
-        // Salva no localStorage
-        await JS.InvokeVoidAsync("localStorage.setItem", "jwt", token);
+        await localStorage.RemoveItemAsync("jwt");
+        await localStorage.SetItemAsync<OAuthResponse>("jwt", token);
 
-        // Redireciona para home
         Nav.NavigateTo("/");
     }
 }

@@ -126,7 +126,19 @@ services:
             - message.broker.rabbitmq
             - redis
             - accountsloginweb
-
+    projectweb:
+        build:
+            context: ./project.web
+            dockerfile: Dockerfile
+        container_name: project.web
+        ports:
+            - "9003:80"
+        networks: 
+            - project-network
+        environment:
+            - ASPNETCORE_ENVIRONMENT=Development
+        depends_on:
+            - projectapi
 volumes:
     cache:
         driver: local

@@ -1,19 +1,18 @@
-using System.Net.Http;
 using System.Net.Http.Json;
-using System.Threading.Tasks;
+using Project.Web.Responses;
 
 namespace Project.Web.Services
 {
-    public class AuthApiService
+    public class LoginWebService
     {
         private readonly HttpClient _httpClient;
 
-        public AuthApiService(HttpClient httpClient)
+        public LoginWebService(HttpClient httpClient)
         {
             _httpClient = httpClient;
         }
 
-        public async Task<string> ExchangeCodeForJwtAsync(string code)
+        public async Task<OAuthResponse> ExchangeCodeForJwtAsync(string code)
         {
             var url = $"/Login/token?code={code}";
 
@@ -22,16 +21,8 @@ namespace Project.Web.Services
             response.EnsureSuccessStatusCode();
 
             var json = await response.Content.ReadFromJsonAsync<OAuthResponse>();
-            return json?.Token ?? string.Empty;
+            return json ?? new OAuthResponse();
         }
 
-        public class OAuthResponse
-        {
-            public Guid AuthId { get; set; }
-            public DateTime? ExpiresIn { get; set; }
-            public string Token { get; set; }
-            public string RefreshToken { get; set; }
-            public string? CallbackUrl { get; set; }
-        }
     }
 }

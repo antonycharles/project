@@ -5,6 +5,7 @@ using System.Security.Claims;
 using System.Threading.Tasks;
 using Blazored.LocalStorage;
 using Microsoft.AspNetCore.Components.Authorization;
+using Project.Web.Responses;
 
 namespace Project.Web.Providers
 {
@@ -19,17 +20,18 @@ namespace Project.Web.Providers
 
         public override async Task<AuthenticationState> GetAuthenticationStateAsync()
         {
-            var token = await _localStorage.GetItemAsync<string>("jwt");
+            var token = await _localStorage.GetItemAsync<OAuthResponse>("jwt");
 
             ClaimsIdentity identity;
 
-            if (string.IsNullOrEmpty(token))
+            if (token == null || string.IsNullOrEmpty(token.Token) || token.ExpiresIn < DateTime.Now)
             {
-                identity = new ClaimsIdentity(); // usuário não autenticado
+                await _localStorage.RemoveItemAsync("jwt");
+                identity = new ClaimsIdentity();
             }
             else
             {
-                identity = JwtParser.ParseClaimsFromJwt(token);
+                identity = JwtParser.ParseClaimsFromJwt(token.Token);
             }
 
             return new AuthenticationState(new ClaimsPrincipal(identity));

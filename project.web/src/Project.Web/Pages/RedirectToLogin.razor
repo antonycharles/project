@@ -1,10 +1,12 @@
 @inject NavigationManager Nav
 @page "/redirect/login"
+@using Microsoft.Extensions.Options
 
+@inject IConfiguration Config
 
 @code {
     protected override void OnInitialized()
     {
-        Nav.NavigateTo("http://localhost:9001/login?appSlug=project-api");
+        Nav.NavigateTo(Config["LoginWebUrl"] + "/login?appSlug=project-api");
     }
 }
