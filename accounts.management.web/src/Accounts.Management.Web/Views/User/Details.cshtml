@@ -12,16 +12,47 @@
         </button> @Model.Name
     </h1>
     <div class="d-flex">
-      <button onclick="window.history.back()" type="button" class="btn btn-light">Return</button>
+      <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addProfileModal">
+        Add profile
+      </button>
+      <button onclick="window.history.back()" type="button" class="btn btn-light me-2">Return</button>
     </div>
   </div>
 </nav>
+<!-- Modal -->
+<div class="modal fade" id="addProfileModal" tabindex="-1" aria-labelledby="addProfileModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="addProfileModalLabel">Add Profile</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <form id="addProfileForm">
+          <div class="mb-3">
+            <label for="appNameInput" class="form-label">App</label>
+            <input type="text" class="form-control" id="appNameInput" required>
+          </div>
+          <div class="mb-3">
+            <label for="profileNameInput" class="form-label">Profile</label>
+            <input type="text" class="form-control" id="profileNameInput" required>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary" onclick="addProfile()">Add</button>
+      </div>
+    </div>
+  </div>
+</div>
 <table class="table">
   <thead>
     <tr>
       <th scope="col">Profile</th>
       <th scope="col">App</th>
       <th scope="col">Status</th>
+      <th scope="col" class="text-end"></th> <!-- Alinha o cabeçalho à direita -->
     </tr>
   </thead>
   <tbody>
@@ -31,13 +62,89 @@
             <tr>
                 <td class="align-middle">@profile.Profile?.Name</td>
                 <td class="align-middle">@profile.Profile?.AppName</td>
-                <td class="align-middle">@profile.Profile?.Status.GetDisplayName()</td>
+                <td class="align-middle">
+                    <select class="form-select form-select-sm"
+                            onchange="updateStatus(this, '@Model.Name', '@profile.Profile?.Name')">
+                        @{
+                            var enumType = profile.Status.GetType();
+                        }
+                        @foreach(var val in Enum.GetValues(enumType))
+                        {
+                            var enumVal = (Enum)val;
+                            var selected = enumVal.Equals(profile.Status) ? "selected" : null;
+                            <option value="@(Convert.ToInt32(val))" selected="@selected">@enumVal.GetDisplayName()</option>
+                        }
+                    </select>
+                </td>
+                <td class="align-middle">
+                    <div class="d-flex justify-content-end">
+                        <button class="btn btn-danger btn-sm"
+                                onclick="deleteProfile('@Model.Name', '@profile.Profile?.Name', this)">
+                            Excluir
+                        </button>
+                    </div>
+                </td>
             </tr>
         }
     }else{
         <tr>
-            <td colspan="3">No records found!</td>
+            <td colspan="4">No records found!</td>
         </tr>
     }
   </tbody>
 </table>
+<script>
+    async function updateStatus(selectEl, userName, profileName) {
+        const status = selectEl.value;
+        try {
+            await fetch('/User/UpdateProfile', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ userName: userName, profileName: profileName, status: status })
+            });
+        } catch (err) {
+            console.error(err);
+            alert('Erro ao atualizar status');
+        }
+    }
+
+    async function deleteProfile(userName, profileName, btn) {
+        if (!confirm('Tem certeza que deseja excluir este perfil?')) return;
+        try {
+            await fetch('/User/DeleteProfile', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ userName: userName, profileName: profileName })
+            });
+            // Remove a linha da tabela após exclusão
+            btn.closest('tr').remove();
+        } catch (err) {
+            console.error(err);
+            alert('Erro ao excluir perfil');
+        }
+    }
+ 
+    async function addProfile() {
+        const appName = document.getElementById('appNameInput').value;
+        const profileName = document.getElementById('profileNameInput').value;
+        if (!appName || !profileName) {
+            alert('Preencha todos os campos.');
+            return;
+        }
+        try {
+            await fetch('/User/AddProfile', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ userName: '@Model.Name', appName: appName, profileName: profileName })
+            });
+            // Fecha o modal
+            var modal = bootstrap.Modal.getInstance(document.getElementById('addProfileModal'));
+            modal.hide();
+            // Opcional: recarrega a página ou atualiza a tabela dinamicamente
+            location.reload();
+        } catch (err) {
+            console.error(err);
+            alert('Erro ao adicionar perfil');
+        }
+    }
+</script>

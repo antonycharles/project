@@ -50,6 +50,35 @@ namespace Accounts.Api.Controllers
             }
         }
 
+        [HttpPut("{id}")]
+        [AuthorizeRole(RoleConstants.UserProfileRole.Update)]
+        [ProducesResponseType(StatusCodes.Status204NoContent)]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        [ProducesResponseType(StatusCodes.Status400BadRequest)]
+        [ProducesResponseType(StatusCodes.Status500InternalServerError)]
+        public async Task<IActionResult> UpdateAsync(Guid id, [FromBody] UserProfileUpdateRequest request)
+        {
+            try
+            {
+                request.Id = id;
+                await _userProfileHandler.UpdateAsync(request);
+
+                return NoContent();
+            }
+            catch(NotFoundException ex)
+            {
+                return Problem(ex.Message, statusCode: StatusCodes.Status404NotFound);
+            }
+            catch(BusinessException ex)
+            {
+                return Problem(ex.Message, statusCode: StatusCodes.Status400BadRequest);
+            }
+            catch(Exception ex)
+            {
+                return Problem(ex.Message, statusCode: StatusCodes.Status500InternalServerError);
+            }
+        }
+
         [HttpDelete("{id}")]
         [AuthorizeRole(RoleConstants.UserProfileRole.Delete)]
         [ProducesResponseType(StatusCodes.Status200OK)]

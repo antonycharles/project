@@ -4,16 +4,12 @@ using System.Linq;
 using System.Threading.Tasks;
 using Accounts.Core.Enums;
 
-namespace Accounts.Core.Responses
+namespace Accounts.Core.Requests
 {
-    public class UserProfileResponse
+    public class UserProfileUpdateRequest
     {
         public Guid Id { get; set; }
-        public Guid UserId { get; set; }
         public Guid ProfileId { get; set; }
-        public ProfileResponse? Profile { get; set; }
-        public Guid CompanyId { get; set; }
-        public CompanyResponse? Company { get; set; }
         public StatusEnum Status { get; set; }
     }
 }

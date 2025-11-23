@@ -33,7 +33,7 @@ namespace Accounts.Application.Handlers
                 throw new NotFoundException("Profile not found");
 
             var existUserProfileForApp = await _context.UserProfiles.AsNoTracking()
-                .AnyAsync(w => w.IsDeleted == false && w.UserId == userProfile.UserId && w.Profile.AppId == profile.AppId);
+                .AnyAsync(w => w.IsDeleted == false && w.UserId == userProfile.UserId && w.Profile.AppId == profile.AppId && w.CompanyId == userProfile.CompanyId);
 
             if(existUserProfileForApp == true)
                 throw new BusinessException("User already has a profile for this app");
@@ -54,6 +54,22 @@ namespace Accounts.Application.Handlers
                 throw new NotFoundException("User profile not found");
 
             userProfile.IsDeleted = true;
+
+            _context.Update(userProfile);
+
+            await _context.SaveChangesAsync();
+        }
+
+        public async Task UpdateAsync(UserProfileUpdateRequest request)
+        {
+            var userProfile = await _context.UserProfiles
+                .FirstOrDefaultAsync(w => w.Id == request.Id && w.IsDeleted == false);
+
+            if(userProfile == null)
+                throw new NotFoundException("User profile not found");
+
+            userProfile.ProfileId = request.ProfileId;
+            userProfile.Status = request.Status;
 
             _context.Update(userProfile);
 

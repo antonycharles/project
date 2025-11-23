@@ -19,11 +19,13 @@ namespace Accounts.Application.Mappers
         
         public static UserProfileResponse ToUserProfileResponse(this UserProfile entity) => new UserProfileResponse
         {
+            Id = entity.Id,
             UserId = entity.UserId,
             ProfileId = entity.ProfileId,
             Profile = entity.Profile != null ? entity.Profile.ToProfileResponse() : null,
             CompanyId = entity.CompanyId,
-            Company = entity.Company != null ? entity.Company.ToCompanyResponse() : null
+            Company = entity.Company != null ? entity.Company.ToCompanyResponse() : null,
+            Status = entity.Status
         };
     }
 }
