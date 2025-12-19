@@ -17,9 +17,20 @@ namespace Project.Web.Providers
 
             var claims = new List<Claim>();
 
+            claims.Add(new Claim("access_token", token));
             foreach (var item in data)
             {
-                claims.Add(new Claim(item.Key, item.Value.ToString()!));
+                if(item.Value is JsonElement element && element.ValueKind == JsonValueKind.Array)
+                {
+                    foreach (var arrayItem in element.EnumerateArray())
+                    {
+                        claims.Add(new Claim(item.Key, arrayItem.ToString()!));
+                    }
+                }
+                else
+                {
+                    claims.Add(new Claim(item.Key, item.Value.ToString()!));
+                }
             }
 
             return new ClaimsIdentity(claims, "jwt");

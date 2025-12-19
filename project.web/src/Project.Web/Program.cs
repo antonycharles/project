@@ -29,13 +29,8 @@ builder.Configuration.AddJsonStream(stream);
 
 builder.Services.AddSingleton(builder.Configuration);
 
-builder.Services.AddScoped<LoginWebService>(sp =>
-    new LoginWebService(new HttpClient { BaseAddress = new Uri(builder.Configuration["LoginWebUrl"]) })
-);
-
-builder.Services.AddScoped<ProjectService>(sp =>
-    new ProjectService(new HttpClient { BaseAddress = new Uri(builder.Configuration["AccountsApiUrl"]) })
-);
+builder.Services.AddScoped<LoginWebService>();
+builder.Services.AddScoped<ProjectService>();
 
 
 await builder.Build().RunAsync();

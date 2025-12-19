@@ -7,9 +7,9 @@ namespace Project.Web.Services
     {
         private readonly HttpClient _httpClient;
 
-        public LoginWebService(HttpClient httpClient)
+        public LoginWebService(IConfiguration configuration)
         {
-            _httpClient = httpClient;
+            _httpClient = new HttpClient { BaseAddress = new Uri(configuration["LoginWebUrl"]) };
         }
 
         public async Task<OAuthResponse> ExchangeCodeForJwtAsync(string code)

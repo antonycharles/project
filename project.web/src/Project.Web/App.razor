@@ -12,7 +12,9 @@
             </AuthorizeRouteView>
         </Found>
         <NotFound>
-            <p>Página não encontrada.</p>
+            <LayoutView Layout="@typeof(MainLayout)">
+                <NotFound />
+            </LayoutView>
         </NotFound>
     </Router>
 </CascadingAuthenticationState>

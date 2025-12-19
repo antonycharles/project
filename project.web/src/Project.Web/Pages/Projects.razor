@@ -1,7 +1,9 @@
 @page "/projects"
+@using Microsoft.AspNetCore.Authorization
 @using Project.Web.DTOs
 @using Project.Web.Services
 @inject ProjectService projectsService
+@attribute [Authorize]
 
 <h3>Projetos</h3>
 
