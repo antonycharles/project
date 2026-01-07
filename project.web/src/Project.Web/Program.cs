@@ -30,7 +30,9 @@ builder.Configuration.AddJsonStream(stream);
 builder.Services.AddSingleton(builder.Configuration);
 
 builder.Services.AddScoped<LoginWebService>();
+
 builder.Services.AddScoped<ProjectService>();
+builder.Services.AddScoped<MemberService>();
 
 
 await builder.Build().RunAsync();

@@ -1,0 +1,31 @@
+@page "/projects/{id:guid}"
+@inject ProjectService ProjectService
+
+
+<h3>Project Details</h3>
+
+@if (project == null)
+{
+    <p>Loading...</p>
+}
+else
+{
+    <div class="card">
+        <div class="card-body">
+            <h5 class="card-title">@project.Name</h5>
+            <h6 class="card-subtitle mb-2 text-muted">@project.Id</h6>
+            <p class="card-text"><strong>Description:</strong> @project.Description</p>
+        </div>
+    </div>
+}
+
+@code {
+    [Parameter]
+    public Guid id { get; set; }
+    private ProjectDto project;
+
+    protected override async Task OnInitializedAsync()
+    {
+        project = await ProjectService.Get(id);
+    }
+}

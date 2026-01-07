@@ -1,0 +1,67 @@
+@page "/members/project/{ProjectId:guid}"
+@using Project.Web.DTOs
+@using Project.Web.Services
+@inject MemberService MemberService
+
+<h3>Members</h3>
+
+@if (members == null)
+{
+    <p><em>Loading...</em></p>
+}
+else if (members.Count == 0)
+{
+    <p>No members found.</p>
+}
+else
+{
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Id</th>
+                <th>UserId</th>
+                <th>ProjectId</th>
+                <th>Status</th>
+                <th>Created At</th>
+                <th>Updated At</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var member in members)
+            {
+                <tr>
+                    <td>@member.Id</td>
+                    <td>@member.UserId</td>
+                    <td>@member.ProjectId</td>
+                    <td>@member.Status</td>
+                    <td>@member.CreatedAt</td>
+                    <td>@member.UpdatedAt</td>
+                    <td>
+                        <a class="btn btn-sm btn-info" href="/members/detail/@member.Id">Details</a>
+                        <a class="btn btn-sm btn-danger" href="/members/delete/@member.Id">Delete</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+    [Parameter]
+    public Guid ProjectId { get; set; }
+    private List<MemberDto> members;
+    private string error;
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            members = await MemberService.GetAllAsync(ProjectId);
+        }
+        catch (Exception ex)
+        {
+            error = ex.Message;
+        }
+    }
+}
