@@ -43,14 +43,13 @@ namespace File.Infrastructure.Data
         private void EnsureMigrations()
         {
             using var connection = new NpgsqlConnection(_connectionString);
-            var migrations = new List<IDatabaseMigration>
-            {
-                new AddFileDocumentMigration(),
-            };
+            var migrations = new List<IDatabaseMigration>();
+
+            migrations.Add(new Mig_01_AddFileDocumentMigration());
+            migrations.Add(new Mig_02_AddIsPublicToFileDocumentMigration());
             
             var executor = new MigrationExecutor(migrations);
             executor.RunMigrations(_connectionString);
-            
         }
 
         public string GetConnectionString() => _connectionString;

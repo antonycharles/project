@@ -25,7 +25,7 @@ namespace File.Infrastructure.Data
 
             var executed = GetExecutedMigrations(connection);
 
-            foreach (var migration in _migrations)
+            foreach (var migration in _migrations.OrderBy(m => m.Name))
             {
                 if (!executed.Contains(migration.Name))
                 {

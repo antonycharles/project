@@ -28,5 +28,6 @@ namespace File.Infrastructure.Entities
         [Required]
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
         public bool Active { get; set; } = true;
+        public bool? IsPublic { get; set; } = false;
     }
 }

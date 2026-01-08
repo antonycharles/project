@@ -29,7 +29,7 @@ namespace File.Api.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult> UploadFileAsync(IFormFile file)
+        public async Task<ActionResult> UploadFileAsync(IFormFile file, bool isPublic = false)
         {
             FileDocument document = new FileDocument();
             try
@@ -40,6 +40,7 @@ namespace File.Api.Controllers
 
                 document = await _uploadHelper.UploadFileAsync(file, appId.ToString(), this.GetUrlBase());
                 document.AppId = appId;
+                document.IsPublic = isPublic;
                 await _fileDocumentRepository.AddAsync(document);
 
                 return Ok(document);
@@ -52,7 +53,7 @@ namespace File.Api.Controllers
         }
 
         [HttpPost("Base64")]
-        public async Task<ActionResult> UploadFileBase64Async(string fileName, [FromBody] string base64, string contentType)
+        public async Task<ActionResult> UploadFileBase64Async(string fileName, [FromBody] string base64, string contentType, bool isPublic = false)
         {
             FileDocument document = new FileDocument();
             try
@@ -60,6 +61,7 @@ namespace File.Api.Controllers
                 var appId = User.GetId();
                 document = await _uploadHelper.UploadBase64FileAsync(base64, fileName, contentType, appId.ToString(), this.GetUrlBase());
                 document.AppId = appId;
+                document.IsPublic = isPublic;
                 await _fileDocumentRepository.AddAsync(document);
 
                 return Ok(document);
@@ -76,10 +78,19 @@ namespace File.Api.Controllers
         {
             try
             {
+
+                if(User.Identity?.IsAuthenticated != true)
+                    throw new Exception("You are not authorized to delete this file.");
+
                 var document = await _fileDocumentRepository.GetByIdAsync(id);
 
                 if (document == null)
                     throw new Exception("Document not found");
+
+                var appId = User.GetId();
+                
+                if (document.AppId != appId)
+                    throw new Exception("You are not authorized to delete this file.");
 
                 await _fileDocumentRepository.DeleteAsync(id);
 

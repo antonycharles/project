@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using File.Api.Helpers;
 using File.Infrastructure.interfaces;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -31,6 +32,13 @@ namespace File.Api.Controllers
 
                 if (fileDocument == null)
                     return NotFound("File not found.");
+
+                if(
+                    fileDocument.IsPublic == false && 
+                    (User.Identity?.IsAuthenticated == false || User.GetId() != fileDocument.AppId))
+                {
+                    return NotFound("File is not public.");
+                }
 
                 if (!System.IO.File.Exists(fileDocument.Path))
                 {

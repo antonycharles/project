@@ -7,9 +7,9 @@ using Npgsql;
 
 namespace File.Infrastructure.Migrations
 {
-    public class AddFileDocumentMigration : IDatabaseMigration
+    public class Mig_01_AddFileDocumentMigration : IDatabaseMigration
     {
-        public string Name => "AddFileDocumentMigration";
+        public string Name => "Mig_01_AddFileDocumentMigration";
 
         public void Execute(NpgsqlConnection connection)
         {
