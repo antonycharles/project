@@ -11,7 +11,7 @@ namespace Accounts.Management.Infrastructure.Refits
     public interface IFileRefit
     {
         [Multipart]
-        [Post("/Upload")]
-        Task<FileDocumentResponse> UploadAsync(StreamPart file);
+        [Post("/Upload?isPublic={isPublic}")]
+        Task<FileDocumentResponse> UploadAsync(StreamPart file, bool isPublic);
     }
 }

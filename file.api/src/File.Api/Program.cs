@@ -104,11 +104,9 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.UseStaticFiles(new StaticFileOptions
-{
-    FileProvider = new PhysicalFileProvider(uploadDir),
-    RequestPath = "/files"
-});
+
+// Serve arquivos estáticos da pasta wwwroot (ex: /imgs/arquivo.png)
+app.UseStaticFiles();
 
 app.UseHttpsRedirection();
 

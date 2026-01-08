@@ -20,12 +20,12 @@ namespace Accounts.Management.Infrastructure.Repositories
             _fileRefit = appRefit;
         }
 
-        public async Task<FileDocumentResponse> UploadAsync(IFormFile file)
+        public async Task<FileDocumentResponse> UploadAsync(IFormFile file, bool isPublic)
         {
             try
             {
                 var streamPart = new StreamPart(file.OpenReadStream(), file.FileName, file.ContentType);
-                return await _fileRefit.UploadAsync(streamPart);
+                return await _fileRefit.UploadAsync(streamPart, isPublic);
             }
             catch (ApiException ex) when (ex.StatusCode == System.Net.HttpStatusCode.BadRequest)
             {

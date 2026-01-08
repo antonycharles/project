@@ -7,9 +7,11 @@ using Accounts.Login.Infra.Exceptions;
 using Accounts.Login.Infra.Repositories;
 using Accounts.Login.Infra.Repositories.Interfaces;
 using Accounts.Login.Infra.Requests;
+using Accounts.Login.Infra.Settings;
 using Accounts.Login.Web.Helpers;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 
 namespace Accounts.Login.Web.Controllers
 {
@@ -19,7 +21,10 @@ namespace Accounts.Login.Web.Controllers
         private readonly ILogger<SignUpController> _logger;
         private readonly IUserRepository _userRepository;
 
-        public SignUpController(ILogger<SignUpController> logger, IUserRepository userRepository)
+        public SignUpController(
+            ILogger<SignUpController> logger, 
+            IUserRepository userRepository,
+            IOptions<AccountsLoginSettings> configuration) : base(configuration)
         {
             _userRepository = userRepository ?? throw new ArgumentNullException(nameof(userRepository));
             _logger = logger;

@@ -11,6 +11,7 @@ using Accounts.Login.Infra.Repositories;
 using Accounts.Login.Infra.Repositories.Interfaces;
 using Accounts.Login.Infra.Requests;
 using Accounts.Login.Infra.Responses;
+using Accounts.Login.Infra.Settings;
 using Accounts.Login.Web.Extensions;
 using Accounts.Login.Web.Models;
 using Microsoft.AspNetCore.Authentication;
@@ -18,6 +19,7 @@ using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Caching.Distributed;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 
 namespace Accounts.Login.Web.Controllers
 {
@@ -34,7 +36,8 @@ namespace Accounts.Login.Web.Controllers
             ILogger<LoginController> logger, 
             IUserAuthorizationRepository userAuthorizationRepository,
             IDistributedCache cache,
-            JwtSecurityTokenHandler jwtSecurityTokenHandler)
+            JwtSecurityTokenHandler jwtSecurityTokenHandler,
+            IOptions<AccountsLoginSettings> configuration) : base(configuration)
         {
             _userAuthorizationRepository = userAuthorizationRepository;
             _logger = logger;

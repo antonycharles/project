@@ -100,7 +100,7 @@ namespace Accounts.Management.Web.Controllers
         {
             if (request.FaviconFile != null)
             {
-                var uploadResult = await _fileRepository.UploadAsync(request.FaviconFile);
+                var uploadResult = await _fileRepository.UploadAsync(request.FaviconFile, true);
                 request.FaviconUrl = uploadResult.Url;
             }
         }

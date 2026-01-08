@@ -9,6 +9,6 @@ namespace Accounts.Management.Infrastructure.Repositories.Interfaces
 {
     public interface IFileRepository
     {
-        Task<FileDocumentResponse> UploadAsync(IFormFile file);
+        Task<FileDocumentResponse> UploadAsync(IFormFile file, bool isPublic);
     }
 }

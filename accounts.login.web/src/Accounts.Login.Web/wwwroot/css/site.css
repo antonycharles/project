@@ -13,7 +13,7 @@ h1,h2,h3,h4,h5,h6 {
   color:#818181
 }
 
-body {
+.login {
   display: flex;
   align-items: center;
   padding-top: 40px;

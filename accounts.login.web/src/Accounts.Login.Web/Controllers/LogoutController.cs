@@ -3,9 +3,11 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
+using Accounts.Login.Infra.Settings;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 
 namespace Accounts.Login.Web.Controllers
 {
@@ -14,7 +16,9 @@ namespace Accounts.Login.Web.Controllers
     {
         private readonly ILogger<LogoutController> _logger;
 
-        public LogoutController(ILogger<LogoutController> logger)
+        public LogoutController(
+            ILogger<LogoutController> logger,
+            IOptions<AccountsLoginSettings> configuration) : base(configuration)
         {
             _logger = logger;
         }

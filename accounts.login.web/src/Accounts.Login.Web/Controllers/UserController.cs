@@ -14,6 +14,8 @@ using Microsoft.Extensions.Logging;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Authentication;
 using Accounts.Login.Infra.Responses;
+using Accounts.Login.Infra.Settings;
+using Microsoft.Extensions.Options;
 
 namespace Accounts.Login.Web.Controllers
 {
@@ -28,9 +30,10 @@ namespace Accounts.Login.Web.Controllers
 
         public UserController(
             ILogger<UserController> logger,
-            IUserRepository userRepository = null,
-            IFileRepository fileRepository = null,
-            IUserPhotoRepository userPhotoRepository = null)
+            IUserRepository userRepository,
+            IFileRepository fileRepository,
+            IUserPhotoRepository userPhotoRepository,
+            IOptions<AccountsLoginSettings> configuration) : base(configuration)
         {
             _logger = logger;
             _userRepository = userRepository;
