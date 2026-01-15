@@ -14,19 +14,22 @@ using Microsoft.Extensions.Options;
 
 namespace Accounts.Login.Web.Controllers
 {
-    public abstract class BaseController : Controller
+    public abstract class BaseHomeController : Controller
     {
         private readonly AccountsLoginSettings _configuration;
+        private readonly ICompanyRepository _companyRepository;
 
-        public BaseController(IOptions<AccountsLoginSettings> configuration)
+        public BaseHomeController(IOptions<AccountsLoginSettings> configuration, ICompanyRepository companyRepository)
         {
             _configuration = configuration.Value;
+            _companyRepository = companyRepository;
         }
 
         public override void OnActionExecuting(ActionExecutingContext context)
         {
             ViewData["FileApiUrlPublic"] = _configuration.FileApiUrlPublic;
             base.OnActionExecuting(context);
+            ViewData["Companies"] = _companyRepository.GetCompaniesByUserIdAsync(User.GetId()).GetAwaiter().GetResult().ToList();
         }
 
         public void AddModelError(ExternalApiException ex)

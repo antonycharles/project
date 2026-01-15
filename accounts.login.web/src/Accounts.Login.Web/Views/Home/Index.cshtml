@@ -4,59 +4,8 @@
     ViewData["Title"] = "Log In";
     Layout = "_LayoutHome";
 }
-<div class="container pt-1 pb-1">
-    <div class="row align-items-center">
-        <div class="col d-flex align-items-center">
-            <div>
-                <small>Company:</small>
-                <h4 class="mb-0">@User.CompanyName()</h4>
-            </div>
-        </div>
-        <div class="col d-flex align-items-center justify-content-end">
-            <div class="row align-items-center">
-                <div class="col">
-                    <figure class="user-image me-3" style="width:70px;height:70px;border-radius:50%;background-size:cover;background-position:center;background-image: url('@(@User.GetImage()?.Length > 5 ? User.GetImage() : "")');margin:0;">
-                    </figure>
-                </div>
-                <div class="col">
-                    <h4 class="mb-0">@User.GetName()</h4>
-                    <p class="mb-0">@User.GetEmail()</p>
-                </div>
-            </div>
-        </div>
-    </div>
-    <hr class="mt-2 mb-2"/>
-    <div class="col-auto ms-auto">
-        <button type="button" data-bs-toggle="modal" data-bs-target="#modalChangeCompany" class="btn btn-link btn-sm me-2">Change company</button>
-        <a class="btn btn-link btn-sm me-2" href="@Url.Action("Update", "User")">Update user</a>
-        <a class="btn btn-link btn-sm" href="@Url.Action("Logout", "Logout")">Logout</a>
-    </div>
-    <div class="modal fade" id="modalChangeCompany" tabindex="-1" aria-labelledby="modalChangeCompanyLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <form class="modal-content">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h1 class="modal-title fs-5" id="modalChangeCompanyLabel">Change Company</h1>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body">
-                        <div class="d-grid gap-2">
-                            @foreach (var company in Model.Companies)
-                            {
-                                <a asp-controller="Login" asp-action="Index" asp-route-appSlug="accounts-api" asp-route-companyId="@company.Id" class="btn btn-light" type="button">@company.Name</a>
-                            }
-                        </div>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                    </div>
-                </div>
-            </form>
-        </div>
-    </div>
-    <hr class="mt-2 mb-2"/>
-    <br />
-    <h5>Applications</h5>
+<div class="container">
+    <h5 class="mb-3">Applications</h5>
     <div class="row">
         @foreach (var app in Model.Apps)
         {

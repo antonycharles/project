@@ -21,7 +21,7 @@ namespace Accounts.Login.Web.Controllers
 {
     [Authorize]
     [Route("[controller]")]
-    public class UserController : BaseController
+    public class UserController : BaseHomeController
     {
         private readonly ILogger<UserController> _logger;
         private readonly IUserRepository _userRepository;
@@ -33,7 +33,8 @@ namespace Accounts.Login.Web.Controllers
             IUserRepository userRepository,
             IFileRepository fileRepository,
             IUserPhotoRepository userPhotoRepository,
-            IOptions<AccountsLoginSettings> configuration) : base(configuration)
+            ICompanyRepository companyRepository,
+            IOptions<AccountsLoginSettings> configuration) : base(configuration, companyRepository)
         {
             _logger = logger;
             _userRepository = userRepository;

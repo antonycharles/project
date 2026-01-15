@@ -1,10 +1,11 @@
 @model UserUpdateViewModel
 @{
+  Layout = "_LayoutHome";
     ViewData["Title"] = "User update";
 }
 <div asp-validation-summary="ModelOnly"></div>
 <form asp-action="Index" method="post" class="form-signin" enctype="multipart/form-data">
-    <h1 class="h3 mb-3">User Update</h1>
+    <h5 class="mb-3">User Update</h5>
     <div class="form-floating">
       <input asp-for="Name" class="form-control" id="floatingInput" placeholder="">
       <label>Name</label>

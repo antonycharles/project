@@ -10,30 +10,26 @@ using Microsoft.Extensions.Options;
 namespace Accounts.Login.Web.Controllers;
 
 [Authorize]
-public class HomeController : BaseController
+public class HomeController : BaseHomeController
 {
     private readonly ILogger<HomeController> _logger;
     private readonly IAppRepository _appRepository;
-    private readonly ICompanyRepository _companyRepository;
 
     public HomeController(
         ILogger<HomeController> logger, 
         IAppRepository appRepository, 
         ICompanyRepository companyRepository,
-        IOptions<AccountsLoginSettings> configuration) : base(configuration)
+        IOptions<AccountsLoginSettings> configuration) : base(configuration,companyRepository)
     {
         _logger = logger;
         _appRepository = appRepository;
-        _companyRepository = companyRepository;
     }
 
     public async Task<IActionResult> IndexAsync()
     {
         var appsPublic = await _appRepository.GetPublicAppsByUserIdAsync(User.GetId());
-        var companies = await _companyRepository.GetCompaniesByUserIdAsync(User.GetId());
         return View(new HomeViewModel {
-            Apps = appsPublic.ToList(),
-            Companies = companies.ToList()
+            Apps = appsPublic.ToList()
         });
     }
 

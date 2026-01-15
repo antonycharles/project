@@ -9,6 +9,5 @@ namespace Accounts.Login.Web.Models
     public class HomeViewModel
     {
         public List<AppResponse> Apps { get; set; }
-        public List<CompanyResponse> Companies { get; set; }
     }
 }

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
+using Accounts.Login.Infra.Repositories.Interfaces;
 using Accounts.Login.Infra.Settings;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Mvc;

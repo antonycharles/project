@@ -1,4 +1,5 @@
-﻿<!DOCTYPE html>
+﻿@using Accounts.Login.Infra.Responses
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
@@ -10,16 +11,87 @@
     <link rel="stylesheet" href="~/Accounts.Login.Web.styles.css" asp-append-version="true" />
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400..900&display=swap" rel="stylesheet">
+    <style>
+        .dropdown-toggle::after{
+            margin-left:0px;
+        }
+    </style>
 </head>
 <body class="text-center" style="align-items:normal;">
     <main>
-        <div class="container mt-1">
-            <img src="@ViewData["FileApiUrlPublic"]/imgs/logo-project-sync.png" alt="" style="max-width: 150px;">
+        <div id="header" class="container mt-2">
+            <div class="d-flex justify-content-between align-items-center">
+                <a asp-controller="Home" asp-action="Index">
+                <img src="@ViewData["FileApiUrlPublic"]/imgs/logo-project-sync.png" alt="" style="max-width: 150px;">
+                </a>
+                <div class="d-flex align-items-center">
+                    <figure class="user-image me-3" style="width:50px;height:50px;border-radius:50%;background-size:cover;background-position:center;background-image: url('@(@User.GetImage()?.Length > 5 ? User.GetImage() : "")');margin:0;"></figure>
+                    <div class="dropdown">
+                        <div class="d-flex align-items-center">
+                            <div class="text-start d-none d-md-block">
+                                <b>@User.GetName()</b><br />
+                                <small>@User.GetEmail()</small>
+                            </div>
+                            <button class="btn btn-light dropdown-toggle p-1 d-flex align-items-center" type="button" id="userDropdown" data-bs-toggle="dropdown" aria-expanded="false" style="background:transparent; border:none;font-size:20px;padding:10px!important;height:50px;">
+                                <span class="visually-hidden">Abrir menu</span>
+                            </button>
+                            <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
+                                <li class="d-block d-md-none">
+                                    <div class="fw-bold ps-1 pe-1">@User.GetName()</div>
+                                    <div class="small ps-1 pe-1">@User.GetEmail()</div>
+                                    <hr class="dropdown-divider">
+                                </li>
+                                <li><a class="dropdown-item" asp-controller="Home" asp-action="Index">Home</a></li>
+                                <li><a class="dropdown-item" href="/User">Update user</a></li>
+                                <li><hr class="dropdown-divider"></li>
+                                <li><a class="dropdown-item" href="/Logout">Logout</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
-        <hr class="mt-2 mb-2"/>
-        <div class="container">
-            <div>
+        <div class="pt-2 pb-2 mt-2" style="background:#736ba7">
+            <div class="container pt-1 pb-1">
+                <div class="row align-items-center">
+                    <div class="col d-flex align-items-center">
+                        <div>
+                            <h4 class="mb-0 text-white"><i class="bi bi-building me-1 text-white"></i> @User.CompanyName()</h4>
+                        </div>
+                    </div>
+                    <div class="col d-flex align-items-center justify-content-end">
+                        <button type="button" data-bs-toggle="modal" data-bs-target="#modalChangeCompany" class="btn btn-light btn-sm me-2">Change company</button>
+                    </div>
+                </div>
+                <div class="modal fade" id="modalChangeCompany" tabindex="-1" aria-labelledby="modalChangeCompanyLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <form class="modal-content">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h1 class="modal-title fs-5" id="modalChangeCompanyLabel">Change Company</h1>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <div class="d-grid gap-2">
+                                        @foreach (var company in (ViewData["Companies"] as List<CompanyResponse>))
+                                        {
+                                            <a asp-controller="Login" asp-action="Index" asp-route-appSlug="accounts-api" asp-route-companyId="@company.Id" class="btn btn-light" type="button">@company.Name</a>
+                                        }
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div>
+            <div class="min-vh-100 mt-4">
                 @RenderBody()
             </div>
             <footer>
