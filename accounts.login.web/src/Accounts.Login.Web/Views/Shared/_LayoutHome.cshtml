@@ -5,7 +5,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>@ViewData["Title"] - Project.Sync </title>
-      <link rel="icon" type="image/x-icon" href="~/imgs/favicon_io/favicon.ico">
+      <link rel="icon" type="image/x-icon" href="@ViewData["FileApiUrlPublic"]/imgs/favicon_io/favicon.ico">
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="stylesheet" href="~/Accounts.Login.Web.styles.css" asp-append-version="true" />
@@ -34,7 +34,7 @@
                                 <b>@User.GetName()</b><br />
                                 <small>@User.GetEmail()</small>
                             </div>
-                            <button class="btn btn-light dropdown-toggle p-1 d-flex align-items-center" type="button" id="userDropdown" data-bs-toggle="dropdown" aria-expanded="false" style="background:transparent; border:none;font-size:20px;padding:10px!important;height:50px;">
+                            <button class="btn btn-light dropdown-toggle p-1 d-flex align-items-center" type="button" id="userDropdown" data-bs-toggle="dropdown" aria-expanded="false" style="background:transparent; border:none;padding:10px!important;height:50px;">
                                 <span class="visually-hidden">Abrir menu</span>
                             </button>
                             <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">

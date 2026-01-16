@@ -2,15 +2,19 @@ using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using Accounts.Management.Web.Models;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.Extensions.Options;
+using Accounts.Management.Infrastructure.Settings;
 
 namespace Accounts.Management.Web.Controllers;
 
 [Authorize]
-public class HomeController : Controller
+public class HomeController : BaseController
 {
     private readonly ILogger<HomeController> _logger;
 
-    public HomeController(ILogger<HomeController> logger)
+    public HomeController(
+        ILogger<HomeController> logger,
+        IOptions<AccountsManagementSettings> configuration) : base(configuration)
     {
         _logger = logger;
     }
