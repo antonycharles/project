@@ -1,14 +1,66 @@
-﻿<div class="top-row ps-3 navbar navbar-dark">
+﻿@using Blazored.LocalStorage
+@using Microsoft.AspNetCore.Components.Authorization
+@using Project.Web.Extensions
+@using System.Security.Claims
+
+@inject IConfiguration Config
+@inject ILocalStorageService LocalStorage
+@inject NavigationManager Nav
+
+@inject AuthenticationStateProvider AuthenticationStateProvider
+<div class="top-row ps-3 navbar navbar-dark">
     <div class="container-fluid">
-        <a class="navbar-brand" href="">Project.Web</a>
-        <button title="Navigation menu" class="navbar-toggler" @onclick="ToggleNavMenu">
-            <span class="navbar-toggler-icon"></span>
+        <a class="navbar-brand" href="">
+            <h4 class="fw-bold d-flex align-items-center m-0">
+                <img src="@Config["FileApiUrlPublic"]/imgs/icone-project-sync-purple.png"
+                            alt=""
+                            style="max-width:30px;">
+                <span class="title-logo">Project.Web</span>
+            </h4>
+        </a>
+        <button class="navbar-toggler border-0" title="Navigation menu" type="button" @onclick="ToggleNavMenu">
+            <i class="bi bi-list fs-3"></i>
         </button>
+
     </div>
 </div>
 
 <div class="@NavMenuCssClass nav-scrollable" @onclick="ToggleNavMenu">
     <nav class="flex-column">
+        <div class="nav-item px-3">
+            <div class="user-toggler">
+                <div class="d-flex align-items-center p-2 rounded" style="background-color: var(--color-white);">
+                    <figure class="user-image me-3"
+                        style="
+                            width:50px;
+                            height:50px;
+                            border-radius:50%;
+                            background-size:cover;
+                            background-position:center;
+                            background-color:#6c757d;
+                            background-image: @(User.GetImage().Length > 5 
+                                ? $"url('{User.GetImage()}')" 
+                                : "none");
+                            margin:0;
+                            display:flex;
+                            align-items:center;
+                            justify-content:center;
+                            color:white;
+                            font-weight:bold;
+                        ">
+                        @if (User.GetImage().Length <= 5)
+                        {
+                            @User.GetImage()
+                        }
+                    </figure>
+                    <div class="text-dark text-start lh-sm">
+                        <b>@User.GetName()</b><br />
+                        <small class="text-muted">@User.GetEmail()</small>
+                    </div>
+                </div>
+
+            </div>
+        </div>
         <div class="nav-item px-3">
             <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
                 <span class="bi bi-house-door-fill-nav-menu" aria-hidden="true"></span> Home
@@ -19,21 +71,33 @@
                 <span class="bi bi-plus-square-fill-nav-menu" aria-hidden="true"></span> Projects
             </NavLink>
         </div>
-        <div class="nav-item px-3">
-            <NavLink class="nav-link" href="weather">
-                <span class="bi bi-list-nested-nav-menu" aria-hidden="true"></span> Weather
-            </NavLink>
+        <div class="nav-item px-3 user-toggler">
+            <a class="nav-link" style="cursor: pointer;" @onclick="Logout">
+                <span class="bi bi-plus-square-fill-nav-menu" aria-hidden="true"></span> Logout
+            </a>
         </div>
     </nav>
 </div>
 
 @code {
     private bool collapseNavMenu = true;
-
+    private ClaimsPrincipal? User;
     private string? NavMenuCssClass => collapseNavMenu ? "collapse" : null;
 
     private void ToggleNavMenu()
     {
         collapseNavMenu = !collapseNavMenu;
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        var user = authState.User;
+        User = user;
+    }
+    private async Task Logout()
+    {
+        await LocalStorage.RemoveItemAsync("jwt");
+        Nav.NavigateTo("http://localhost:9001/", true);
     }
 }

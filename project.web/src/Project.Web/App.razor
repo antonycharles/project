@@ -1,5 +1,9 @@
 ﻿@using Microsoft.AspNetCore.Components.Authorization
 @using Project.Web.Pages
+@inject IConfiguration Config
+
+<!-- CSS base vindo da configuração -->
+<link rel="stylesheet" href="@Config["FileApiUrlPublic"]/css/base.css" />
 
 <CascadingAuthenticationState>
     <Router AppAssembly="@typeof(App).Assembly">

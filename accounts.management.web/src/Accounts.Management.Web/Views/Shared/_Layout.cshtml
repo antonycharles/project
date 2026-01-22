@@ -8,6 +8,7 @@
     <title>@ViewData["Title"] - Accounts.management</title>
     <link rel="icon" type="image/x-icon" href="@ViewData["FileApiUrlPublic"]/imgs/favicon_io/favicon.ico">
     <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="@ViewData["FileApiUrlPublic"]/css/base.css" />
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -20,11 +21,11 @@
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm" style="padding-top:0px; padding-bottom:0px;">
             <div class="container">
                 <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">
-                    <h4 class="fw-bold d-flex align-items-center m-0" style="font-size:1.1rem;">
+                    <h4 class="fw-bold d-flex align-items-center m-0">
                         <img src="@ViewData["FileApiUrlPublic"]/imgs/icone-project-sync-purple.png"
                             alt=""
                             style="max-width:30px;">
-                        <span style="font-family: 'Orbitron', sans-serif;">Accounts.management</span>
+                        <span class="title-logo">Accounts.management</span>
                     </h4>
                 </a>
 
@@ -34,7 +35,7 @@
                 </button>
                 <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
                     <ul class="navbar-nav flex-grow-1 justify-content-end">
-                        
+
                     </ul>
                     <ul class="navbar-nav flex-grow-1 justify-content-end">
                         <li class="nav-item dropdown">
@@ -105,14 +106,14 @@
         </div>
     </header>
     <div class="container">
-                
+
         @if(Context.IsMessageSuccess()){
             <div class="alert alert-success alert-dismissible" role="alert">
                 <div>@Context.GetMessageSuccess()</div>
                 <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
             </div>
         }
-            
+
         @if(Context.IsMessageError()){
             <div class="alert alert-danger alert-dismissible" role="alert">
                 <div>@Context.GetMessageError()</div>
