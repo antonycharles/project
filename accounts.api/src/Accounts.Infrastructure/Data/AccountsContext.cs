@@ -34,6 +34,7 @@ namespace Accounts.Infrastructure.Data
 
 
         public virtual DbSet<App> Apps { get; set; }
+        public virtual DbSet<AppCallback> AppCallbacks { get; set; }
         public virtual DbSet<Company> Companies { get; set; }
         public virtual DbSet<Permission> Permissions { get; set; }
         public virtual DbSet<Profile> Profiles { get; set; }
@@ -41,7 +42,6 @@ namespace Accounts.Infrastructure.Data
         public virtual DbSet<User> Users{ get; set; }
         public virtual DbSet<UserPhoto> UserPhotos { get; set; }
         public virtual DbSet<UserProfile> UserProfiles { get; set; }
-        public virtual DbSet<UserSystem> UserSystems { get; set; }
         public virtual DbSet<Client> Clients { get; set; }
         public virtual DbSet<ClientProfile> ClientProfiles { get; set; }
     }

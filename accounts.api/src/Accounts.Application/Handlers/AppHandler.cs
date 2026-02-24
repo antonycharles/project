@@ -52,6 +52,9 @@ namespace Accounts.Application.Handlers
 
         public async Task<PaginatedResponse<AppResponse>> GetAppsAsync(PaginatedRequest request)
         {
+            if(request.UserId != null)
+                return await GetPublicByUserIdAsync(request);
+
             var query = _context.Apps.AsNoTracking()
                 .Where(w => w.IsDeleted == false);
 
@@ -80,25 +83,31 @@ namespace Accounts.Application.Handlers
             return app.ToAppResponse();
         }
 
-        public async Task<IList<AppResponse>> GetPublicByUserIdAsync(Guid userId)
+        public async Task<PaginatedResponse<AppResponse>> GetPublicByUserIdAsync(PaginatedRequest request)
         {
             var lastCompanyId = await _context.Users.AsNoTracking()
-                .Where(w => w.Id == userId && w.IsDeleted == false)
+                .Where(w => w.Id == request.UserId && w.IsDeleted == false)
                 .Select(s => s.LastCompanyId)
                 .FirstOrDefaultAsync();
 
-            var apps = await _context.UserProfiles.AsNoTracking()
+            var query = _context.UserProfiles.AsNoTracking()
                 .Where(w =>
-                    w.UserId == userId && w.CompanyId == lastCompanyId && w.Status == StatusEnum.Active && w.IsDeleted == false &&
+                    w.UserId == request.UserId && w.CompanyId == lastCompanyId && w.Status == StatusEnum.Active && w.IsDeleted == false &&
                     w.Profile.Status == StatusEnum.Active && w.Profile.IsDeleted == false)
                 .Include(i => i.Profile)
                 .ThenInclude(i => i.App)
                 .Select(s => s.Profile.App)
-                .Where(w => w.IsPublic == true && w.IsDeleted == false && w.Status == StatusEnum.Active)
-                .Distinct()
+                .Where(w => w.IsPublic == request.IsPublic && w.IsDeleted == false && w.Status == StatusEnum.Active)
+                .Distinct();
+
+            var totalItems = await query.CountAsync();
+            var apps = await query
+                .Skip((request.PageIndex - 1) * request.PageSize)
+                .Take(request.PageSize)
                 .ToListAsync();
 
-            return apps.Select(s => s.ToAppResponse()).ToList();
+            var response = apps.Select(s => s.ToAppResponse()).ToList();
+            return new PaginatedResponse<AppResponse>(response, totalItems, request.PageIndex, request.PageSize, request);
         }
 
         public async Task UpdateAsync(Guid id, AppRequest request)
