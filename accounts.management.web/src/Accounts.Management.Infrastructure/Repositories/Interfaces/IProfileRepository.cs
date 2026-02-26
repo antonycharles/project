@@ -15,5 +15,6 @@ namespace Accounts.Management.Infrastructure.Repositories.Interfaces
         Task<ProfileResponse> GetByIdAsync(Guid id);
         Task DeleteAsync(Guid id);
         Task UpdateAsync(Guid id, ProfileRequest request);
+        Task UpdatePermissionsAsync(Guid id, Guid[] permissionsIds);
     }
 }

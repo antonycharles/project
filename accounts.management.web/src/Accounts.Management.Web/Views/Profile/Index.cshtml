@@ -1,13 +1,15 @@
 @model AppProfileViewModel
 @{
-    ViewData["Title"] = "User";
+    ViewData["Title"] = "Profiles";
 }
 <nav class="navbar bg-body-tertiary">
   <div class="container-fluid">
-    <h1 class="navbar-brand fs-3">
-        @Model.App.Name
-    </h1>
-    <div class="d-flex">
+    <h1 class="navbar-brand fs-3">@Model.App.Name - profiles</h1>
+    <div class="d-flex gap-2">
+      @if(User.IsInRole(RoleConstants.ProfileRole.Create))
+      {
+        <a asp-action="Create" asp-route-appId="@Model.App.Id" class="btn btn-success">Add</a>
+      }
       <button onclick="window.history.back()" type="button" class="btn btn-light">Return</button>
     </div>
   </div>
@@ -16,6 +18,8 @@
   <thead>
     <tr>
       <th scope="col">Profile</th>
+      <th scope="col">Slug</th>
+      <th scope="col">Type</th>
       <th scope="col">Status</th>
       <th></th>
     </tr>
@@ -26,21 +30,27 @@
         {
             <tr>
                 <td class="align-middle">@profile.Name</td>
-                <td class="align-middle">@profile.Status.GetDisplayName()</td>
+                <td class="align-middle">@profile.Slug</td>
+                <td class="align-middle">@profile.Type</td>
+                <td class="align-middle">@profile.Status?.GetDisplayName()</td>
                 <td class="d-flex flex-row-reverse">
-                    <div class="btn-group" role="group" aria-label="Basic example">
-                        <a asp-controller="Profile" asp-action="Details" asp-route-id="@profile.Id" class="btn btn-outline-secondary">
-                          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-bricks" viewBox="0 0 16 16">
-                            <path d="M0 .5A.5.5 0 0 1 .5 0h15a.5.5 0 0 1 .5.5v3a.5.5 0 0 1-.5.5H14v2h1.5a.5.5 0 0 1 .5.5v3a.5.5 0 0 1-.5.5H14v2h1.5a.5.5 0 0 1 .5.5v3a.5.5 0 0 1-.5.5H.5a.5.5 0 0 1-.5-.5v-3a.5.5 0 0 1 .5-.5H2v-2H.5a.5.5 0 0 1-.5-.5v-3A.5.5 0 0 1 .5 6H2V4H.5a.5.5 0 0 1-.5-.5zM3 4v2h4.5V4zm5.5 0v2H13V4zM3 10v2h4.5v-2zm5.5 0v2H13v-2zM1 1v2h3.5V1zm4.5 0v2h5V1zm6 0v2H15V1zM1 7v2h3.5V7zm4.5 0v2h5V7zm6 0v2H15V7zM1 13v2h3.5v-2zm4.5 0v2h5v-2zm6 0v2H15v-2z"/>
-                          </svg>
-                        </a>
+                    <div class="btn-group" role="group" aria-label="actions">
+                        <a asp-action="Details" asp-route-id="@profile.Id" class="btn btn-outline-secondary">Details</a>
+                        @if(User.IsInRole(RoleConstants.ProfileRole.Update))
+                        {
+                          <a asp-action="Edit" asp-route-id="@profile.Id" class="btn btn-outline-secondary">Edit</a>
+                        }
+                        @if(User.IsInRole(RoleConstants.ProfileRole.Delete))
+                        {
+                          <a asp-action="DeleteConfirm" asp-route-id="@profile.Id" class="btn btn-outline-secondary">Delete</a>
+                        }
                     </div>
                 </td>
             </tr>
         }
     }else{
         <tr>
-            <td colspan="3">No records found!</td>
+            <td colspan="5">No records found!</td>
         </tr>
     }
   </tbody>

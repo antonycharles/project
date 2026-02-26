@@ -62,13 +62,18 @@ namespace Accounts.Api.Controllers
 
         [HttpPost]
         [ProducesResponseType(typeof(AppCallbackResponse), 201)]
+        [ProducesResponseType(400)]
         [ProducesResponseType(500)]
         public async Task<IActionResult> CreateAsync([FromBody] AppCallbackRequest request)
         {
             try
             {
                 var result = await _handler.CreateAsync(request);
-                return CreatedAtAction(nameof(GetByIdAsync), new { id = result.Id }, result);
+                return StatusCode(StatusCodes.Status201Created, result);
+            }
+            catch(BusinessException ex)
+            {
+                return Problem(ex.Message, statusCode: StatusCodes.Status400BadRequest);
             }
             catch(Exception ex)
             {
@@ -78,6 +83,7 @@ namespace Accounts.Api.Controllers
 
         [HttpPut("{id}")]
         [ProducesResponseType(204)]
+        [ProducesResponseType(400)]
         [ProducesResponseType(404)]
         [ProducesResponseType(500)]
         public async Task<IActionResult> UpdateAsync(Guid id, [FromBody] AppCallbackRequest request)
@@ -86,6 +92,10 @@ namespace Accounts.Api.Controllers
             {
                 await _handler.UpdateAsync(id, request);
                 return NoContent();
+            }
+            catch(BusinessException ex)
+            {
+                return Problem(ex.Message, statusCode: StatusCodes.Status400BadRequest);
             }
             catch(NotFoundException ex)
             {

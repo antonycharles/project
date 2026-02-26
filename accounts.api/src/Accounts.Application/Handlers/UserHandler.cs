@@ -73,6 +73,12 @@ namespace Accounts.Application.Handlers
                 .ThenInclude(i => i.Company)
                 .Where(w => w.IsDeleted == false && w.UserProfiles.Any(a => a.CompanyId == request.CompanyId));
 
+            if (request.UserId.HasValue)
+                query = query.Where(w => w.Id == request.UserId.Value);
+
+            if (request.UserIds is not null && request.UserIds.Any())
+                query = query.Where(w => request.UserIds.Contains(w.Id));
+
             if(request.Search is not null)
                 query = query.Where(w => w.Name.ToLower() == request.Search.ToLower());
 

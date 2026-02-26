@@ -23,6 +23,8 @@ namespace Accounts.Application.Handlers
 
         public async Task<AppCallbackResponse> CreateAsync(AppCallbackRequest request)
         {
+            await ValidateDuplicateUrlAsync(request.AppId, request.Url);
+
             var callback = request.ToAppCallback();
 
             _context.AppCallbacks.Add(callback);
@@ -70,6 +72,8 @@ namespace Accounts.Application.Handlers
             
             if (callback == null)
                 throw new NotFoundException("AppCallback not found");
+
+            await ValidateDuplicateUrlAsync(request.AppId, request.Url, id);
                 
             callback.Update(request);
             
@@ -77,6 +81,17 @@ namespace Accounts.Application.Handlers
             await _context.SaveChangesAsync();
         }
 
-        
+        private async Task ValidateDuplicateUrlAsync(Guid appId, string url, Guid? callbackIdToIgnore = null)
+        {
+            var callbackExists = await _context.AppCallbacks.AsNoTracking()
+                .AnyAsync(w =>
+                    w.AppId == appId &&
+                    w.Url == url &&
+                    w.IsDeleted == false &&
+                    (!callbackIdToIgnore.HasValue || w.Id != callbackIdToIgnore.Value));
+
+            if (callbackExists)
+                throw new BusinessException("App callback url already exists for this app");
+        }
     }
 }

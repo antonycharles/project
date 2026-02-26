@@ -1,13 +1,15 @@
 @model AppPermissionViewModel
 @{
-    ViewData["Title"] = "User";
+    ViewData["Title"] = "Permissions";
 }
 <nav class="navbar bg-body-tertiary">
   <div class="container-fluid">
-    <h1 class="navbar-brand fs-3">
-        @Model.App.Name
-    </h1>
-    <div class="d-flex">
+    <h1 class="navbar-brand fs-3">@Model.App.Name - permissions</h1>
+    <div class="d-flex gap-2">
+      @if(User.IsInRole(RoleConstants.PermissionRole.Create))
+      {
+        <a asp-action="Create" asp-route-appId="@Model.App.Id" class="btn btn-success">Add</a>
+      }
       <button onclick="window.history.back()" type="button" class="btn btn-light">Return</button>
     </div>
   </div>
@@ -18,6 +20,7 @@
       <th scope="col">Permission</th>
       <th scope="col">Role</th>
       <th scope="col">Status</th>
+      <th scope="col"></th>
     </tr>
   </thead>
   <tbody>
@@ -28,11 +31,23 @@
                 <td class="align-middle">@permission.Name</td>
                 <td class="align-middle">@permission.Role</td>
                 <td class="align-middle">@permission.Status.GetDisplayName()</td>
+                <td class="d-flex flex-row-reverse">
+                    <div class="btn-group" role="group" aria-label="actions">
+                        @if(User.IsInRole(RoleConstants.PermissionRole.Update))
+                        {
+                          <a asp-action="Edit" asp-route-id="@permission.Id" class="btn btn-outline-secondary">Edit</a>
+                        }
+                        @if(User.IsInRole(RoleConstants.PermissionRole.Delete))
+                        {
+                          <a asp-action="DeleteConfirm" asp-route-id="@permission.Id" class="btn btn-outline-secondary">Delete</a>
+                        }
+                    </div>
+                </td>
             </tr>
         }
     }else{
         <tr>
-            <td colspan="3">No records found!</td>
+            <td colspan="4">No records found!</td>
         </tr>
     }
   </tbody>

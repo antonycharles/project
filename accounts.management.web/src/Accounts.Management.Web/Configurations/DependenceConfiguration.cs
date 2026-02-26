@@ -27,6 +27,9 @@ namespace Accounts.Management.Web.Configurations
             builder.Services.AddScoped<IPermissionRepository, PermissionRepository>();
             builder.Services.AddScoped<IClientRepository, ClientRepository>();
             builder.Services.AddScoped<IFileRepository, FileRepository>();
+            builder.Services.AddScoped<IAppCallbackRepository, AppCallbackRepository>();
+            builder.Services.AddScoped<IUserProfileRepository, UserProfileRepository>();
+            builder.Services.AddScoped<IClientProfileRepository, ClientProfileRepository>();
 
             builder.Services.AddRefitClient<IAppRefit>().ConfigureHttpClient(c =>
             {
@@ -54,6 +57,24 @@ namespace Accounts.Management.Web.Configurations
 
 
             builder.Services.AddRefitClient<IClientRefit>().ConfigureHttpClient(c =>
+            {
+                c.BaseAddress = new Uri(settings.AccountsApiUrl);
+            })
+            .AddHttpMessageHandler<AccountsApiAuthHeaderHandler>();
+
+            builder.Services.AddRefitClient<IAppCallbackRefit>().ConfigureHttpClient(c =>
+            {
+                c.BaseAddress = new Uri(settings.AccountsApiUrl);
+            })
+            .AddHttpMessageHandler<AccountsApiAuthHeaderHandler>();
+
+            builder.Services.AddRefitClient<IUserProfileRefit>().ConfigureHttpClient(c =>
+            {
+                c.BaseAddress = new Uri(settings.AccountsApiUrl);
+            })
+            .AddHttpMessageHandler<AccountsApiAuthHeaderHandler>();
+
+            builder.Services.AddRefitClient<IClientProfileRefit>().ConfigureHttpClient(c =>
             {
                 c.BaseAddress = new Uri(settings.AccountsApiUrl);
             })

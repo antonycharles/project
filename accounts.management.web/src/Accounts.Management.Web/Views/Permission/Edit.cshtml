@@ -1,0 +1,33 @@
+@model PermissionRequest
+@{
+    ViewData["Title"] = "Permission edit";
+    var app = ViewBag.App as AppResponse;
+}
+<nav class="navbar bg-body-tertiary">
+  <div class="container-fluid">
+    <h1 class="navbar-brand fs-3">Permission - edit (@app?.Name)</h1>
+  </div>
+</nav>
+
+<form asp-action="Edit" method="post">
+  <input type="hidden" asp-for="AppId" />
+  <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+  <div class="mb-3">
+    <label asp-for="Name" class="form-label">Name</label>
+    <input asp-for="Name" class="form-control">
+    <span asp-validation-for="Name" class="text-danger"></span>
+  </div>
+  <div class="mb-3">
+    <label asp-for="Role" class="form-label">Role</label>
+    <input asp-for="Role" class="form-control">
+    <span asp-validation-for="Role" class="text-danger"></span>
+  </div>
+  <div class="mb-3">
+    <label asp-for="Status" class="form-label">Status</label>
+    <select asp-for="Status" class="form-select" asp-items="Html.GetEnumSelectList<StatusEnum>()">
+      <option selected value="">Select...</option>
+    </select>
+  </div>
+  <a asp-action="Index" asp-route-appId="@Model.AppId" class="btn btn-light">Return</a>
+  <button type="submit" class="btn btn-primary">Submit</button>
+</form>

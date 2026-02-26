@@ -15,6 +15,7 @@ namespace Accounts.Application.Handlers
         private const string MSG_USER_OR_PASSAWORD_INVALID = "User or password invalid";
         private const string MSG_PROFILE_NOT_FOUND_FOR_USER = "Profile not found for user and app";
         private const string MSG_USER_INACTIVE = "User is inactive";
+        private const string MSG_REDIRECT_URI_INVALID = "Invalid callback url";
 
         private readonly AccountsContext _context;
         private readonly IPasswordProvider _passwordProvider;
@@ -54,6 +55,9 @@ namespace Accounts.Application.Handlers
 
             if(user.Status != StatusEnum.Active || user.IsDeleted == true)
                 throw new BusinessException(MSG_USER_INACTIVE);
+
+            if (!string.IsNullOrWhiteSpace(request.RedirectUri))
+                await ValidateRedirectUriAsync(request);
 
             if(request.AppSlug != null)
             {
@@ -101,6 +105,26 @@ namespace Accounts.Application.Handlers
                 throw new BusinessException(MSG_PROFILE_NOT_FOUND_FOR_USER);
 
             return userProfile;
+        }
+
+        private async Task ValidateRedirectUriAsync(UserAuthenticationRequest request)
+        {
+            if (string.IsNullOrWhiteSpace(request.AppSlug))
+                throw new BusinessException(MSG_REDIRECT_URI_INVALID);
+
+            var redirectUri = request.RedirectUri?.Trim();
+
+            var callbackExists = await _context.AppCallbacks.AsNoTracking()
+                .AnyAsync(w =>
+                    w.IsDeleted == false &&
+                    w.Status == StatusEnum.Active &&
+                    w.Url == redirectUri &&
+                    w.App.IsDeleted == false &&
+                    w.App.Status == StatusEnum.Active &&
+                    w.App.Slug == request.AppSlug);
+
+            if (!callbackExists)
+                throw new BusinessException(MSG_REDIRECT_URI_INVALID);
         }
     }
 }

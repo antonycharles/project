@@ -23,6 +23,6 @@ namespace Accounts.Management.Infrastructure.Refits
         Task<UserResponse> GetByIdAsync(Guid id, Guid companyId);
 
         [Put("/User/{id}")]
-        Task UpdateAsync(Guid id, UserRequest request);
+        Task UpdateAsync(Guid id, UserUpdateRequest request);
     }
 }

@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
+using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using Accounts.Core.Helpers;
 
@@ -17,6 +18,8 @@ namespace Accounts.Core.Requests
 
         [Required(ErrorMessage = "Password is required")]
         public string? Password { get; set; }
-        
+
+        [JsonPropertyName("redirect_uri")]
+        public string? RedirectUri { get; set; }
     }
 }

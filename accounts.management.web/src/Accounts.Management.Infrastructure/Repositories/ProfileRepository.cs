@@ -111,5 +111,26 @@ namespace Accounts.Management.Infrastructure.Repositories
                 throw new Exception(ex.Content.ToString());
             }
         }
+
+        public async Task UpdatePermissionsAsync(Guid id, Guid[] permissionsIds)
+        {
+            try
+            {
+                await _profileRefit.UpdatePermissionsAsync(id, permissionsIds);
+            }
+            catch(ApiException ex) when (ex.StatusCode == System.Net.HttpStatusCode.BadRequest)
+            {
+                var problemDetails = await ex.GetContentAsAsync<ProblemDetails>();
+
+                if(problemDetails.Detail != null)
+                    throw new ExternalApiException(problemDetails.Detail);
+
+                throw new ExternalApiException(problemDetails.Errors.FirstOrDefault().Value.FirstOrDefault());
+            }
+            catch (ApiException ex)
+            {
+                throw new Exception(ex.Content.ToString());
+            }
+        }
     }
 }

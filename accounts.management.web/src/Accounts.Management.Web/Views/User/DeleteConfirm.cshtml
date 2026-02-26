@@ -1,10 +1,10 @@
-@model AppResponse
+@model UserResponse
 @{
-    ViewData["Title"] = "App delete";
+    ViewData["Title"] = "User delete";
 }
 <nav class="navbar bg-body-tertiary">
   <div class="container-fluid">
-    <h1 class="navbar-brand fs-3">App - delete</h1>
+    <h1 class="navbar-brand fs-3">User - delete</h1>
   </div>
 </nav>
 
@@ -12,8 +12,8 @@
   <input type="hidden" name="id" value="@Model.Id"/>
   <div asp-validation-summary="ModelOnly" class="text-danger"></div>
   <div class="mb-3">
-    <label asp-for="Name" class="form-label">Do you really want to delete the <b>@Model.Name</b> app?</label>
+    <label asp-for="Name" class="form-label">Do you really want to delete the <b>@Model.Name</b> user?</label>
   </div>
   <a asp-action="Index" class="btn btn-light">Return</a>
   <button type="submit" class="btn btn-danger">Delete</button>
-</form>  
+</form>

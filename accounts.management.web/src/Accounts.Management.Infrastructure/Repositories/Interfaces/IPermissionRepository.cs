@@ -9,6 +9,10 @@ namespace Accounts.Management.Infrastructure.Repositories.Interfaces
 {
     public interface IPermissionRepository
     {
+        Task CreateAsync(PermissionRequest request);
         Task<PaginatedResponse<PermissionResponse>> GetAsync(PermissionPaginatedRequest? request);
+        Task<PermissionResponse> GetByIdAsync(Guid id);
+        Task DeleteAsync(Guid id);
+        Task UpdateAsync(Guid id, PermissionRequest request);
     }
 }

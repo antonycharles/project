@@ -93,7 +93,7 @@ namespace Accounts.Management.Infrastructure.Repositories
             }
         }
 
-        public async Task UpdateAsync(Guid id, UserRequest request)
+        public async Task UpdateAsync(Guid id, UserUpdateRequest request)
         {
             try
             {

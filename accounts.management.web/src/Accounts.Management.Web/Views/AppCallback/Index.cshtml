@@ -1,0 +1,54 @@
+@model AppCallbackPageViewModel
+@{
+    ViewData["Title"] = "Callbacks";
+}
+<nav class="navbar bg-body-tertiary">
+  <div class="container-fluid">
+    <h1 class="navbar-brand fs-3">@Model.App.Name - callbacks</h1>
+    <div class="d-flex gap-2">
+      @if(User.IsInRole(RoleConstants.AppRole.Update))
+      {
+        <a asp-action="Create" asp-route-appId="@Model.App.Id" class="btn btn-success">Add</a>
+      }
+      <button onclick="window.history.back()" type="button" class="btn btn-light">Return</button>
+    </div>
+  </div>
+</nav>
+<table class="table">
+  <thead>
+    <tr>
+      <th scope="col">Url</th>
+      <th scope="col">Environment</th>
+      <th scope="col">Default</th>
+      <th scope="col"></th>
+    </tr>
+  </thead>
+  <tbody>
+    @if(Model.Callbacks != null && Model.Callbacks.Any()){
+        @foreach(var callback in Model.Callbacks.OrderBy(o => o.Environment))
+        {
+            <tr>
+                <td class="align-middle">@callback.Url</td>
+                <td class="align-middle">@callback.Environment</td>
+                <td class="align-middle">@(callback.IsDefault ? "Yes" : "No")</td>
+                <td class="d-flex flex-row-reverse">
+                    <div class="btn-group" role="group" aria-label="actions">
+                      @if(User.IsInRole(RoleConstants.AppRole.Update))
+                      {
+                        <a asp-action="Edit" asp-route-id="@callback.Id" class="btn btn-outline-secondary">Edit</a>
+                      }
+                      @if(User.IsInRole(RoleConstants.AppRole.Delete))
+                      {
+                        <a asp-action="DeleteConfirm" asp-route-id="@callback.Id" class="btn btn-outline-secondary">Delete</a>
+                      }
+                    </div>
+                </td>
+            </tr>
+        }
+    }else{
+        <tr>
+            <td colspan="4">No records found!</td>
+        </tr>
+    }
+  </tbody>
+</table>

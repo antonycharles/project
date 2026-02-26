@@ -15,6 +15,12 @@ namespace Accounts.Management.Infrastructure.Mappers
             Email = user.Email,
             Status = user.Status,
         };
+
+        public static UserUpdateRequest ToUserUpdateRequest(this UserResponse user) => new UserUpdateRequest
+        {
+            Name = user.Name,
+            Email = user.Email
+        };
         
     }
 }

@@ -24,5 +24,8 @@ namespace Accounts.Management.Infrastructure.Refits
 
         [Put("/Profile/{id}")]
         Task UpdateAsync(Guid id, ProfileRequest request);
+
+        [Put("/Profile/Permissions/{id}")]
+        Task UpdatePermissionsAsync(Guid id, Guid[] permissionsIds);
     }
 }

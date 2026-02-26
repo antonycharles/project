@@ -13,6 +13,6 @@ namespace Accounts.Management.Infrastructure.Repositories.Interfaces
         Task<PaginatedResponse<UserResponse>> GetAsync(PaginatedRequest? request);
         Task<UserResponse> GetByIdAsync(Guid id, Guid companyId);
         Task DeleteAsync(Guid id);
-        Task UpdateAsync(Guid id, UserRequest request);
+        Task UpdateAsync(Guid id, UserUpdateRequest request);
     }
 }

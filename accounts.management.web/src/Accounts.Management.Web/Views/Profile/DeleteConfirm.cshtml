@@ -1,0 +1,20 @@
+@model ProfileResponse
+@{
+    ViewData["Title"] = "Profile delete";
+}
+<nav class="navbar bg-body-tertiary">
+  <div class="container-fluid">
+    <h1 class="navbar-brand fs-3">Profile - delete</h1>
+  </div>
+</nav>
+
+<form asp-action="Delete" method="post">
+  <input type="hidden" name="id" value="@Model.Id"/>
+  <input type="hidden" name="appId" value="@Model.AppId"/>
+  <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+  <div class="mb-3">
+    <label asp-for="Name" class="form-label">Do you really want to delete the profile <b>@Model.Name</b>?</label>
+  </div>
+  <a asp-action="Index" asp-route-appId="@Model.AppId" class="btn btn-light">Return</a>
+  <button type="submit" class="btn btn-danger">Delete</button>
+</form>

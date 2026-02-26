@@ -1,42 +1,30 @@
-@model AppRequest
+@model UserUpdateRequest
 @{
-    ViewData["Title"] = "App edit";
+    ViewData["Title"] = "User edit";
 }
 <nav class="navbar bg-body-tertiary">
   <div class="container-fluid">
-    <h1 class="navbar-brand fs-3">App - edit</h1>
+    <h1 class="navbar-brand fs-3">User - edit</h1>
   </div>
 </nav>
 
 <form asp-action="Edit" method="post">
   <div asp-validation-summary="ModelOnly" class="text-danger"></div>
   <div class="mb-3">
-    <label asp-for="Code" class="form-label">Code</label>
-    <input asp-for="Code" class="form-control">
-    <span asp-validation-for="Code" class="text-danger"></span>
-  </div>
-  <div class="mb-3">
     <label asp-for="Name" class="form-label">Name</label>
     <input asp-for="Name" class="form-control">
     <span asp-validation-for="Name" class="text-danger"></span>
   </div>
   <div class="mb-3">
-    <label asp-for="Slug" class="form-label">Slug</label>
-    <input asp-for="Slug" class="form-control">
-    <span asp-validation-for="Slug" class="text-danger"></span>
+    <label asp-for="Email" class="form-label">Email</label>
+    <input asp-for="Email" class="form-control">
+    <span asp-validation-for="Email" class="text-danger"></span>
   </div>
   <div class="mb-3">
-    <label asp-for="CallbackUrl" class="form-label">Callback url</label>
-    <input asp-for="CallbackUrl" class="form-control">
-    <span asp-validation-for="CallbackUrl" class="text-danger"></span>
-  </div>
-  <div class="mb-3">
-    <label asp-for="Status" class="form-label">Status</label>
-    <select asp-for="Status" class="form-select"  asp-items="Html.GetEnumSelectList<StatusEnum>()">
-      <option selected value="">Select...</option>
-    </select>
-    <span asp-validation-for="Status" class="text-danger"></span>
+    <label asp-for="Password" class="form-label">Password (optional)</label>
+    <input asp-for="Password" type="password" class="form-control">
+    <span asp-validation-for="Password" class="text-danger"></span>
   </div>
   <a asp-action="Index" class="btn btn-light">Return</a>
   <button type="submit" class="btn btn-primary">Submit</button>
-</form>  
+</form>

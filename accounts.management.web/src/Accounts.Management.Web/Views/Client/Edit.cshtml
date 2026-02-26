@@ -1,0 +1,31 @@
+@model ClientUpdateRequest
+@{
+    ViewData["Title"] = "Client edit";
+}
+<nav class="navbar bg-body-tertiary">
+  <div class="container-fluid">
+    <h1 class="navbar-brand fs-3">Client - edit</h1>
+  </div>
+</nav>
+
+<form asp-action="Edit" method="post">
+  <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+  <div class="mb-3">
+    <label asp-for="Name" class="form-label">Name</label>
+    <input asp-for="Name" class="form-control">
+    <span asp-validation-for="Name" class="text-danger"></span>
+  </div>
+  <div class="mb-3">
+    <label asp-for="Password" class="form-label">Password (optional)</label>
+    <input asp-for="Password" type="password" class="form-control">
+    <span asp-validation-for="Password" class="text-danger"></span>
+  </div>
+  <div class="mb-3">
+    <label asp-for="Status" class="form-label">Status</label>
+    <select asp-for="Status" class="form-select" asp-items="Html.GetEnumSelectList<StatusEnum>()">
+      <option selected value="">Select...</option>
+    </select>
+  </div>
+  <a asp-action="Index" class="btn btn-light">Return</a>
+  <button type="submit" class="btn btn-primary">Submit</button>
+</form>

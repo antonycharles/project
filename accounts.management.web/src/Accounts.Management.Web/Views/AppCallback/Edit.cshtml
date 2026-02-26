@@ -1,0 +1,30 @@
+@model AppCallbackRequest
+@{
+    ViewData["Title"] = "Callback edit";
+    var app = ViewBag.App as AppResponse;
+}
+<nav class="navbar bg-body-tertiary">
+  <div class="container-fluid">
+    <h1 class="navbar-brand fs-3">Callback - edit (@app?.Name)</h1>
+  </div>
+</nav>
+
+<form asp-action="Edit" method="post">
+  <input type="hidden" asp-for="AppId" />
+  <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+  <div class="mb-3">
+    <label asp-for="Url" class="form-label">Url</label>
+    <input asp-for="Url" class="form-control">
+    <span asp-validation-for="Url" class="text-danger"></span>
+  </div>
+  <div class="mb-3">
+    <label asp-for="Environment" class="form-label">Environment</label>
+    <select asp-for="Environment" class="form-select" asp-items="Html.GetEnumSelectList<EnvironmentEnum>()"></select>
+  </div>
+  <div class="form-check mb-3">
+    <input asp-for="IsDefault" class="form-check-input" type="checkbox">
+    <label asp-for="IsDefault" class="form-check-label">Is default</label>
+  </div>
+  <a asp-action="Index" asp-route-appId="@Model.AppId" class="btn btn-light">Return</a>
+  <button type="submit" class="btn btn-primary">Submit</button>
+</form>
