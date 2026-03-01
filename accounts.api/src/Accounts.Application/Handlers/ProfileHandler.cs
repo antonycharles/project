@@ -52,6 +52,7 @@ namespace Accounts.Application.Handlers
         public async Task<PaginatedResponse<ProfileResponse>> GetAsync(PaginatedProfileRequest request)
         {
             var query = _context.Profiles.AsNoTracking()
+                .Include(i => i.App)
                 .Where(w => w.IsDeleted == false);
 
             if(request.Search is not null)
@@ -59,6 +60,9 @@ namespace Accounts.Application.Handlers
 
             if(request.AppId is not null)
                 query = query.Where(w => w.AppId == request.AppId);
+
+            if(request.Type is not null)
+                query = query.Where(w => w.Type == request.Type);
 
             var profiles = await query
             .OrderBy(o => o.Name)
@@ -109,7 +113,7 @@ namespace Accounts.Application.Handlers
 
         private async Task ValidExists(Profile profile){
             var exist = await _context.Profiles.AsNoTracking()
-                .AnyAsync(w => w.Name == profile.Name && w.Id != profile.Id && w.IsDeleted == false);
+                .AnyAsync(w => w.Name == profile.Name && w.AppId == profile.AppId && w.Id != profile.Id && w.IsDeleted == false);
 
                 if(exist)
                     throw new BusinessException("Profile name already exists");

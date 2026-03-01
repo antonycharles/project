@@ -60,10 +60,13 @@ namespace Accounts.Application.Handlers
         public async Task<PaginatedResponse<ClientResponse>> GetAsync(PaginatedRequest request)
         {
             var query = _context.Clients.AsNoTracking()
+                .Include(i => i.ClientProfiles)
+                .ThenInclude(i => i.Profile)
+                .ThenInclude(i => i.App)
                 .Where(w => w.IsDeleted == false);
 
             if(request.Search is not null)
-                query = query.Where(w => w.Name.ToLower() == request.Search.ToLower());
+                query = query.Where(w => w.Name.ToLower().Contains(request.Search.ToLower()));
 
             var clients = await query
             .OrderBy(o => o.Name)
@@ -81,6 +84,7 @@ namespace Accounts.Application.Handlers
             var client = await _context.Clients.AsNoTracking()
                 .Include(i => i.ClientProfiles)
                 .ThenInclude(i => i.Profile)
+                .ThenInclude(i => i.App)
                 .FirstOrDefaultAsync(w => w.Id == id && w.IsDeleted == false);
 
             if(client == null)

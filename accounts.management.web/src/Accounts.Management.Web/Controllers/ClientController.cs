@@ -1,3 +1,4 @@
+using Accounts.Management.Infrastructure.Enums;
 using Accounts.Management.Infrastructure.Exceptions;
 using Accounts.Management.Infrastructure.Repositories.Interfaces;
 using Accounts.Management.Infrastructure.Requests;
@@ -59,7 +60,8 @@ namespace Accounts.Management.Web.Controllers
                 var client = await _clientRepository.GetByIdAsync(id);
                 var profiles = await _profileRepository.GetAsync(new ProfilePaginatedRequest
                 {
-                    PageSize = 1000
+                    PageSize = 1000,
+                    Type = ProfileTypeEnum.System
                 });
 
                 return View(new ClientDetailsViewModel
