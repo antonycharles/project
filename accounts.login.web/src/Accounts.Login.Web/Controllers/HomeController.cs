@@ -27,10 +27,23 @@ public class HomeController : BaseHomeController
 
     public async Task<IActionResult> IndexAsync()
     {
-        var appsPublic = await _appRepository.GetPublicAppsByUserIdAsync(User.GetId());
-        return View(new HomeViewModel {
-            Apps = appsPublic.ToList()
-        });
+        try
+        {
+            var appsPublic = await _appRepository.GetPublicAppsByUserIdAsync(User.GetId());
+            return View(new HomeViewModel {
+                Apps = appsPublic.Items.ToList()
+            });
+        }
+        catch (Exception ex)
+        {
+            return RedirectToError(
+                _logger,
+                ex,
+                "Não foi possível carregar os aplicativos disponíveis para sua conta.",
+                returnAction: "Index",
+                returnController: "Login",
+                returnLabel: "Ir para login");
+        }
     }
 
     public IActionResult Privacy()
@@ -39,8 +52,16 @@ public class HomeController : BaseHomeController
     }
 
     [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
+    [AllowAnonymous]
     public IActionResult Error()
     {
-        return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+        return View(new ErrorViewModel
+        {
+            RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier,
+            Title = GetErrorTitle() ?? "Algo deu errado",
+            Message = GetErrorMessage() ?? "Ocorreu um erro inesperado ao processar sua solicitação.",
+            ReturnUrl = GetErrorReturnUrl() ?? Url.Action("Index", User.Identity?.IsAuthenticated == true ? "Home" : "Login") ?? "/",
+            ReturnLabel = GetErrorReturnLabel() ?? "Tentar novamente"
+        });
     }
 }

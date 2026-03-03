@@ -59,8 +59,14 @@ namespace Accounts.Login.Web.Controllers
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "An error occurred while processing the request.");
-                ModelState.AddModelError(string.Empty, ex.Message);
+                return RedirectToError(
+                    _logger,
+                    ex,
+                    "Não foi possível concluir seu cadastro neste momento.",
+                    returnAction: "Index",
+                    returnController: "SignUp",
+                    routeValues: new { request.AppSlug },
+                    returnLabel: "Voltar para cadastro");
             }
 
             return View(request);

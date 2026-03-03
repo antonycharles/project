@@ -99,9 +99,13 @@ namespace Accounts.Login.Web.Controllers
             }
             catch (Exception ex)
             {
-
-                _logger.LogError(ex, "An error occurred while processing the request.");
-                ModelState.AddModelError(string.Empty, ex.Message);
+                return RedirectToError(
+                    _logger,
+                    ex,
+                    "Não foi possível atualizar seus dados agora.",
+                    returnAction: "Update",
+                    returnController: "User",
+                    returnLabel: "Voltar para edição");
             }
             
             return View(model);

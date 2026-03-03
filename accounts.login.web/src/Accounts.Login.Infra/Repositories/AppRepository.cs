@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
+using Accounts.Login.Infra.Exceptions;
 using Accounts.Login.Infra.Repositories.Interfaces;
 using Accounts.Login.Infra.Responses;
 using Accounts.Login.Infra.Settings;
@@ -24,10 +25,21 @@ namespace Accounts.Login.Infra.Repositories
             _clientAuthorizationRepository = clientAuthorizationRepository;
         }
 
-        public async Task<IList<AppResponse>> GetPublicAppsByUserIdAsync(Guid userId)
+        public async Task<PaginatedResponse<AppResponse>> GetPublicAppsByUserIdAsync(Guid userId)
         {
-            await AddToken();
-            return await base.GetAsync<IList<AppResponse>>($"App/public/{userId}");
+            try
+            {
+                await AddToken();
+                return await base.GetAsync<PaginatedResponse<AppResponse>>($"App?userId={userId}&isPublic=true");
+            }
+            catch (ExternalApiException ex)
+            {
+                throw ex;
+            }
+            catch (Exception ex)
+            {
+                throw new ExternalApiException($"Error in request: {ex.Message}", ex);
+            }
         }
 
 

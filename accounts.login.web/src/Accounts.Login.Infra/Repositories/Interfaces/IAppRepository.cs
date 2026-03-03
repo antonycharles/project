@@ -8,6 +8,6 @@ namespace Accounts.Login.Infra.Repositories.Interfaces
 {
     public interface IAppRepository
     {
-        Task<IList<AppResponse>> GetPublicAppsByUserIdAsync(Guid userId);
+        Task<PaginatedResponse<AppResponse>> GetPublicAppsByUserIdAsync(Guid userId);
     }
 }

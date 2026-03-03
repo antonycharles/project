@@ -27,12 +27,25 @@ namespace Accounts.Login.Web.Controllers
         [HttpGet]
         public async Task<IActionResult> Logout()
         {
-            if(!User.Identity.IsAuthenticated)
+            try
+            {
+                if(!User.Identity.IsAuthenticated)
+                    return RedirectToAction("Index", "Login");
+
+                await HttpContext.SignOutAsync("CookieAuth");
+
                 return RedirectToAction("Index", "Login");
-
-            await HttpContext.SignOutAsync("CookieAuth");
-
-            return RedirectToAction("Index", "Login");
+            }
+            catch (Exception ex)
+            {
+                return RedirectToError(
+                    _logger,
+                    ex,
+                    "Não foi possível encerrar sua sessão agora.",
+                    returnAction: "Index",
+                    returnController: "Home",
+                    returnLabel: "Voltar para home");
+            }
         }
     }
 }

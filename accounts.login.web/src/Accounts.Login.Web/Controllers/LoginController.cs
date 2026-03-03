@@ -69,8 +69,14 @@ namespace Accounts.Login.Web.Controllers
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "An error occurred while processing the request.");
-                ModelState.AddModelError(string.Empty, ex.Message);
+                return RedirectToError(
+                    _logger,
+                    ex,
+                    "Não foi possível iniciar o processo de autenticação agora.",
+                    returnAction: "Index",
+                    returnController: "Login",
+                    routeValues: new { AppSlug, companyId },
+                    returnLabel: "Voltar para login");
             }
 
             return View(new UserAuthenticationRequest
@@ -99,8 +105,14 @@ namespace Accounts.Login.Web.Controllers
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "An error occurred while processing the request.");
-                ModelState.AddModelError(string.Empty, ex.Message);
+                return RedirectToError(
+                    _logger,
+                    ex,
+                    "Não foi possível concluir o login neste momento.",
+                    returnAction: "Index",
+                    returnController: "Login",
+                    routeValues: new { request.AppSlug },
+                    returnLabel: "Voltar para login");
             }
 
             return View(request);
