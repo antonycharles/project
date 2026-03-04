@@ -17,13 +17,16 @@ namespace Accounts.Management.Web.Controllers
     {
         private readonly IProfileRepository _profileRepository;
         private readonly IAppRepository _appRepository;
+        private readonly IPermissionRepository _permissionRepository;
 
         public ProfileController(
             IProfileRepository profileRepository,
-            IAppRepository appRepository)
+            IAppRepository appRepository,
+            IPermissionRepository permissionRepository)
         {
             _profileRepository = profileRepository;
             _appRepository = appRepository;
+            _permissionRepository = permissionRepository;
         }
 
         [AuthorizeRole(RoleConstants.ProfileRole.List)]
@@ -74,12 +77,64 @@ namespace Accounts.Management.Web.Controllers
             try
             {
                 var profile = await _profileRepository.GetByIdAsync(id);
-                return View(profile);
+                return RedirectToAction("Permissions", new { id = profile.Id });
             }
             catch (Exception ex)
             {
                 HttpContext.AddMessageError(ex.Message);
                 return RedirectToAction("Index", "App");
+            }
+        }
+
+        [HttpGet]
+        [AuthorizeRole(RoleConstants.ProfileRole.Update)]
+        public async Task<IActionResult> PermissionsAsync(Guid id)
+        {
+            try
+            {
+                var profile = await _profileRepository.GetByIdAsync(id);
+                var availablePermissions = await _permissionRepository.GetAsync(new PermissionPaginatedRequest
+                {
+                    AppId = profile.AppId,
+                    PageSize = 1000
+                });
+
+                return View(new ProfilePermissionManagementViewModel
+                {
+                    Profile = profile,
+                    AppId = profile.AppId,
+                    ProfileId = profile.Id,
+                    PermissionIds = profile.Permissions?.Select(x => x.Id).ToArray() ?? Array.Empty<Guid>(),
+                    AvailablePermissions = availablePermissions
+                });
+            }
+            catch (Exception ex)
+            {
+                HttpContext.AddMessageError(ex.Message);
+                return RedirectToAction("Index", "App");
+            }
+        }
+
+        [HttpPost]
+        [AuthorizeRole(RoleConstants.ProfileRole.Update)]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> PermissionsAsync(ProfilePermissionManagementViewModel model)
+        {
+            try
+            {
+                await _profileRepository.UpdatePermissionsAsync(model.ProfileId, model.PermissionIds ?? Array.Empty<Guid>());
+                HttpContext.AddMessageSuccess("Profile permissions updated successfully!");
+                return RedirectToAction("Permissions", new { id = model.ProfileId });
+            }
+            catch (ExternalApiException ex)
+            {
+                HttpContext.AddMessageError(ex.Message);
+                return RedirectToAction("Permissions", new { id = model.ProfileId });
+            }
+            catch (Exception ex)
+            {
+                HttpContext.AddMessageError(ex.Message);
+                return RedirectToAction("Permissions", new { id = model.ProfileId });
             }
         }
 

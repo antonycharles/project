@@ -6,6 +6,10 @@
   <div class="container-fluid">
     <h1 class="navbar-brand fs-3">@Model.Name</h1>
     <div class="d-flex gap-2">
+      @if(User.IsInRole(RoleConstants.ProfileRole.Update))
+      {
+        <a asp-action="Permissions" asp-route-id="@Model.Id" class="btn btn-outline-secondary">Manage permissions</a>
+      }
       <a asp-action="Index" asp-route-appId="@Model.AppId" class="btn btn-light">Return</a>
     </div>
   </div>

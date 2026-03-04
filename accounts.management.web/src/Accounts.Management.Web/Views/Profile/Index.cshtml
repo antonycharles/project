@@ -35,7 +35,7 @@
                 <td class="align-middle">@profile.Status?.GetDisplayName()</td>
                 <td class="d-flex flex-row-reverse">
                     <div class="btn-group" role="group" aria-label="actions">
-                        <a asp-action="Details" asp-route-id="@profile.Id" class="btn btn-outline-secondary">Details</a>
+                        <a asp-action="Permissions" asp-route-id="@profile.Id" class="btn btn-outline-secondary">Permissions</a>
                         @if(User.IsInRole(RoleConstants.ProfileRole.Update))
                         {
                           <a asp-action="Edit" asp-route-id="@profile.Id" class="btn btn-outline-secondary">Edit</a>
