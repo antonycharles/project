@@ -47,6 +47,7 @@ namespace Accounts.Login.Web.Controllers
                 if (!ModelState.IsValid)
                     return View(request);
 
+                request.CreateCompanyDefault = true;
                 var user = await _userRepository.CreateAsync(request);
 
                 HttpContext.SetSuccessResponse("User created successfully.");

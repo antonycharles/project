@@ -20,6 +20,7 @@ namespace Accounts.Login.Infra.Requests
         [Required(ErrorMessage = "Password is required")]
         [DataType(DataType.Password)]
         public string Password { get; set; }
+        public bool? CreateCompanyDefault { get; set; } = true;
         public StatusEnum? Status { get; set; } = StatusEnum.Active;
     }
 }

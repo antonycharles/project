@@ -4,17 +4,19 @@ using Accounts.Management.Infrastructure.Mappers;
 using Accounts.Management.Infrastructure.Repositories.Interfaces;
 using Accounts.Management.Infrastructure.Requests;
 using Accounts.Management.Infrastructure.Responses;
+using Accounts.Management.Infrastructure.Settings;
 using Accounts.Management.Web.Extensions;
 using Accounts.Management.Web.Helpers;
 using Accounts.Management.Web.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
 
 namespace Accounts.Management.Web.Controllers
 {
-    public class UserController : Controller
+    public class UserController : BaseController
     {
         private readonly IUserRepository _userRepository;
         private readonly IProfileRepository _profileRepository;
@@ -23,7 +25,8 @@ namespace Accounts.Management.Web.Controllers
         public UserController(
             IUserRepository userRepository,
             IProfileRepository profileRepository,
-            IUserProfileRepository userProfileRepository)
+            IOptions<AccountsManagementSettings> settings,
+            IUserProfileRepository userProfileRepository) : base(settings)
         {
             _userRepository = userRepository;
             _profileRepository = profileRepository;

@@ -3,15 +3,17 @@ using Accounts.Management.Infrastructure.Exceptions;
 using Accounts.Management.Infrastructure.Repositories.Interfaces;
 using Accounts.Management.Infrastructure.Requests;
 using Accounts.Management.Infrastructure.Responses;
+using Accounts.Management.Infrastructure.Settings;
 using Accounts.Management.Web.Helpers;
 using Accounts.Management.Web.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
 using System;
 using System.Threading.Tasks;
 
 namespace Accounts.Management.Web.Controllers
 {
-    public class ClientController : Controller
+    public class ClientController : BaseController
     {
         private readonly IClientRepository _clientRepository;
         private readonly IProfileRepository _profileRepository;
@@ -20,7 +22,8 @@ namespace Accounts.Management.Web.Controllers
         public ClientController(
             IClientRepository clientRepository,
             IProfileRepository profileRepository,
-            IClientProfileRepository clientProfileRepository)
+            IOptions<AccountsManagementSettings> settings,
+            IClientProfileRepository clientProfileRepository) : base(settings)
         {
             _clientRepository = clientRepository;
             _profileRepository = profileRepository;

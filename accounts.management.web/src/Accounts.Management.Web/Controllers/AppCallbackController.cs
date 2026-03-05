@@ -1,24 +1,27 @@
 using Accounts.Management.Infrastructure.Exceptions;
 using Accounts.Management.Infrastructure.Repositories.Interfaces;
 using Accounts.Management.Infrastructure.Requests;
+using Accounts.Management.Infrastructure.Settings;
 using Accounts.Management.Web.Helpers;
 using Accounts.Management.Web.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
 using System;
 using System.Threading.Tasks;
 
 namespace Accounts.Management.Web.Controllers
 {
     [Authorize]
-    public class AppCallbackController : Controller
+    public class AppCallbackController : BaseController
     {
         private readonly IAppRepository _appRepository;
         private readonly IAppCallbackRepository _appCallbackRepository;
 
         public AppCallbackController(
             IAppRepository appRepository,
-            IAppCallbackRepository appCallbackRepository)
+            IOptions<AccountsManagementSettings> settings,
+            IAppCallbackRepository appCallbackRepository) : base(settings)
         {
             _appRepository = appRepository;
             _appCallbackRepository = appCallbackRepository;

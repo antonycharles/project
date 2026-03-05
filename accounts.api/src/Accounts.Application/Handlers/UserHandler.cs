@@ -22,16 +22,27 @@ namespace Accounts.Application.Handlers
         private readonly AccountsContext _context;
         private readonly IPasswordProvider _passwordProvider;
         private readonly AccountsSettings _settings;
+        private readonly ICompanyHandler _companyHandler;
+        private readonly IAppHandler _appHandler;
+        private readonly IProfileHandler _profileHandler;
+        private readonly IUserProfileHandler _userProfileHandler;
 
         public UserHandler(
             AccountsContext context,
             IPasswordProvider passwordProvider,
-            IOptions<AccountsSettings> settings
-            )
+            IOptions<AccountsSettings> settings,
+            ICompanyHandler companyHandler,
+            IProfileHandler profileHandler,
+            IUserProfileHandler userProfileHandler,
+            IAppHandler appHandler)
         {
             _context = context;
             _passwordProvider = passwordProvider;
             _settings = settings.Value;
+            _companyHandler = companyHandler;
+            _profileHandler = profileHandler;
+            _userProfileHandler = userProfileHandler;
+            _appHandler = appHandler;
         }
 
         public async Task<UserResponse> CreateAsync(UserRequest request)
@@ -41,11 +52,45 @@ namespace Accounts.Application.Handlers
 
             await ValidExistsAsync(user);
 
-            _context.Add(user);
+            using var transaction = await _context.Database.BeginTransactionAsync();
 
-            await _context.SaveChangesAsync();
+            try
+            {
+                _context.Add(user);
+                await _context.SaveChangesAsync();
 
-            return user.ToUserResponse();
+                if (request.CreateCompanyDefault == true)
+                {
+                    await CreateCompanyProfileDefaultAsync(user);
+                }
+                
+                await transaction.CommitAsync();
+                return user.ToUserResponse();
+            }
+            catch
+            {
+                await transaction.RollbackAsync();
+
+                throw;
+            }
+        }
+
+        private async Task CreateCompanyProfileDefaultAsync(User user)
+        {
+            var company = await _companyHandler.CreateAsync(new CompanyRequest { Name = $"Project Default", });
+            var app = await _appHandler.GetBySlugAsync("accounts-login-web");
+            var profiles = await _profileHandler.GetAsync(new PaginatedProfileRequest { AppId = app.Id, PageIndex = 1, PageSize = 100 });
+            var profile = profiles.Items.FirstOrDefault(w => w.IsDefault == true);
+
+            if (profile == null)
+                throw new BusinessException("Default profile not found for app accounts-login-web");
+
+            _ = await _userProfileHandler.CreateAsync(new UserProfileRequest
+            {
+                CompanyId = company.Id,
+                ProfileId = profile.Id,
+                UserId = user.Id
+            });
         }
 
         public async Task DeleteAsync(Guid id)
@@ -106,9 +151,12 @@ namespace Accounts.Application.Handlers
 
             if (user == null)
                 throw new NotFoundException("User not found");
-                
+            
 
-            user.UserProfiles = user.UserProfiles.Where(w => w.CompanyId == companyId).ToList();
+            if(companyId != Guid.Empty)
+                user.UserProfiles = user.UserProfiles.Where(w => w.CompanyId == companyId).ToList();
+            else
+                user.UserProfiles = new List<UserProfile>();
 
             return user.ToUserResponse(_settings.FileApiUrl);
         }

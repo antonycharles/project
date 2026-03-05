@@ -23,7 +23,7 @@ namespace Accounts.Api.Helpers
         public static Guid GetCompanyId(this ClaimsPrincipal claimsPrincipal)
         {
             var companyIdClaim = claimsPrincipal.Claims.FirstOrDefault(c => c.Type == CustomClaimTypes.CompanyId);
-            return companyIdClaim?.Value != null ? new Guid(companyIdClaim.Value) : Guid.Empty;
+            return companyIdClaim?.Value != null && companyIdClaim.Value != "" ? new Guid(companyIdClaim.Value) : Guid.Empty;
         }
     }
 }

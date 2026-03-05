@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Accounts.Api.Helpers;
 using Accounts.Core.Exceptions;
 using Accounts.Core.Handlers;
 using Accounts.Core.Requests;
@@ -26,6 +27,7 @@ namespace Accounts.Api.Controllers
         [HttpGet("app/{appId}")]
         [ProducesResponseType(typeof(IEnumerable<AppCallbackResponse>), 200)]
         [ProducesResponseType(500)]
+        [AuthorizeRole(RoleConstants.AppRole.List)]
         public async Task<IActionResult> GetAllByAppIdAsync(Guid appId)
         {
             try
@@ -43,6 +45,7 @@ namespace Accounts.Api.Controllers
         [ProducesResponseType(typeof(AppCallbackResponse), 200)]
         [ProducesResponseType(404)]
         [ProducesResponseType(500)]
+        [AuthorizeRole(RoleConstants.AppRole.List)]
         public async Task<IActionResult> GetByIdAsync(Guid id)
         {
             try
@@ -64,6 +67,7 @@ namespace Accounts.Api.Controllers
         [ProducesResponseType(typeof(AppCallbackResponse), 201)]
         [ProducesResponseType(400)]
         [ProducesResponseType(500)]
+        [AuthorizeRole(RoleConstants.AppRole.Create)]
         public async Task<IActionResult> CreateAsync([FromBody] AppCallbackRequest request)
         {
             try
@@ -86,6 +90,7 @@ namespace Accounts.Api.Controllers
         [ProducesResponseType(400)]
         [ProducesResponseType(404)]
         [ProducesResponseType(500)]
+        [AuthorizeRole(RoleConstants.AppRole.Update)]
         public async Task<IActionResult> UpdateAsync(Guid id, [FromBody] AppCallbackRequest request)
         {
             try
@@ -111,6 +116,7 @@ namespace Accounts.Api.Controllers
         [ProducesResponseType(204)]
         [ProducesResponseType(404)]
         [ProducesResponseType(500)]
+        [AuthorizeRole(RoleConstants.AppRole.Delete)]
         public async Task<IActionResult> DeleteAsync(Guid id)
         {
             try

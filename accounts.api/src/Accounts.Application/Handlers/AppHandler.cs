@@ -83,6 +83,17 @@ namespace Accounts.Application.Handlers
             return app.ToAppResponse();
         }
 
+        public async Task<AppResponse> GetBySlugAsync(string slug)
+        {
+            var app = await _context.Apps.AsNoTracking()
+                .FirstOrDefaultAsync(w => w.Slug == slug && w.IsDeleted == false);
+
+            if(app == null)
+                throw new NotFoundException("App not found");
+
+            return app.ToAppResponse();
+        }
+
         public async Task<PaginatedResponse<AppResponse>> GetPublicByUserIdAsync(PaginatedRequest request)
         {
             var lastCompanyId = await _context.Users.AsNoTracking()

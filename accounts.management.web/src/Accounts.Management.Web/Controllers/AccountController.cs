@@ -16,7 +16,7 @@ using Microsoft.Extensions.Options;
 namespace Accounts.Management.Web.Controllers
 {
     [Route("[controller]")]
-    public class AccountController : Controller
+    public class AccountController : BaseController
     {
         private readonly ILogger<AccountController> _logger;
         private readonly AccountsManagementSettings _settings;
@@ -25,7 +25,7 @@ namespace Accounts.Management.Web.Controllers
         public AccountController(
             ILogger<AccountController> logger, 
             IOptions<AccountsManagementSettings> settings,
-            ILoginRepository loginRepository)
+            ILoginRepository loginRepository) : base(settings)
         {
             _logger = logger;
             _settings = settings.Value;

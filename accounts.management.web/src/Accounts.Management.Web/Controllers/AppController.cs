@@ -9,16 +9,18 @@ using Accounts.Management.Infrastructure.Repositories;
 using Accounts.Management.Infrastructure.Repositories.Interfaces;
 using Accounts.Management.Infrastructure.Requests;
 using Accounts.Management.Infrastructure.Responses;
+using Accounts.Management.Infrastructure.Settings;
 using Accounts.Management.Web.Helpers;
 using Accounts.Management.Web.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 
 namespace Accounts.Management.Web.Controllers
 {
     [Authorize]
-    public class AppController : Controller
+    public class AppController : BaseController
     {
         private readonly ILogger<AppController> _logger;
         private readonly IAppRepository _appRepository;
@@ -27,7 +29,8 @@ namespace Accounts.Management.Web.Controllers
         public AppController(
             ILogger<AppController> logger,
             IAppRepository appRepository,
-            IFileRepository fileRepository)
+            IOptions<AccountsManagementSettings> settings,
+            IFileRepository fileRepository) : base(settings)
         {
             _logger = logger;
             _appRepository = appRepository;

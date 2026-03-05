@@ -2,24 +2,27 @@ using Accounts.Management.Infrastructure.Exceptions;
 using Accounts.Management.Infrastructure.Repositories.Interfaces;
 using Accounts.Management.Infrastructure.Requests;
 using Accounts.Management.Infrastructure.Responses;
+using Accounts.Management.Infrastructure.Settings;
 using Accounts.Management.Web.Helpers;
 using Accounts.Management.Web.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
 using System;
 using System.Threading.Tasks;
 
 namespace Accounts.Management.Web.Controllers
 {
     [Authorize]
-    public class PermissionController : Controller
+    public class PermissionController : BaseController
     {
         private readonly IPermissionRepository _permissionRepository;
         private readonly IAppRepository _appRepository;
 
         public PermissionController(
             IPermissionRepository permissionRepository,
-            IAppRepository appRepository)
+            IOptions<AccountsManagementSettings> settings,
+            IAppRepository appRepository) : base(settings)
         {
             _permissionRepository = permissionRepository;
             _appRepository = appRepository;

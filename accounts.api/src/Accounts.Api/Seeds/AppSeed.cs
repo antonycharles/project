@@ -78,6 +78,14 @@ namespace Accounts.Api.Seeds
                 Status = StatusEnum.Active
             });
 
+            apps.Add(new App{
+                Code = 8,
+                Type = AppTypeEnum.Web,
+                Name = "Accounts Login - Web",
+                Slug = "accounts-login-web",
+                Status = StatusEnum.Active
+            });
+
             var appsDb = context.Apps.AsNoTracking().ToList();
 
             foreach(var app in apps)

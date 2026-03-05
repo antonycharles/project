@@ -2,10 +2,12 @@ using Accounts.Management.Infrastructure.Exceptions;
 using Accounts.Management.Infrastructure.Repositories.Interfaces;
 using Accounts.Management.Infrastructure.Requests;
 using Accounts.Management.Infrastructure.Responses;
+using Accounts.Management.Infrastructure.Settings;
 using Accounts.Management.Web.Helpers;
 using Accounts.Management.Web.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Options;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
@@ -13,7 +15,7 @@ using System.Threading.Tasks;
 namespace Accounts.Management.Web.Controllers
 {
     [Authorize]
-    public class ProfileController : Controller
+    public class ProfileController : BaseController
     {
         private readonly IProfileRepository _profileRepository;
         private readonly IAppRepository _appRepository;
@@ -22,7 +24,8 @@ namespace Accounts.Management.Web.Controllers
         public ProfileController(
             IProfileRepository profileRepository,
             IAppRepository appRepository,
-            IPermissionRepository permissionRepository)
+            IOptions<AccountsManagementSettings> settings,
+            IPermissionRepository permissionRepository) : base(settings)
         {
             _profileRepository = profileRepository;
             _appRepository = appRepository;
