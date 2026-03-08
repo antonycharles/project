@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 using Accounts.Core.Attributes;
+using Accounts.Core.Enums;
 
 namespace Accounts.Core.Requests
 {
@@ -44,5 +45,8 @@ namespace Accounts.Core.Requests
 
         [JsonPropertyName("refresh_token")]
         public string? RefreshToken { get; set; }
+        
+        [JsonPropertyName("environment")]
+        public EnvironmentEnum? Environment { get; set; }
     }
 }

@@ -47,6 +47,7 @@ namespace Accounts.Api.Configurations
                 var passwordProvider = scope.ServiceProvider.GetService<IPasswordProvider>();
 
                 AppSeed.Seeder(context);
+                AppCallbackSeed.Seeder(context);
                 PermissionSeed.Seeder(context);
                 ProfileSeed.Seeder(context);
                 ProfilePermissionSeed.Seeder(context);

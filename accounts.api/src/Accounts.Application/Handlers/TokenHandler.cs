@@ -7,6 +7,7 @@ using Accounts.Application.Extensions;
 using Accounts.Core;
 using Accounts.Core.Entities;
 using Accounts.Core.Enums;
+using Accounts.Core.Exceptions;
 using Accounts.Core.Handlers;
 using Accounts.Core.Requests;
 using Accounts.Core.Responses;
@@ -21,6 +22,7 @@ namespace Accounts.Application.Handlers
     public class TokenHandler : ITokenHandler
     {
         private const string T_ISSUER = "accounts.api";
+        private const string MSG_REDIRECT_URI_INVALID = "Invalid callback url";
 
         private readonly AccountsContext _context;
         private readonly ITokenKeyHandler _tokenKeyHandler;
@@ -67,7 +69,7 @@ namespace Accounts.Application.Handlers
         }
 
 
-        public async Task<AuthenticationResponse> GenerateUserTokenAsync(Guid userId, string appSlug)
+        public async Task<AuthenticationResponse> GenerateUserTokenAsync(Guid userId, string appSlug, string? redirectUri, EnvironmentEnum? environment)
         {
             var user = await _context.Users.AsNoTracking()
                 .Include(i => i.LastCompany)
@@ -113,11 +115,12 @@ namespace Accounts.Application.Handlers
             foreach (var role in roles)
                 claims.Add(new Claim(CustomClaimTypes.Role, profile.App.Code + "-" + role));
 
-            
-            return GenerationAuthenticationResponse(claims, user.Id, UserTypeEnum.user, profile?.App);
+            var callbackUrl = await DefineCallbackAsync(appSlug, redirectUri, environment);
+
+            return GenerationAuthenticationResponse(claims, user.Id, UserTypeEnum.user, profile?.App, callbackUrl);
         }
 
-        private AuthenticationResponse GenerationAuthenticationResponse(List<Claim> claims, Guid authId, UserTypeEnum userType, App? app)
+        private AuthenticationResponse GenerationAuthenticationResponse(List<Claim> claims, Guid authId, UserTypeEnum userType, App? app, string? redirectUri = null)
         {
             SecurityTokenDescriptor jwt = GetSecurityTokenDescriptor(claims, app?.Slug);
 
@@ -131,15 +134,59 @@ namespace Accounts.Application.Handlers
             return new AuthenticationResponse
             {
                 ExpiresIn = jwt.Expires?.AddMinutes(-3),
-                CallbackUrl = app?.CallbackUrl,
                 Token = lastJws,
                 AuthId = authId,
                 AppSlug = app?.Slug,
+                CallbackUrl = redirectUri,
                 UserType = userType,
                 RefreshToken = Guid.NewGuid().ToString()
             };
         }
 
+        private async Task<string> DefineCallbackAsync(string appSlug, string? redirectUri, EnvironmentEnum? environment)
+        {
+            if (!string.IsNullOrWhiteSpace(redirectUri))
+            {
+                await ValidateRedirectUriAsync(redirectUri, appSlug);
+                return redirectUri;
+            }
+            else
+            {
+                var callback = await _context.AppCallbacks.AsNoTracking()
+                    .Include(i => i.App)
+                    .FirstOrDefaultAsync(w =>
+                        w.Environment == environment &&
+                        w.IsDeleted == false &&
+                        w.IsDefault == true &&
+                        w.Status == StatusEnum.Active &&
+                        w.App.Slug == appSlug);
+
+                if (callback == null)
+                    throw new BusinessException(MSG_REDIRECT_URI_INVALID);
+
+                return callback.Url;
+            }
+        }
+
+        private async Task ValidateRedirectUriAsync(string? redirectUri, string appSlug)
+        {
+            if (string.IsNullOrWhiteSpace(appSlug))
+                throw new BusinessException(MSG_REDIRECT_URI_INVALID);
+
+            redirectUri = redirectUri?.Trim();
+
+            var callbackExists = await _context.AppCallbacks.AsNoTracking()
+                .AnyAsync(w =>
+                    w.IsDeleted == false &&
+                    w.Status == StatusEnum.Active &&
+                    w.Url == redirectUri &&
+                    w.App.IsDeleted == false &&
+                    w.App.Status == StatusEnum.Active &&
+                    w.App.Slug == appSlug);
+
+            if (!callbackExists)
+                throw new BusinessException(MSG_REDIRECT_URI_INVALID);
+        }
 
         private SecurityTokenDescriptor GetSecurityTokenDescriptor(List<Claim> claims, string? appSlug = null)
         {

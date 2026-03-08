@@ -29,6 +29,10 @@ namespace Accounts.Login.Infra.Repositories
         public async Task<AuthenticationResponse> AuthenticateAsync(UserAuthenticationRequest request)
         {
             await AddToken();
+
+            if (string.IsNullOrWhiteSpace(request.RedirectUri))
+                request.Environment = _options.Environment;
+
             var code = await base.PostAsync<AuthenticationCodeResponse>("OAuth/Authentication", request);
 
             if (code == null || string.IsNullOrWhiteSpace(code.Code))
@@ -36,7 +40,7 @@ namespace Accounts.Login.Infra.Repositories
 
             return await base.PostFormDataAsync<AuthenticationResponse>("OAuth/token", new Dictionary<string, string>
             {
-                { "code", code.Code },
+                { "Code", code.Code },
                 { "GrantType", "authorization_code" }
             });
         }
@@ -55,9 +59,14 @@ namespace Accounts.Login.Infra.Repositories
             return await base.GetAsync<UserResponse>($"OAuth/userInfo");
         }
 
-        public async Task<AuthenticationResponse> RefreshTokenAsync(string tokenRefresh, string appSlug = "", Guid? companyId = null)
+        public async Task<AuthenticationResponse> RefreshTokenAsync(
+            string tokenRefresh, 
+            string appSlug = "", 
+            Guid? companyId = null,
+            string redirectUri = "")
         {
             await AddToken();
+
 
             var dados = new Dictionary<string, string>
             {
@@ -66,6 +75,12 @@ namespace Accounts.Login.Infra.Repositories
                 { "AppSlug", appSlug },
 
             };
+
+
+            if (string.IsNullOrWhiteSpace(redirectUri))
+                dados.Add("Environment", _options.Environment.ToString());
+            else
+                dados.Add("RedirectUri", redirectUri);
 
             if (companyId.HasValue)
                 dados.Add("CompanyId", companyId.Value.ToString());

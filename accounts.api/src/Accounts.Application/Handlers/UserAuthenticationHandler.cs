@@ -45,29 +45,27 @@ namespace Accounts.Application.Handlers
                 .ThenInclude(i => i.Permission)
                 .FirstOrDefaultAsync(w => w.Email == request.Email);
 
-            if(user == null)
+            if (user == null)
                 throw new BusinessException(MSG_USER_OR_PASSAWORD_INVALID);
 
             var passwordHash = request.Password != null ? _passwordProvider.HashPassword(request.Password) : Guid.NewGuid().ToString();
 
-            if(user.Password != passwordHash)
+            if (user.Password != passwordHash)
                 throw new BusinessException(MSG_USER_OR_PASSAWORD_INVALID);
 
-            if(user.Status != StatusEnum.Active || user.IsDeleted == true)
+            if (user.Status != StatusEnum.Active || user.IsDeleted == true)
                 throw new BusinessException(MSG_USER_INACTIVE);
 
-            if (!string.IsNullOrWhiteSpace(request.RedirectUri))
-                await ValidateRedirectUriAsync(request);
-
-            if(request.AppSlug != null)
+            if (request.AppSlug != null)
             {
-                var userProfile = await GetUserProfileAsync(user,request);
+                var userProfile = await GetUserProfileAsync(user, request);
                 user.UserProfiles.Add(userProfile);
             }
 
-            return await _tokenHandler.GenerateUserTokenAsync(user.Id, request.AppSlug);
+            return await _tokenHandler.GenerateUserTokenAsync(user.Id, request.AppSlug, request.RedirectUri, request.Environment);
         }
 
+        
         private async Task<UserProfile> GetUserProfileAsync(User user, UserAuthenticationRequest request)
         {
             if(user.LastCompanyId == null)
@@ -105,26 +103,6 @@ namespace Accounts.Application.Handlers
                 throw new BusinessException(MSG_PROFILE_NOT_FOUND_FOR_USER);
 
             return userProfile;
-        }
-
-        private async Task ValidateRedirectUriAsync(UserAuthenticationRequest request)
-        {
-            if (string.IsNullOrWhiteSpace(request.AppSlug))
-                throw new BusinessException(MSG_REDIRECT_URI_INVALID);
-
-            var redirectUri = request.RedirectUri?.Trim();
-
-            var callbackExists = await _context.AppCallbacks.AsNoTracking()
-                .AnyAsync(w =>
-                    w.IsDeleted == false &&
-                    w.Status == StatusEnum.Active &&
-                    w.Url == redirectUri &&
-                    w.App.IsDeleted == false &&
-                    w.App.Status == StatusEnum.Active &&
-                    w.App.Slug == request.AppSlug);
-
-            if (!callbackExists)
-                throw new BusinessException(MSG_REDIRECT_URI_INVALID);
         }
     }
 }

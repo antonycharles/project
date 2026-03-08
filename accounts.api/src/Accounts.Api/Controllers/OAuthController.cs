@@ -105,7 +105,7 @@ public class OAuthController : ControllerBase
             if(request.CompanyId != null)
                 await _userHandler.UpdateLastCompanyAsync(result.AuthId, request.CompanyId.Value);
 
-            var user = await _tokenHandler.GenerateUserTokenAsync(result.AuthId, request.AppSlug ?? result.AppSlug);
+            var user = await _tokenHandler.GenerateUserTokenAsync(result.AuthId, request.AppSlug ?? result.AppSlug,request.RedirectUri, request.Environment ?? EnvironmentEnum.Production);
             
             if (user == null)
                 return BadRequest("User not found");

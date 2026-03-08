@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
+using Accounts.Login.Infra.Enums;
 
 namespace Accounts.Login.Infra.Settings
 {
@@ -31,5 +32,8 @@ namespace Accounts.Login.Infra.Settings
 
         [Required]
         public string FileApiSlug { get; set; }
+
+        [Required]
+        public EnvironmentEnum Environment { get; set; }
     }
 }
