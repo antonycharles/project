@@ -1,5 +1,6 @@
 @page "/projects/update/{id:guid}"
 @inject ProjectService ProjectService
+@inject NavigationManager Navigation
 
 <h3>Edit Project</h3>
 
@@ -46,8 +47,7 @@ else
         try
         {
             var result = await ProjectService.Update(project);
-            message = "Project updated successfully!";
-            alertClass = "alert alert-success";
+            Navigation.NavigateTo("/projects");
         }
         catch (Exception ex)
         {

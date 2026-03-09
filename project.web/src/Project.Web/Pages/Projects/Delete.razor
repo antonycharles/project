@@ -1,0 +1,38 @@
+@page "/projects/delete/{Id:guid}"
+
+@inject ProjectService ProjectService
+@inject NavigationManager Navigation
+
+@code {
+    [Parameter]
+    public Guid Id { get; set; }
+    private string message;
+    private string alertClass;
+    private bool deleted;
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            await ProjectService.Delete(Id);
+            deleted = true;
+            Navigation.NavigateTo("/projects");
+        }
+        catch (Exception ex)
+        {
+            message = $"Error deleting project: {ex.Message}";
+            alertClass = "alert alert-danger";
+        }
+    }
+}
+
+<h3>Delete Project</h3>
+@if (!string.IsNullOrEmpty(message))
+{
+    <div class="alert @alertClass mb-3">@message</div>
+}
+@if (deleted)
+{
+    <div class="alert alert-success mb-3">Project deleted successfully.</div>
+    <a class="btn btn-secondary" href="/projects">Back to List</a>
+}

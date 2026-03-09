@@ -121,7 +121,16 @@ namespace Project.Web.Services
             }
         }
 
-        public Task Delete(Guid id)
-            => _http.DeleteAsync($"/v1/Project/{id}");
+        public async Task Delete(Guid id)
+        {
+            await AddBearerTokenAsync();
+            var res = await _http.DeleteAsync($"/v1/Project/{id}");
+
+            if (!res.IsSuccessStatusCode)
+            {
+                var content = await res.Content.ReadAsStringAsync();
+                throw new Exception($"API error: {content}");
+            }
+        }
     }
 }
