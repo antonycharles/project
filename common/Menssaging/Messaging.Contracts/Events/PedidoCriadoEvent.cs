@@ -4,7 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Messaging.Abstractions;
 
-namespace Messaging.Contracts;
+namespace Messaging.Contracts.Events;
 
 public sealed record PedidoCriadoEvent(
     Guid PedidoId,
