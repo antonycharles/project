@@ -2,6 +2,9 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Project.Domain\Project.Domain.csproj" />
+    <ProjectReference Include="..\..\..\common\Menssaging\Messaging.Abstractions\Messaging.Abstractions.csproj" />
+    <ProjectReference Include="..\..\..\common\Menssaging\Messaging.Contracts\Messaging.Contracts.csproj" />
+    <ProjectReference Include="..\..\..\common\Menssaging\Messaging.RabbitMQ\Messaging.RabbitMQ.csproj" />
   </ItemGroup>
 
   <ItemGroup>

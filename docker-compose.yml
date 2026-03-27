@@ -26,6 +26,10 @@ services:
             - "15672:15672"
         networks:
             - project-network
+        volumes:
+            - rabbitmq_data:/var/lib/rabbitmq
+            - ./infra/rabbitmq/rabbitmq.conf:/etc/rabbitmq/rabbitmq.conf:ro
+            - ./infra/rabbitmq/definitions.json:/etc/rabbitmq/definitions.json:ro
 
     redis:
         image: redis:6.2-alpine
@@ -77,8 +81,8 @@ services:
             - redis
     projectapi:
         build:
-            context: ./project.api
-            dockerfile: Dockerfile
+            context: .
+            dockerfile: ./project.api/Dockerfile
         container_name: project-api
         ports:
             - "9503:8080"
@@ -145,6 +149,8 @@ volumes:
     uploads:
         driver: local
     db_postgresql:
+        driver: local
+    rabbitmq_data:
         driver: local
         
 networks:

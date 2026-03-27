@@ -8,6 +8,8 @@ using Microsoft.IdentityModel.Tokens;
 using Project.Api.Configurations;
 using Microsoft.OpenApi.Models;
 using Microsoft.AspNetCore.Mvc;
+using Messaging.Contracts.Events;
+using Messaging.RabbitMQ;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -81,6 +83,9 @@ builder.Services.AddApiVersioning(options =>
     options.ReportApiVersions = true;
 });
 
+builder.Services.AddRabbitMqEventBus(
+    builder.Configuration,
+    typeof(Project_Created_Event).Assembly);
 
 var app = builder.Build();
 

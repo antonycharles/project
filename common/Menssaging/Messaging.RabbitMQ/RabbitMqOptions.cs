@@ -14,6 +14,6 @@ public sealed class RabbitMqOptions
     public string VirtualHost { get; set; } = "/";
     public string ExchangeName { get; set; } = "integration_events";
     public string ExchangeType { get; set; } = "topic";
-    public string QueueName { get; set; } = "default_queue";
+    public string? QueueName { get; set; }
 }
     

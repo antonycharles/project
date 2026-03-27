@@ -47,17 +47,23 @@ public sealed class RabbitMqConsumerBackgroundService<TEvent, THandler> : Backgr
             autoDelete: false,
             cancellationToken: stoppingToken);
 
-        await _channel.QueueDeclareAsync(
-            queue: _options.QueueName,
+        string queueName = string.IsNullOrWhiteSpace(_options.QueueName) ? string.Empty : _options.QueueName;
+
+        // Se não informar o nome, o RabbitMQ irá gerar um nome exclusivo
+        var queueDeclareResult = await _channel.QueueDeclareAsync(
+            queue: queueName,
             durable: true,
             exclusive: false,
             autoDelete: false,
             cancellationToken: stoppingToken);
 
+        // Sempre usar o nome real da fila (informado ou gerado)
+        queueName = queueDeclareResult.QueueName;
+
         var routingKey = _eventNameResolver.GetName<TEvent>();
 
         await _channel.QueueBindAsync(
-            queue: _options.QueueName,
+            queue: queueName,
             exchange: _options.ExchangeName,
             routingKey: routingKey,
             cancellationToken: stoppingToken);
@@ -99,7 +105,7 @@ public sealed class RabbitMqConsumerBackgroundService<TEvent, THandler> : Backgr
         };
 
         _consumerTag = await _channel.BasicConsumeAsync(
-            queue: _options.QueueName,
+            queue: queueName,
             autoAck: false,
             consumer: consumer,
             cancellationToken: stoppingToken);

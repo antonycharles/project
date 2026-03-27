@@ -28,5 +28,5 @@ public sealed class DefaultEventNameResolver : IEventNameResolver
         => _map.TryGetValue(eventName, out var type) ? type : null;
 
     private static string GetEventNameInternal(Type type)
-        => type.Name.Replace("Event", "").ToLowerInvariant();
+        => type.Name.Replace("_Event", "").Replace("_",".").ToLowerInvariant();
 }

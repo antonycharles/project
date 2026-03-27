@@ -6,8 +6,8 @@ using Messaging.Abstractions;
 
 namespace Messaging.Contracts.Events;
 
-public sealed record PedidoCriadoEvent(
-    Guid PedidoId,
-    Guid ClienteId,
-    decimal ValorTotal
+public sealed record Project_Created_Event(
+    Guid ProjectId,
+    string Name,
+    string Status
     ) : IntegrationEvent;

@@ -9,16 +9,20 @@ using Project.Domain.Entities;
 using Microsoft.Extensions.Configuration;
 using Project.Domain.Settings;
 using Microsoft.Extensions.Options;
+using Messaging.Abstractions;
+using Messaging.Contracts.Events;
 
 namespace Project.Infrastructure.Repositories
 {
     public class ProjectRepository: IProjectRepository
     {
         private readonly string _connectionString;
+        private readonly IEventBus _eventBus;
 
-        public ProjectRepository(IOptions<ProjectSettings> options)
+        public ProjectRepository(IOptions<ProjectSettings> options, IEventBus eventBus)
         {
             _connectionString = options.Value.ConnectionString;
+            _eventBus = eventBus;
         }
 
         public async Task<Domain.Entities.Project> GetByIdAsync(Guid id)
@@ -107,6 +111,10 @@ namespace Project.Infrastructure.Repositories
             command.Parameters.AddWithValue("@status", (int)Project.Status);
 
             await command.ExecuteNonQueryAsync();
+
+            var item = new Project_Created_Event(Project.Id, Project.Name, Project.Status.ToString());
+
+            await _eventBus.PublishAsync(item);
         }
 
         public async Task UpdateAsync(Domain.Entities.Project Project)
