@@ -22,7 +22,7 @@ namespace Project.Application.Services
             _memberService = memberService;
         }
 
-        public async Task<ProjectDto?> GetByIdAsync(Guid id)
+        public async Task<ProjectDto?> GetByIdAsync(Guid companyId, Guid id)
         {
             var Project = await _ProjectRepository.GetByIdAsync(id);
 
@@ -30,7 +30,7 @@ namespace Project.Application.Services
 
             var result = MapToDto(Project);
 
-            result.Members = await _memberService.GetByProjectIdAsync(id);
+            result.Members = await _memberService.GetByProjectIdAsync(companyId, id);
 
             return result;
         }

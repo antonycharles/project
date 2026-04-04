@@ -8,7 +8,7 @@ namespace Project.Application.Interfaces
 {
     public interface IProjectService
     {
-        Task<ProjectDto?> GetByIdAsync(Guid id);
+        Task<ProjectDto?> GetByIdAsync(Guid companyId, Guid id);
         Task<IEnumerable<ProjectDto>> GetAllAsync();
         Task<IEnumerable<ProjectDto>> GetByCompanyIdAsync(Guid companyId);
         Task<ProjectDto> AddAsync(ProjectCreateDto dto);

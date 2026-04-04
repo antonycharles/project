@@ -66,12 +66,19 @@ code {
 }
 
 .project-card {
+    cursor: pointer;
     transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
-.project-card:hover {
+.project-card:hover,
+.project-card:focus {
     transform: translateY(-4px);
-    box-shadow: 0 1rem 2rem rgba(0, 0, 0, 0.08) !important;
+    box-shadow: 0 1rem 2rem rgba(15, 23, 42, 0.12) !important;
+}
+
+.project-card:focus {
+    outline: 2px solid #1b6ec2;
+    outline-offset: 2px;
 }
 
 .project-card .card-title {

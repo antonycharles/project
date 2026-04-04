@@ -12,5 +12,11 @@ namespace Project.Domain.Settings
         public required string ConnectionString { get; set; }
         [Required]
         public required string AccountsApiUrl { get; set; }
+        [Required]
+        public required string AccountsApiSlug { get; set; }
+        [Required]
+        public string ClientId { get; set; }
+        [Required]
+        public string ClientSecret { get; set; }
     }
 }

@@ -6,16 +6,20 @@ using Project.Application.DTOs;
 using Project.Domain.Interfaces;
 using Project.Domain.Entities;
 using Project.Domain.Exceptions;
+using Project.Domain.Interfaces.Externals;
+using Project.Domain.Responses;
 
 namespace Project.Application.Services
 {
     public class MemberService : IMemberService
     {
         private readonly IMemberRepository _memberRepository;
+        private readonly IUserRepository _userRepository;
 
-        public MemberService(IMemberRepository memberRepository)
+        public MemberService(IMemberRepository memberRepository, IUserRepository userRepository)
         {
             _memberRepository = memberRepository;
+            _userRepository = userRepository;
         }
 
         public async Task<MemberDto?> GetByIdAsync(Guid id)
@@ -25,10 +29,11 @@ namespace Project.Application.Services
             return MapToDto(member);
         }
 
-        public async Task<IEnumerable<MemberDto>> GetByProjectIdAsync(Guid projectId)
+        public async Task<IEnumerable<MemberDto>> GetByProjectIdAsync(Guid companyId, Guid projectId)
         {
             var members = await _memberRepository.GetByProjectIdAsync(projectId);
-            return MapToDtoList(members);
+            var users = await _userRepository.GetUsersByIdsAsync(companyId, members.Select(m => m.UserId).ToList());
+            return MapToDtoList(members, users);
         }
 
         public async Task<MemberDto> AddAsync(MemberCreateDto dto)
@@ -61,12 +66,13 @@ namespace Project.Application.Services
             };
         }
 
-        private static MemberDto MapToDto(Member member)
+        private static MemberDto MapToDto(Member member, UserResponse? user = null)
         {
             return new MemberDto
             {
                 Id = member.Id,
                 UserId = member.UserId,
+                UserName = user?.Name,
                 ProjectId = member.ProjectId,
                 CreatedAt = member.CreatedAt,
                 UpdatedAt = member.UpdatedAt,
@@ -74,11 +80,11 @@ namespace Project.Application.Services
             };
         }
 
-        private static IEnumerable<MemberDto> MapToDtoList(IEnumerable<Member> members)
+        private static IEnumerable<MemberDto> MapToDtoList(IEnumerable<Member> members, List<UserResponse>? users = null)
         {
             foreach (var member in members)
             {
-                yield return MapToDto(member);
+                yield return MapToDto(member, users?.FirstOrDefault(u => u.Id == member.UserId));
             }
         }
     }

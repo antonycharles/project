@@ -4,6 +4,7 @@ using Project.Application.DTOs;
 using Project.Domain.Exceptions;
 using Microsoft.AspNetCore.Authorization;
 using Project.Api.Helpers;
+using Project.Api.Extensions;
 
 namespace Project.Api.Controllers.V1;
 
@@ -84,7 +85,7 @@ public class MemberController : ControllerBase
     {
         try
         {
-            var members = await _memberService.GetByProjectIdAsync(projectId);
+            var members = await _memberService.GetByProjectIdAsync(User.CompanyId(), projectId);
             return Ok(members);
         }
         catch (Exception ex)

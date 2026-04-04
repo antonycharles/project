@@ -10,9 +10,12 @@ using Microsoft.OpenApi.Models;
 using Microsoft.AspNetCore.Mvc;
 using Messaging.Contracts.Events;
 using Messaging.RabbitMQ;
+using Project.Infrastructure.Repositories.Externals;
+using Project.Domain.Interfaces.Externals;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Services.AddHttpClient();
 builder.AddConfigurationRoot();
 var settings = builder.GetSettings();
 
@@ -22,6 +25,8 @@ var connectionString = settings.ConnectionString;
 
 builder.Services.AddScoped<IProjectRepository, ProjectRepository>();
 builder.Services.AddScoped<IMemberRepository, MemberRepository>();
+builder.Services.AddScoped<IClientAuthorizationRepository, ClientAuthorizationRepository>();
+builder.Services.AddScoped<IUserRepository, UserRepository>();
 
 
 builder.Services.AddScoped<IProjectService, ProjectService>();

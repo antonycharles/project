@@ -14,6 +14,7 @@ namespace Accounts.Api.Seeds
         public static void Seeder(AccountsContext context){
             SeederAccountsApiAdmin(context);
             SeederAccountsApiLogin(context);
+            SeederAccountsApiInfo(context);
             SeederAccountsManagementAdmin(context);
             SeederAccountsManagementUser(context);
             SeederAccountsApiPublicToken(context);
@@ -104,6 +105,32 @@ namespace Accounts.Api.Seeds
                 "user-update",
                 "company-list",
                 "app-list"
+            };
+
+            var permissions = context.Permissions.AsNoTracking()
+                .Where(w => w.AppId == app.Id && roles.Contains(w.Role)).ToList();
+
+            AddProfilePermission(context, profile, permissions);
+        }
+
+        private static void SeederAccountsApiInfo(AccountsContext context)
+        {
+            var app = context.Apps.AsNoTracking().FirstOrDefault(w => w.Slug == "accounts-api");
+
+            if(app == null)
+                return;
+
+            var profile = context.Profiles.AsNoTracking()
+                .FirstOrDefault(w => w.Slug == "info" && w.AppId == app.Id);
+
+            if(profile == null)
+                return;
+
+            var roles = new List<string>
+            {
+                "app-list",
+                "user-list",
+                "profile-list",
             };
 
             var permissions = context.Permissions.AsNoTracking()

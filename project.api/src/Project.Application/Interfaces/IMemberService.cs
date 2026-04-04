@@ -8,7 +8,7 @@ namespace Project.Application.Interfaces
     public interface IMemberService
     {
         Task<MemberDto?> GetByIdAsync(Guid id);
-        Task<IEnumerable<MemberDto>> GetByProjectIdAsync(Guid projectId);
+        Task<IEnumerable<MemberDto>> GetByProjectIdAsync(Guid companyId, Guid projectId);
         Task<MemberDto> AddAsync(MemberCreateDto dto);
         Task DeleteAsync(Guid id);
     }

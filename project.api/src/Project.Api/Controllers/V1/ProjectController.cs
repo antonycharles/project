@@ -50,7 +50,7 @@ public class ProjectController : ControllerBase
     {
         try
         {
-            var Project = await _ProjectService.GetByIdAsync(id);
+            var Project = await _ProjectService.GetByIdAsync(User.CompanyId(),id);
             
             if (Project == null)
                 return NotFound("Project not found");

@@ -34,8 +34,8 @@
                                 background-size:cover;
                                 background-position:center;
                                 background-color:#6c757d;
-                                background-image: @(User.GetImage().Length > 5 
-                                    ? $"url('{User.GetImage()}')" 
+                                background-image: @(HasUserImageUrl 
+                                    ? $"url('{UserImage}')" 
                                     : "none");
                                 margin:0;
                                 display:flex;
@@ -44,9 +44,9 @@
                                 color:white;
                                 font-weight:bold;
                             ">
-                        @if (User.GetImage().Length <= 5)
+                        @if (!HasUserImageUrl)
                         {
-                            @User.GetImage()
+                            @UserImage
                         }
                     </figure>
 
@@ -77,12 +77,7 @@
         <nav class="flex-column"> 
             <div class="nav-item ">
                 <NavLink class="nav-link" href="" Match="NavLinkMatch.All">
-                    <span class="bi bi-house-door-fill-nav-menu" aria-hidden="true"></span> Home
-                </NavLink>
-            </div>
-            <div class="nav-item">
-                <NavLink class="nav-link" href="projects">
-                    <span class="bi bi-plus-square-fill-nav-menu" aria-hidden="true"></span> Projects
+                    <span class="bi bi-house-door-fill-nav-menu" aria-hidden="true"></span> Projects
                 </NavLink>
             </div>
         </nav>
@@ -92,6 +87,8 @@
     private bool collapseNavMenu = true;
     private ClaimsPrincipal? User;
     private string? NavMenuCssClass => collapseNavMenu ? "collapse" : null;
+    private string UserImage => User.GetImage();
+    private bool HasUserImageUrl => UserImage.Length > 5;
 
     private void ToggleNavMenu()
     {

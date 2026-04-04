@@ -6,6 +6,7 @@ namespace Project.Web.DTOs
     {
         public Guid Id { get; set; }
         public Guid UserId { get; set; }
+        public string? UserName { get; set; }
         public Guid ProjectId { get; set; }
         public int Status { get; set; }
         public DateTime CreatedAt { get; set; }
