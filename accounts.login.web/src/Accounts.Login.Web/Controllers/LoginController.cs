@@ -46,13 +46,13 @@ namespace Accounts.Login.Web.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> IndexAsync(string? AppSlug = "accounts-login-web", Guid? companyId = null, string? RedirectUri = "")
+        public async Task<IActionResult> IndexAsync(string? AppSlug = "accounts-login-web", Guid? companyId = null, string? redirectUrl = "")
         {
             try
             {
                 if (User.Identity.IsAuthenticated && User.GetRefreshToken() != null && AppSlug != null && AppSlug != "")
                 {
-                    var result = await _userAuthorizationRepository.RefreshTokenAsync(User.GetRefreshToken(), AppSlug, companyId, RedirectUri);
+                    var result = await _userAuthorizationRepository.RefreshTokenAsync(User.GetRefreshToken(), AppSlug, companyId, redirectUrl);
                     var userInfo = await _userAuthorizationRepository.GetUserInfoByTokenAsync(result.Token);
                     await AddCookieAuthentication(result, userInfo);
                     return await GenerateCode(result);
@@ -61,7 +61,7 @@ namespace Accounts.Login.Web.Controllers
                 return View(new UserAuthenticationRequest
                 {
                     AppSlug = AppSlug,
-                    RedirectUri = RedirectUri
+                    RedirectUrl = redirectUrl
                 });
             }
             catch (ExternalApiException ex)
@@ -83,7 +83,7 @@ namespace Accounts.Login.Web.Controllers
             return View(new UserAuthenticationRequest
             {
                 AppSlug = AppSlug,
-                RedirectUri = RedirectUri
+                RedirectUrl = redirectUrl
             });
         }
 

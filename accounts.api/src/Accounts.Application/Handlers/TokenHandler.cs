@@ -143,12 +143,12 @@ namespace Accounts.Application.Handlers
             };
         }
 
-        private async Task<string> DefineCallbackAsync(string appSlug, string? redirectUri, EnvironmentEnum? environment)
+        private async Task<string> DefineCallbackAsync(string appSlug, string? redirectUrl, EnvironmentEnum? environment)
         {
-            if (!string.IsNullOrWhiteSpace(redirectUri))
+            if (!string.IsNullOrWhiteSpace(redirectUrl))
             {
-                await ValidateRedirectUriAsync(redirectUri, appSlug);
-                return redirectUri;
+                await ValidateRedirectUriAsync(redirectUrl, appSlug);
+                return redirectUrl;
             }
             else
             {
@@ -168,18 +168,18 @@ namespace Accounts.Application.Handlers
             }
         }
 
-        private async Task ValidateRedirectUriAsync(string? redirectUri, string appSlug)
+        private async Task ValidateRedirectUriAsync(string? redirectUrl, string appSlug)
         {
             if (string.IsNullOrWhiteSpace(appSlug))
                 throw new BusinessException(MSG_REDIRECT_URI_INVALID);
 
-            redirectUri = redirectUri?.Trim();
+            redirectUrl = redirectUrl?.Trim();
 
             var callbackExists = await _context.AppCallbacks.AsNoTracking()
                 .AnyAsync(w =>
                     w.IsDeleted == false &&
                     w.Status == StatusEnum.Active &&
-                    w.Url == redirectUri &&
+                    w.Url == redirectUrl &&
                     w.App.IsDeleted == false &&
                     w.App.Status == StatusEnum.Active &&
                     w.App.Slug == appSlug);

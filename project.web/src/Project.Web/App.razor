@@ -2,8 +2,10 @@
 @using Project.Web.Pages
 @inject IConfiguration Config
 
-<!-- CSS base vindo da configuração -->
-<link rel="stylesheet" href="@Config["FileApiUrlPublic"]/css/base.css" />
+<HeadContent>
+    <link rel="stylesheet" href="@Config["FileApiUrlPublic"]/css/base.css" />
+    <link rel="icon" type="image/x-icon" href="@($"{Config["FileApiUrlPublic"]}/imgs/favicon_io/favicon.ico")" />
+</HeadContent>
 
 <CascadingAuthenticationState>
     <Router AppAssembly="@typeof(App).Assembly">

@@ -66,7 +66,8 @@ namespace Accounts.Login.Infra.Repositories
         {
             try
             {
-                var content = new StringContent(JsonSerializer.Serialize(data), System.Text.Encoding.UTF8, "application/json");
+                var json = JsonSerializer.Serialize(data);
+                var content = new StringContent(json, System.Text.Encoding.UTF8, "application/json");
                 var response = await _httpClient.PostAsync(url, content);
 
                 if (response.IsSuccessStatusCode == false)

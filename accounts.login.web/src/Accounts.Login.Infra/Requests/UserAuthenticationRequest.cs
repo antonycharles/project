@@ -26,8 +26,8 @@ namespace Accounts.Login.Infra.Requests
         [JsonPropertyName("password")]
         public string? Password { get; set; }
 
-        [JsonPropertyName("redirect_uri")]
-        public string? RedirectUri { get; set; }
+        [JsonPropertyName("redirect_url")]
+        public string? RedirectUrl { get; set; }
         
         [JsonPropertyName("environment")]
         public EnvironmentEnum? Environment { get; set; }

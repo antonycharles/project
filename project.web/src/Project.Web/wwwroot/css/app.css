@@ -64,3 +64,21 @@
 code {
     color: #c02d76;
 }
+
+.project-card {
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.project-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 1rem 2rem rgba(0, 0, 0, 0.08) !important;
+}
+
+.project-card .card-title {
+    color: #1f2937;
+    font-weight: 600;
+}
+
+.project-card .card-text {
+    line-height: 1.6;
+}

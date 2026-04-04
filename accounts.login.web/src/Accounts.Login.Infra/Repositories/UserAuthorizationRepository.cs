@@ -30,7 +30,7 @@ namespace Accounts.Login.Infra.Repositories
         {
             await AddToken();
 
-            if (string.IsNullOrWhiteSpace(request.RedirectUri))
+            if (string.IsNullOrWhiteSpace(request.RedirectUrl))
                 request.Environment = _options.Environment;
 
             var code = await base.PostAsync<AuthenticationCodeResponse>("OAuth/Authentication", request);
@@ -80,7 +80,7 @@ namespace Accounts.Login.Infra.Repositories
             if (string.IsNullOrWhiteSpace(redirectUri))
                 dados.Add("Environment", _options.Environment.ToString());
             else
-                dados.Add("RedirectUri", redirectUri);
+                dados.Add("RedirectUrl", redirectUri);
 
             if (companyId.HasValue)
                 dados.Add("CompanyId", companyId.Value.ToString());

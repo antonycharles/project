@@ -62,7 +62,7 @@ namespace Accounts.Application.Handlers
                 user.UserProfiles.Add(userProfile);
             }
 
-            return await _tokenHandler.GenerateUserTokenAsync(user.Id, request.AppSlug, request.RedirectUri, request.Environment);
+            return await _tokenHandler.GenerateUserTokenAsync(user.Id, request.AppSlug, request.RedirectUrl, request.Environment);
         }
 
         

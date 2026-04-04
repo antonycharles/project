@@ -41,7 +41,7 @@ namespace Accounts.Core.Requests
         public string? Code { get; set; }
 
         [JsonPropertyName("redirect_uri")]
-        public string? RedirectUri { get; set; }
+        public string? RedirectUrl { get; set; }
 
         [JsonPropertyName("refresh_token")]
         public string? RefreshToken { get; set; }

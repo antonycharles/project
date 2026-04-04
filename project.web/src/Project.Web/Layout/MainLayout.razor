@@ -3,64 +3,18 @@
 @using System.Security.Claims
 @using Project.Web.Extensions
 @inherits LayoutComponentBase
+@inject IConfiguration Config
 @inject ILocalStorageService LocalStorage
 @inject NavigationManager Nav
 @inject AuthenticationStateProvider AuthenticationStateProvider
 
-<div class="page">
+<div class="">
     <div class="sidebar">
         <NavMenu />
     </div>
 
     <main>
-        <div class="top-row px-4 d-flex justify-content-end align-items-center" style="height:auto;">
-            <div class="dropdown user-toggler">
-                <a class="nav-link  text-decoration-none dropdown-toggle d-flex align-items-center"
-                href="#"
-                role="button"
-                data-bs-toggle="dropdown"
-                aria-expanded="false">
-
-                    <figure class="user-image me-3"
-                            style="
-                                width:50px;
-                                height:50px;
-                                border-radius:50%;
-                                background-size:cover;
-                                background-position:center;
-                                background-color:#6c757d;
-                                background-image: @(User.GetImage().Length > 5 
-                                    ? $"url('{User.GetImage()}')" 
-                                    : "none");
-                                margin:0;
-                                display:flex;
-                                align-items:center;
-                                justify-content:center;
-                                color:white;
-                                font-weight:bold;
-                            ">
-                        @if (User.GetImage().Length <= 5)
-                        {
-                            @User.GetImage()
-                        }
-                    </figure>
-
-                    <div class="text-dark text-start lh-sm">
-                        <b>@User.GetName()</b><br />
-                        <small class="text-muted">@User.GetEmail()</small>
-                    </div>
-                </a>
-
-                <ul class="dropdown-menu dropdown-menu-end">
-                    <li>
-                        <button class="dropdown-item" @onclick="Logout">
-                            Exit
-                        </button>
-                    </li>
-                </ul>
-            </div>
-
-        </div>
+       
 
         <article class="content p-4">
             @Body
@@ -73,7 +27,7 @@
     private async Task Logout()
     {
         await LocalStorage.RemoveItemAsync("jwt");
-        Nav.NavigateTo("http://localhost:9001/", true);
+        Nav.NavigateTo(Config["LoginWebUrl"] + "/", true);
     }
 
     protected override async Task OnInitializedAsync()
