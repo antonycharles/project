@@ -1,6 +1,7 @@
 @page "/"
 @page "/projects"
 @using Microsoft.AspNetCore.Authorization
+@using Project.Web.Enums
 @inject ProjectService projectsService
 @inject NavigationManager Navigation
 
@@ -40,7 +41,7 @@ else
                                 <h5 class="card-title mb-1">@p.Name</h5>
                                 <p class="text-muted small mb-0">Project</p>
                             </div>
-                            <span class="badge bg-secondary border">Active</span>
+                            <span class="badge @GetStatusBadgeClass(p.Status) border">@GetStatusLabel(p.Status)</span>
                         </div>
 
                         <p class="card-text text-muted flex-grow-1">@(string.IsNullOrWhiteSpace(p.Description) ? "No description provided." : p.Description)</p>
@@ -75,4 +76,18 @@ else
             GoToDetails(projectId);
         }
     }
+
+    private static string GetStatusLabel(StatusEnum status) => status switch
+    {
+        StatusEnum.Active => "Active",
+        StatusEnum.Inactive => "Inactive",
+        _ => status.ToString()
+    };
+
+    private static string GetStatusBadgeClass(StatusEnum status) => status switch
+    {
+        StatusEnum.Active => "bg-success",
+        StatusEnum.Inactive => "bg-secondary",
+        _ => "bg-light text-dark"
+    };
 }

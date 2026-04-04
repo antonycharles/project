@@ -1,4 +1,5 @@
 using System;
+using Project.Web.Enums;
 
 namespace Project.Web.DTOs
 {
@@ -8,7 +9,7 @@ namespace Project.Web.DTOs
         public Guid UserId { get; set; }
         public string? UserName { get; set; }
         public Guid ProjectId { get; set; }
-        public int Status { get; set; }
+        public StatusEnum Status { get; set; }
         public DateTime CreatedAt { get; set; }
         public DateTime UpdatedAt { get; set; }
     }

@@ -1,5 +1,6 @@
 @page "/members/project/{ProjectId:guid}"
 @using Project.Web.DTOs
+@using Project.Web.Enums
 @using Project.Web.Services
 @inject MemberService MemberService
 @inject ProjectService ProjectService
@@ -20,8 +21,14 @@
 {
     <div class="card border-0 shadow-sm mb-3">
         <div class="card-body">
-            <h5 class="card-title mb-1">@project.Name</h5>
-            <p class="text-muted mb-2">Project information</p>
+            <div class="d-flex justify-content-between align-items-start gap-3 mb-2">
+                <div>
+                    <h5 class="card-title mb-1">@project.Name</h5>
+                    <p class="text-muted mb-0">Project information</p>
+                </div>
+                <span class="badge @GetStatusBadgeClass(project.Status) border">@GetStatusLabel(project.Status)</span>
+            </div>
+            <p class="mb-1"><strong>Status:</strong> @GetStatusLabel(project.Status)</p>
             <p class="mb-1"><strong>Description:</strong> @(string.IsNullOrWhiteSpace(project.Description) ? "No description provided." : project.Description)</p>
             <p class="mb-0"><strong>Project ID:</strong> @project.Id</p>
         </div>
@@ -112,6 +119,20 @@ else
     private bool showDeleteModal;
     private bool isDeleting;
     private MemberDto? memberToDelete;
+
+    private static string GetStatusLabel(StatusEnum status) => status switch
+    {
+        StatusEnum.Active => "Active",
+        StatusEnum.Inactive => "Inactive",
+        _ => status.ToString()
+    };
+
+    private static string GetStatusBadgeClass(StatusEnum status) => status switch
+    {
+        StatusEnum.Active => "bg-success",
+        StatusEnum.Inactive => "bg-secondary",
+        _ => "bg-light text-dark"
+    };
 
     protected override async Task OnInitializedAsync()
     {

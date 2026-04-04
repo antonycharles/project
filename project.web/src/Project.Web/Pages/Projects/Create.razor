@@ -1,4 +1,5 @@
 @page "/projects/create"
+@using Project.Web.Enums
 
 @inject ProjectService ProjectService
 @inject NavigationManager Navigation
@@ -21,6 +22,15 @@
         <label for="description" class="form-label">Description</label>
         <InputText id="description" class="form-control" @bind-Value="project.Description" />
     </div>
+    <div class="mb-3">
+        <label for="status" class="form-label">Status</label>
+        <InputSelect id="status" class="form-select" @bind-Value="project.Status">
+            @foreach (var status in Enum.GetValues<StatusEnum>())
+            {
+                <option value="@status">@GetStatusLabel(status)</option>
+            }
+        </InputSelect>
+    </div>
     <button type="submit" class="btn btn-primary">Create</button>
 </EditForm>
 
@@ -28,6 +38,13 @@
     private ProjectCreateDto project = new();
     private string message;
     private string alertClass;
+
+    private static string GetStatusLabel(StatusEnum status) => status switch
+    {
+        StatusEnum.Active => "Active",
+        StatusEnum.Inactive => "Inactive",
+        _ => status.ToString()
+    };
 
     private async Task HandleValidSubmit()
     {
