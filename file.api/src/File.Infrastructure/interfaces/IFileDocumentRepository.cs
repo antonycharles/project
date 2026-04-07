@@ -10,6 +10,7 @@ namespace File.Infrastructure.interfaces
     {
         Task<IEnumerable<FileDocument>> GetAllAsync();
         Task<FileDocument?> GetByIdAsync(Guid id);
+        Task<FileDocument?> GetByAppIdAndNameAsync(Guid appId, string name);
         Task AddAsync(FileDocument document);
         Task UpdateAsync(FileDocument document);
         Task DeleteAsync(Guid id);

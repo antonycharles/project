@@ -40,13 +40,13 @@ namespace Accounts.Api.Configurations
             }
         }
 
-        public static void SeedData(this IHost host){
+        public static void SeedData(this IHost host, AccountsSettings settings){
             using(var scope = host.Services.CreateScope())
             {
                 var context = scope.ServiceProvider.GetService<AccountsContext>();
                 var passwordProvider = scope.ServiceProvider.GetService<IPasswordProvider>();
 
-                AppSeed.Seeder(context);
+                AppSeed.Seeder(context,settings);
                 AppCallbackSeed.Seeder(context);
                 PermissionSeed.Seeder(context);
                 ProfileSeed.Seeder(context);

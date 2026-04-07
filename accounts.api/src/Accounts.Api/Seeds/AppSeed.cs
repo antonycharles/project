@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Accounts.Core;
 using Accounts.Core.Entities;
 using Accounts.Core.Enums;
 using Accounts.Infrastructure.Data;
@@ -11,7 +12,7 @@ namespace Accounts.Api.Seeds
 {
     public class AppSeed
     {
-        public static void Seeder(AccountsContext context){
+        public static void Seeder(AccountsContext context, AccountsSettings settings){
 
             var apps = new List<App>();
             
@@ -46,6 +47,7 @@ namespace Accounts.Api.Seeds
                 Type = AppTypeEnum.Web,
                 Name = "Accounts - Management",
                 Slug = "accounts-management",
+                FaviconUrl = $"{settings.FileApiUrl}/File/d8e6b464-3b70-42f3-8bd4-7f77c8ca5189",
                 IsPublic = true,
                 Status = StatusEnum.Active
             });
@@ -74,6 +76,7 @@ namespace Accounts.Api.Seeds
                 Type = AppTypeEnum.Api,
                 Name = "Project - Web",
                 Slug = "project-api",
+                FaviconUrl = $"{settings.FileApiUrl}/File/71402371-2fc0-4e15-b9e0-384f45508afb",
                 IsPublic = true,
                 Status = StatusEnum.Active
             });

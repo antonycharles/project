@@ -32,6 +32,20 @@ namespace File.Infrastructure.Repositories
             return await connection.QueryFirstOrDefaultAsync<FileDocument>(sql, new { Id = id });
         }
 
+        public async Task<FileDocument?> GetByAppIdAndNameAsync(Guid appId, string name)
+        {
+            const string sql = @"
+                SELECT *
+                FROM FileDocument
+                WHERE AppId = @AppId
+                    AND Name = @Name
+                    AND Active = TRUE
+                LIMIT 1";
+
+            await using var connection = await _dataSource.OpenConnectionAsync();
+            return await connection.QueryFirstOrDefaultAsync<FileDocument>(sql, new { AppId = appId, Name = name });
+        }
+
         public async Task AddAsync(FileDocument document)
         {
             const string sql = @"

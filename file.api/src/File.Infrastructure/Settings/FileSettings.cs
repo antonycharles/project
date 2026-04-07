@@ -9,6 +9,8 @@ namespace File.Infrastructure.Settings
     public class FileSettings
     {
         [Required]
+        public required string BaseUrl { get; set; }
+        [Required]
         public required string UploadDirectory { get; set; }
         [Required]
         public required string DatabaseHost { get; set; }

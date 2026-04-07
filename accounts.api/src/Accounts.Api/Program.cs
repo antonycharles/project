@@ -79,7 +79,7 @@ builder.Services.AddStackExchangeRedisCache(options =>
 var app = builder.Build();
 
 app.AddMigration();
-app.SeedData();
+app.SeedData(settings);
 
 
 // Configure the HTTP request pipeline.
