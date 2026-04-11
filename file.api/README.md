@@ -11,4 +11,5 @@ O projeto File.Api é responsável por gerenciar o armazenamento e a disponibili
 <span><img src="https://img.shields.io/badge/Swagger-API-green?style=for-the-badge&logo=swagger&logoColor=white"/></span>
 
 ### Database
-<img width="501" height="378" alt="Image" src="https://github.com/user-attachments/assets/a000d378-08f2-4e5e-815d-23f2b1c29413" />
+
+<img width="501" height="378" alt="Image" src="https://github.com/user-attachments/assets/52802b08-a87f-472a-8ae0-ec250f4e3b26" />
