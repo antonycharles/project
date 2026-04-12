@@ -30,6 +30,14 @@ namespace Accounts.Api.Seeds
                 IsDefault = true
             });
 
+
+            callbacks.Add(new AppCallback{
+                Url = "http://localhost:9003/auth/callback",
+                Environment = Core.Enums.EnvironmentEnum.Staging,
+                AppId = apps.FirstOrDefault(a => a.Slug == "project-api").Id,
+                IsDefault = true
+            });
+
             var callbacksDb = context.AppCallbacks.AsNoTracking().ToList();
 
             foreach(var callback in callbacks)
