@@ -78,19 +78,18 @@ namespace Accounts.Application.Handlers
         private async Task CreateCompanyProfileDefaultAsync(User user)
         {
             var company = await _companyHandler.CreateAsync(new CompanyRequest { Name = $"Project Default", });
-            var app = await _appHandler.GetBySlugAsync("accounts-login-web");
-            var profiles = await _profileHandler.GetAsync(new PaginatedProfileRequest { AppId = app.Id, PageIndex = 1, PageSize = 100 });
-            var profile = profiles.Items.FirstOrDefault(w => w.IsDefault == true);
+            
+            var profiles = await _profileHandler.GetDefaultAsync();
 
-            if (profile == null)
-                throw new BusinessException("Default profile not found for app accounts-login-web");
-
-            _ = await _userProfileHandler.CreateAsync(new UserProfileRequest
+            foreach(var profile in profiles)
             {
-                CompanyId = company.Id,
-                ProfileId = profile.Id,
-                UserId = user.Id
-            });
+                _ = await _userProfileHandler.CreateAsync(new UserProfileRequest
+                {
+                    CompanyId = company.Id,
+                    ProfileId = profile.Id,
+                    UserId = user.Id
+                });
+            }
         }
 
         public async Task DeleteAsync(Guid id)

@@ -77,7 +77,7 @@
                                     <div class="d-grid gap-2">
                                         @foreach (var company in (ViewData["Companies"] as List<CompanyResponse>))
                                         {
-                                            <a asp-controller="Login" asp-action="Index" asp-route-appSlug="accounts-api" asp-route-companyId="@company.Id" class="btn btn-light" type="button">@company.Name</a>
+                                            <a asp-controller="Login" asp-action="Index" asp-route-appSlug="accounts-login-web" asp-route-companyId="@company.Id" class="btn btn-light" type="button">@company.Name</a>
                                         }
                                     </div>
                                 </div>

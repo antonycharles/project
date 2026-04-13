@@ -156,5 +156,16 @@ namespace Accounts.Application.Handlers
 
             await _context.SaveChangesAsync();
         }
+
+        public async Task<List<ProfileResponse>> GetDefaultAsync()
+        {
+            var profiles = await _context.Profiles.AsNoTracking()
+                .Where(w => w.IsDeleted == false && w.IsDefault)
+                .ToListAsync();
+
+            var response = profiles.Select(s => s.ToProfileResponse()).ToList();
+
+            return response;
+        }
     }
 }
