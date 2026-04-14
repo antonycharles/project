@@ -90,6 +90,10 @@ namespace Accounts.Application.Handlers
                     UserId = user.Id
                 });
             }
+
+            user.LastCompanyId = company.Id;
+            _context.Update(user);
+            await _context.SaveChangesAsync();
         }
 
         public async Task DeleteAsync(Guid id)
