@@ -8,6 +8,7 @@ namespace Messaging.Contracts.Events;
 
 public sealed record Project_Created_Event(
     Guid ProjectId,
+    Guid CompanyId,
     string Name,
     string Status
     ) : IntegrationEvent;

@@ -112,7 +112,7 @@ namespace Project.Infrastructure.Repositories
 
             await command.ExecuteNonQueryAsync();
 
-            var item = new Project_Created_Event(Project.Id, Project.Name, Project.Status.ToString());
+            var item = new Project_Created_Event(Project.Id, Project.CompanyId, Project.Name, Project.Status.ToString());
 
             await _eventBus.PublishAsync(item);
         }
