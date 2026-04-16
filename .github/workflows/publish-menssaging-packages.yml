@@ -7,7 +7,12 @@ on:
         description: "NuGet package version to publish"
         required: true
         type: string
+  release:
+    types:
+      - published
   push:
+    branches:
+      - main
     tags:
       - "menssaging-v*"
 
@@ -40,6 +45,9 @@ jobs:
         run: |
           if [[ "${GITHUB_REF_TYPE}" == "tag" ]]; then
             VERSION="${GITHUB_REF_NAME#menssaging-v}"
+            VERSION="${VERSION#v}"
+          elif [[ "${GITHUB_REF_NAME}" == "main" ]]; then
+            VERSION="0.0.0-main.${GITHUB_RUN_NUMBER}"
           else
             VERSION="${{ inputs.version }}"
           fi
