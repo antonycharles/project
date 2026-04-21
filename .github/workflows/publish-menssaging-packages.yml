@@ -47,7 +47,7 @@ jobs:
             VERSION="${GITHUB_REF_NAME#menssaging-v}"
             VERSION="${VERSION#v}"
           elif [[ "${GITHUB_REF_NAME}" == "main" ]]; then
-            VERSION="0.0.0-main.${GITHUB_RUN_NUMBER}"
+            VERSION="1.0.0.${GITHUB_RUN_NUMBER}"
           else
             VERSION="${{ inputs.version }}"
           fi

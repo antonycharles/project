@@ -12,9 +12,6 @@ COPY project.api/src/Project.Application/*.csproj ./project.api/src/Project.Appl
 COPY project.api/src/Project.Domain/*.csproj ./project.api/src/Project.Domain/
 COPY project.api/src/Project.Infrastructure/*.csproj ./project.api/src/Project.Infrastructure/
 
-RUN test -n "${GITHUB_PACKAGES_USERNAME}" && test -n "${GITHUB_PACKAGES_TOKEN}" || \
-    (echo "GITHUB_PACKAGES_USERNAME and GITHUB_PACKAGES_TOKEN are required to restore GitHub Packages." >&2 && exit 1)
-
 RUN dotnet nuget update source github-antonycharles \
     --configfile ./project.api/NuGet.Config \
     --username "${GITHUB_PACKAGES_USERNAME}" \
