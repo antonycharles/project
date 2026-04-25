@@ -15,7 +15,7 @@ COPY project.api/src/Project.Application/*.csproj ./project.api/src/Project.Appl
 COPY project.api/src/Project.Domain/*.csproj ./project.api/src/Project.Domain/
 COPY project.api/src/Project.Infrastructure/*.csproj ./project.api/src/Project.Infrastructure/
 
-RUN dotnet restore ./project.api/ProjectApi.sln --configfile ./project.api/NuGet.Config
+RUN dotnet restore ./project.api/ProjectApi.sln --configfile ./project.api/NuGet.Config --no-cache --force --verbosity normal
 
 COPY project.api/src/Project.Api/. ./project.api/src/Project.Api/
 COPY project.api/src/Project.Application/. ./project.api/src/Project.Application/
