@@ -5,18 +5,15 @@ WORKDIR /app
 ARG GITHUB_PACKAGES_USERNAME
 ARG GITHUB_PACKAGES_TOKEN
 
+ENV GITHUB_PACKAGES_USERNAME=${GITHUB_PACKAGES_USERNAME}
+ENV GITHUB_PACKAGES_TOKEN=${GITHUB_PACKAGES_TOKEN}
+
 COPY project.api/*.sln ./project.api/
 COPY project.api/NuGet.Config ./project.api/
 COPY project.api/src/Project.Api/*.csproj ./project.api/src/Project.Api/
 COPY project.api/src/Project.Application/*.csproj ./project.api/src/Project.Application/
 COPY project.api/src/Project.Domain/*.csproj ./project.api/src/Project.Domain/
 COPY project.api/src/Project.Infrastructure/*.csproj ./project.api/src/Project.Infrastructure/
-
-RUN dotnet nuget update source github-antonycharles \
-    --configfile ./project.api/NuGet.Config \
-    --username "${GITHUB_PACKAGES_USERNAME}" \
-    --password "${GITHUB_PACKAGES_TOKEN}" \
-    --store-password-in-clear-text
 
 RUN dotnet restore ./project.api/ProjectApi.sln --configfile ./project.api/NuGet.Config
 
