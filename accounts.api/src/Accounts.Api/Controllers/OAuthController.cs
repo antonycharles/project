@@ -102,9 +102,6 @@ public class OAuthController : ControllerBase
         }
         else if (result.UserType == UserTypeEnum.user)
         {
-            if(request.CompanyId != null)
-                await _userHandler.UpdateLastCompanyAsync(result.AuthId, request.CompanyId.Value);
-
             var user = await _tokenHandler.GenerateUserTokenAsync(result.AuthId, request.AppSlug ?? result.AppSlug,request.RedirectUrl, request.Environment ?? EnvironmentEnum.Production);
             
             if (user == null)
@@ -208,7 +205,7 @@ public class OAuthController : ControllerBase
             }
             else if(User.GetUserType() == UserTypeEnum.user.ToString())
             {
-                var user = await _userHandler.GetByIdAsync(User.GetId(), User.GetCompanyId());
+                var user = await _userHandler.GetByIdAsync(User.GetId());
                 return Ok(user);
             }
             

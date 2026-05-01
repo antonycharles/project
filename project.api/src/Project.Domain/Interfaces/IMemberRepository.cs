@@ -9,7 +9,6 @@ namespace Project.Domain.Interfaces
     {
         Task<Member> GetByIdAsync(Guid id);
         Task<IEnumerable<Member>> GetByProjectIdAsync(Guid projectId);
-        Task<bool> ExistsByNameAndCompanyIdAsync(Guid userId, Guid projectId);
         Task AddAsync(Member member);
         Task DeleteAsync(Guid id);
     }

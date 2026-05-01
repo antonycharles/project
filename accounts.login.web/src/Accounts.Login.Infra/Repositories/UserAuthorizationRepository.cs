@@ -62,7 +62,6 @@ namespace Accounts.Login.Infra.Repositories
         public async Task<AuthenticationResponse> RefreshTokenAsync(
             string tokenRefresh, 
             string appSlug = "", 
-            Guid? companyId = null,
             string redirectUri = "")
         {
             await AddToken();
@@ -81,9 +80,6 @@ namespace Accounts.Login.Infra.Repositories
                 dados.Add("Environment", _options.Environment.ToString());
             else
                 dados.Add("RedirectUrl", redirectUri);
-
-            if (companyId.HasValue)
-                dados.Add("CompanyId", companyId.Value.ToString());
 
             return await base.PostFormDataAsync<AuthenticationResponse>("OAuth/token", dados);
         }

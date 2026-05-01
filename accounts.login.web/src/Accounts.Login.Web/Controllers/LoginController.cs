@@ -46,13 +46,13 @@ namespace Accounts.Login.Web.Controllers
         }
 
         [HttpGet]
-        public async Task<IActionResult> IndexAsync(string? AppSlug = "accounts-login-web", Guid? companyId = null, string? redirectUrl = "")
+        public async Task<IActionResult> IndexAsync(string? AppSlug = "accounts-login-web", string? redirectUrl = "")
         {
             try
             {
                 if (User.Identity.IsAuthenticated && User.GetRefreshToken() != null && AppSlug != null && AppSlug != "")
                 {
-                    var result = await _userAuthorizationRepository.RefreshTokenAsync(User.GetRefreshToken(), AppSlug, companyId, redirectUrl);
+                    var result = await _userAuthorizationRepository.RefreshTokenAsync(User.GetRefreshToken(), AppSlug, redirectUrl);
                     var userInfo = await _userAuthorizationRepository.GetUserInfoByTokenAsync(result.Token);
                     await AddCookieAuthentication(result, userInfo);
                     return await GenerateCode(result);
@@ -76,7 +76,7 @@ namespace Accounts.Login.Web.Controllers
                     "Não foi possível iniciar o processo de autenticação agora.",
                     returnAction: "Index",
                     returnController: "Login",
-                    routeValues: new { AppSlug, companyId },
+                    routeValues: new { AppSlug },
                     returnLabel: "Voltar para login");
             }
 
@@ -188,9 +188,7 @@ namespace Accounts.Login.Web.Controllers
                 new Claim(ClaimTypes.Name, userInfo.Name),
                 new Claim(ClaimTypes.Email, userInfo.Email),
                 new Claim(CustomClaimTypes.RefreshToken, auth.RefreshToken),
-                new Claim(CustomClaimTypes.Image, userInfo.ImageUrl ?? ""),
-                new Claim(CustomClaimTypes.CompanyId, jwt.Claims.FirstOrDefault(c => c.Type == CustomClaimTypes.CompanyId)?.Value ?? ""),
-                new Claim(CustomClaimTypes.CompanyName, jwt.Claims.FirstOrDefault(c => c.Type == CustomClaimTypes.CompanyName)?.Value ?? "")
+                new Claim(CustomClaimTypes.Image, userInfo.ImageUrl ?? "")
             };
 
             var identity = new ClaimsIdentity(claims, "CookieAuth");

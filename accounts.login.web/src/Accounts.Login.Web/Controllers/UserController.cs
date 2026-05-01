@@ -33,8 +33,7 @@ namespace Accounts.Login.Web.Controllers
             IUserRepository userRepository,
             IFileRepository fileRepository,
             IUserPhotoRepository userPhotoRepository,
-            ICompanyRepository companyRepository,
-            IOptions<AccountsLoginSettings> configuration) : base(configuration, companyRepository)
+            IOptions<AccountsLoginSettings> configuration) : base(configuration)
         {
             _logger = logger;
             _userRepository = userRepository;

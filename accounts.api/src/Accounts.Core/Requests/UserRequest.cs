@@ -21,7 +21,6 @@ namespace Accounts.Core.Requests
 
         [Required(ErrorMessage = "Password is required")]
         public string Password { get; set; }
-        public bool? CreateCompanyDefault { get; set; }
 
         public StatusEnum? Status { get; set; }
     }

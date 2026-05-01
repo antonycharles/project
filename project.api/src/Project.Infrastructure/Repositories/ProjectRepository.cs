@@ -31,7 +31,7 @@ namespace Project.Infrastructure.Repositories
             await connection.OpenAsync();
 
             var command = new NpgsqlCommand(@"
-                SELECT ""Id"", ""Name"", ""Description"", ""UserCreatedId"", ""CreatedAt"", ""UpdatedAt"", ""CompanyId"", ""Status""
+                SELECT ""Id"", ""Name"", ""Description"", ""UserCreatedId"", ""CreatedAt"", ""UpdatedAt"", ""Status""
                 FROM ""Project""
                 WHERE ""Id"" = @id AND ""DeletedAt"" IS NULL", connection);
 
@@ -54,32 +54,9 @@ namespace Project.Infrastructure.Repositories
             await connection.OpenAsync();
 
             var command = new NpgsqlCommand(@"
-                SELECT ""Id"", ""Name"", ""Description"", ""UserCreatedId"", ""CreatedAt"", ""UpdatedAt"", ""CompanyId"", ""Status""
+                SELECT ""Id"", ""Name"", ""Description"", ""UserCreatedId"", ""CreatedAt"", ""UpdatedAt"", ""Status""
                 FROM ""Project""
                 WHERE ""DeletedAt"" IS NULL", connection);
-
-            using var reader = await command.ExecuteReaderAsync();
-            while (await reader.ReadAsync())
-            {
-                projects.Add(MapProject(reader));
-            }
-
-            return projects;
-        }
-
-        public async Task<IEnumerable<Domain.Entities.Project>> GetByCompanyIdAsync(Guid companyId)
-        {
-            var projects = new List<Domain.Entities.Project>();
-
-            using var connection = new NpgsqlConnection(_connectionString);
-            await connection.OpenAsync();
-
-            var command = new NpgsqlCommand(@"
-                SELECT ""Id"", ""Name"", ""Description"", ""UserCreatedId"", ""CreatedAt"", ""UpdatedAt"", ""CompanyId"", ""Status""
-                FROM ""Project""
-                WHERE ""CompanyId"" = @companyId AND ""DeletedAt"" IS NULL", connection);
-
-            command.Parameters.AddWithValue("@companyId", companyId);
 
             using var reader = await command.ExecuteReaderAsync();
             while (await reader.ReadAsync())
@@ -97,9 +74,9 @@ namespace Project.Infrastructure.Repositories
 
             var command = new NpgsqlCommand(@"
                 INSERT INTO ""Project"" 
-                (""Id"", ""Name"", ""Description"", ""UserCreatedId"", ""CreatedAt"", ""UpdatedAt"", ""CompanyId"", ""Status"")
+                (""Id"", ""Name"", ""Description"", ""UserCreatedId"", ""CreatedAt"", ""UpdatedAt"", ""Status"")
                 VALUES
-                (@id, @name, @description, @userCreatedId, @createdAt, @updatedAt, @companyId, @status)", connection);
+                (@id, @name, @description, @userCreatedId, @createdAt, @updatedAt, @status)", connection);
 
             command.Parameters.AddWithValue("@id", Project.Id);
             command.Parameters.AddWithValue("@name", Project.Name);
@@ -107,12 +84,11 @@ namespace Project.Infrastructure.Repositories
             command.Parameters.AddWithValue("@userCreatedId", Project.UserCreatedId);
             command.Parameters.AddWithValue("@createdAt", Project.CreatedAt);
             command.Parameters.AddWithValue("@updatedAt", Project.UpdatedAt);
-            command.Parameters.AddWithValue("@companyId", Project.CompanyId);
             command.Parameters.AddWithValue("@status", (int)Project.Status);
 
             await command.ExecuteNonQueryAsync();
 
-            var item = new Project_Created_Event(Project.Id, Project.CompanyId, Project.Name, Project.Status.ToString());
+            var item = new Project_Created_Event(Project.Id, new Guid(), Project.Name, Project.Status.ToString());
 
             await _eventBus.PublishAsync(item);
         }
@@ -155,28 +131,6 @@ namespace Project.Infrastructure.Repositories
             await command.ExecuteNonQueryAsync();
         }
 
-        public async Task<bool> ExistsByNameAndCompanyIdAsync(string name, Guid companyId, Guid excludeId)
-        {
-            using var connection = new NpgsqlConnection(_connectionString);
-            await connection.OpenAsync();
-
-            var command = new NpgsqlCommand(@"
-                SELECT 1
-                FROM ""Project""
-                WHERE ""Name"" = @name
-                  AND ""CompanyId"" = @companyId
-                  AND ""Id"" <> @excludeId
-                  AND ""DeletedAt"" IS NULL
-                LIMIT 1", connection);
-
-            command.Parameters.AddWithValue("@name", name);
-            command.Parameters.AddWithValue("@companyId", companyId);
-            command.Parameters.AddWithValue("@excludeId", excludeId);
-
-            using var reader = await command.ExecuteReaderAsync();
-            return await reader.ReadAsync();
-        }
-
         private Domain.Entities.Project MapProject(NpgsqlDataReader reader)
         {
             return new Domain.Entities.Project
@@ -185,7 +139,6 @@ namespace Project.Infrastructure.Repositories
                 Name = reader.GetString(reader.GetOrdinal("Name")),
                 Description = reader.IsDBNull(reader.GetOrdinal("Description")) ? null : reader.GetString(reader.GetOrdinal("Description")),
                 UserCreatedId = reader.GetGuid(reader.GetOrdinal("UserCreatedId")),
-                CompanyId = reader.GetGuid(reader.GetOrdinal("CompanyId")),
                 Status = (Project.Domain.Enums.StatusEnum)reader.GetInt32(reader.GetOrdinal("Status")),
                 CreatedAt = reader.GetDateTime(reader.GetOrdinal("CreatedAt")),
                 UpdatedAt = reader.GetDateTime(reader.GetOrdinal("UpdatedAt"))

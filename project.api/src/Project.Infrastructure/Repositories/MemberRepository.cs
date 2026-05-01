@@ -113,23 +113,5 @@ namespace Project.Infrastructure.Repositories
                 Status = (StatusEnum)reader.GetInt32(reader.GetOrdinal("Status"))
             };
         }
-
-        public async Task<bool> ExistsByNameAndCompanyIdAsync(Guid userId, Guid projectId)
-        {
-            using var connection = new NpgsqlConnection(_connectionString);
-            await connection.OpenAsync();
-
-            var command = new NpgsqlCommand(@"
-                SELECT COUNT(*) 
-                FROM ""Member""
-                WHERE ""UserId"" = @userId AND ""ProjectId"" = @projectId AND ""DeletedAt"" IS NULL", connection);
-
-            command.Parameters.AddWithValue("@userId", userId);
-            command.Parameters.AddWithValue("@projectId", projectId);
-
-            var count = (long)await command.ExecuteScalarAsync();
-            
-            return count > 0;
-        }
     }
 }

@@ -35,7 +35,6 @@ namespace Accounts.Infrastructure.Data
 
         public virtual DbSet<App> Apps { get; set; }
         public virtual DbSet<AppCallback> AppCallbacks { get; set; }
-        public virtual DbSet<Company> Companies { get; set; }
         public virtual DbSet<Permission> Permissions { get; set; }
         public virtual DbSet<Profile> Profiles { get; set; }
         public virtual DbSet<ProfilePermission> ProfilePermissions{ get; set; }

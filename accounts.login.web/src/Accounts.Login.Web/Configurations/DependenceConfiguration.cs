@@ -19,7 +19,6 @@ namespace Accounts.Login.Web.Configurations
             builder.Services.AddScoped<IFileRepository, FileRepository>();
             builder.Services.AddScoped<IUserPhotoRepository, UserPhotoRepository>();
             builder.Services.AddScoped<IAppRepository, AppRepository>();
-            builder.Services.AddScoped<ICompanyRepository, CompanyRepository>();
         }
     }
 }

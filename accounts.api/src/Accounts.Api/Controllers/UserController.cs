@@ -49,16 +49,16 @@ namespace Accounts.Api.Controllers
             } 
         }
 
-        [HttpGet("{id}/company/{companyId}")]
+        [HttpGet("{id}")]
         [AuthorizeRole(RoleConstants.UserRole.List)]
         [ProducesResponseType(typeof(UserResponse), StatusCodes.Status200OK)]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
         [ProducesResponseType(StatusCodes.Status500InternalServerError)]
-        public async Task<IActionResult> GetByIdAsync(Guid id, Guid companyId)
+        public async Task<IActionResult> GetByIdAsync(Guid id)
         {
             try
             {
-                var user = await _userHandler.GetByIdAsync(id, companyId);
+                var user = await _userHandler.GetByIdAsync(id);
 
                 return Ok(user);
             }

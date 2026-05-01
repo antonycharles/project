@@ -31,8 +31,7 @@ public class ProjectController : ControllerBase
     {
         try
         {
-            var projects = await _ProjectService.GetByCompanyIdAsync(User.CompanyId());
-            return Ok(projects);
+            return Ok();
         }
         catch (Exception ex)
         {
@@ -50,7 +49,7 @@ public class ProjectController : ControllerBase
     {
         try
         {
-            var Project = await _ProjectService.GetByIdAsync(User.CompanyId(),id);
+            var Project = await _ProjectService.GetByIdAsync(id);
             
             if (Project == null)
                 return NotFound("Project not found");
@@ -81,7 +80,6 @@ public class ProjectController : ControllerBase
                 return BadRequest(ModelState);
 
             dto.UserCreatedId = User.UserId();
-            dto.CompanyId = User.CompanyId();
 
             var created = await _ProjectService.AddAsync(dto);
 
@@ -116,7 +114,6 @@ public class ProjectController : ControllerBase
                 return BadRequest(ModelState);
 
             dto.UserCreatedId = User.UserId();
-            dto.CompanyId = User.CompanyId();
 
             await _ProjectService.UpdateAsync(dto);
             
@@ -143,7 +140,7 @@ public class ProjectController : ControllerBase
     {
         try
         {
-            await _ProjectService.DeleteAsync(id, User.CompanyId());
+            await _ProjectService.DeleteAsync(id);
             return NoContent();
         }
         catch (BusinessException ex)

@@ -10,7 +10,7 @@ namespace Accounts.Login.Infra.Repositories.Interfaces
     public interface IUserAuthorizationRepository
     {
         Task<AuthenticationResponse> AuthenticateAsync(UserAuthenticationRequest request);
-        Task<AuthenticationResponse> RefreshTokenAsync(string tokenRefresh, string appSlug = "", Guid? companyId = null, string redirectUri = "");
+        Task<AuthenticationResponse> RefreshTokenAsync(string tokenRefresh, string appSlug = "", string redirectUri = "");
         Task<UserResponse> GetUserInfoByTokenAsync(string token);
     }
 }

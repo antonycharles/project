@@ -96,14 +96,10 @@ namespace Accounts.Application.Handlers
 
         public async Task<PaginatedResponse<AppResponse>> GetPublicByUserIdAsync(PaginatedRequest request)
         {
-            var lastCompanyId = await _context.Users.AsNoTracking()
-                .Where(w => w.Id == request.UserId && w.IsDeleted == false)
-                .Select(s => s.LastCompanyId)
-                .FirstOrDefaultAsync();
 
             var query = _context.UserProfiles.AsNoTracking()
                 .Where(w =>
-                    w.UserId == request.UserId && w.CompanyId == lastCompanyId && w.Status == StatusEnum.Active && w.IsDeleted == false &&
+                    w.UserId == request.UserId && w.Status == StatusEnum.Active && w.IsDeleted == false &&
                     w.Profile.Status == StatusEnum.Active && w.Profile.IsDeleted == false)
                 .Include(i => i.Profile)
                 .ThenInclude(i => i.App)

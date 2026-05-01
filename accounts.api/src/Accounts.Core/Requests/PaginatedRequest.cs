@@ -13,6 +13,6 @@ namespace Accounts.Core.Requests
         public Guid? UserId { get; set; }
         public List<Guid>? UserIds { get; set; }
         public bool? IsPublic { get; set; }
-        public Guid CompanyId { get; set; }
+        public Guid Id { get; set; }
     }
 }

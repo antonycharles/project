@@ -21,15 +21,6 @@ namespace Accounts.Api.Seeds
 
         private static void AddUser(AccountsContext context, IPasswordProvider passwordProvider)
         {
-            var company = new Company
-            {
-                Id = new Guid("c1d2e3f4-5a6b-4789-0abc-def123456789"),
-                Name = "Project Default",
-                Status = StatusEnum.Active
-            };
-
-            if (!context.Companies.AsNoTracking().Any(w => w.Id == company.Id))
-                context.Companies.Add(company);
 
             var user = new User
             {
@@ -37,7 +28,6 @@ namespace Accounts.Api.Seeds
                 Name = "User Default",
                 Email = "user.default@team.com",
                 Password = passwordProvider.HashPassword("123456"),
-                LastCompanyId = company.Id,
                 Status = StatusEnum.Active
             };
 
@@ -52,14 +42,13 @@ namespace Accounts.Api.Seeds
                     Id = Guid.NewGuid(),
                     UserId = user.Id,
                     ProfileId = context.Profiles.AsNoTracking().FirstOrDefault(w => w.Slug == "user" && w.App.Slug == "accounts-management").Id,
-                    CompanyId = company.Id,
                     Status = StatusEnum.Active
                 }
             };
             
             foreach (var userProfile in userProfiles)
             {
-                if (!context.UserProfiles.AsNoTracking().Any(w => w.UserId == userProfile.UserId && w.ProfileId == userProfile.ProfileId && w.CompanyId == userProfile.CompanyId))
+                if (!context.UserProfiles.AsNoTracking().Any(w => w.UserId == userProfile.UserId && w.ProfileId == userProfile.ProfileId))
                     context.UserProfiles.Add(userProfile);
             }
         }
@@ -67,37 +56,12 @@ namespace Accounts.Api.Seeds
 
         private static void AddAdmin(AccountsContext context, IPasswordProvider passwordProvider)
         {
-
-            var company = new Company
-            {
-                Id = new Guid("a1b2c3d4-e5f6-4789-0abc-def123456789"),
-                Name = "Project Team",
-                Status = StatusEnum.Active
-            };
-
-            var companyTest = new Company
-            {
-                Id = new Guid("b1c2d3e4-f5a6-4789-0abc-def123456789"),
-                Name = "Project Test",
-                Status = StatusEnum.Active
-            };
-
-            if (!context.Companies.AsNoTracking().Any(w => w.Id == company.Id))
-                context.Companies.Add(company);
-
-
-
-            if (!context.Companies.AsNoTracking().Any(w => w.Id == companyTest.Id))
-                context.Companies.Add(companyTest);
-
-
             var user = new User
             {
                 Id = new Guid("d3b0f1a2-4c5e-4b8c-9f7e-1a2b3c4d5e6f"),
                 Name = "User admin",
                 Email = "user.admin@team.com",
                 Password = passwordProvider.HashPassword("123456"),
-                LastCompanyId = company.Id,
                 Status = StatusEnum.Active
             };
 
@@ -112,7 +76,6 @@ namespace Accounts.Api.Seeds
                     Id = Guid.NewGuid(),
                     UserId = user.Id,
                     ProfileId = context.Profiles.AsNoTracking().FirstOrDefault(w => w.Slug == "admin" && w.App.Slug == "accounts-management").Id,
-                    CompanyId = company.Id,
                     Status = StatusEnum.Active
                 },
                 new UserProfile
@@ -120,14 +83,13 @@ namespace Accounts.Api.Seeds
                     Id = Guid.NewGuid(),
                     UserId = user.Id,
                     ProfileId = context.Profiles.AsNoTracking().FirstOrDefault(w => w.Slug == "admin" && w.App.Slug == "accounts-management").Id,
-                    CompanyId = companyTest.Id,
                     Status = StatusEnum.Active
                 }
             };
             
             foreach (var userProfile in userProfiles)
             {
-                if (!context.UserProfiles.AsNoTracking().Any(w => w.UserId == userProfile.UserId && w.ProfileId == userProfile.ProfileId && w.CompanyId == userProfile.CompanyId))
+                if (!context.UserProfiles.AsNoTracking().Any(w => w.UserId == userProfile.UserId && w.ProfileId == userProfile.ProfileId))
                     context.UserProfiles.Add(userProfile);
             }
 

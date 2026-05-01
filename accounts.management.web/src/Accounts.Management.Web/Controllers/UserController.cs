@@ -40,7 +40,6 @@ namespace Accounts.Management.Web.Controllers
             try
             {
                 request ??= new PaginatedRequest();
-                request.CompanyId = User.CompanyId();
                 var users = await _userRepository.GetAsync(request);
                 return View(users);
             }
@@ -64,7 +63,7 @@ namespace Accounts.Management.Web.Controllers
         {
             try
             {
-                var user = await _userRepository.GetByIdAsync(id, User.CompanyId());
+                var user = await _userRepository.GetByIdAsync(id);
                 var profiles = await _profileRepository.GetAsync(new ProfilePaginatedRequest
                 {
                     PageSize = 1000,
@@ -94,8 +93,7 @@ namespace Accounts.Management.Web.Controllers
                 await _userProfileRepository.CreateAsync(new UserProfileRequest
                 {
                     UserId = userId,
-                    ProfileId = profileId,
-                    CompanyId = User.CompanyId()
+                    ProfileId = profileId
                 });
 
                 HttpContext.AddMessageSuccess("Profile added to user.");
@@ -191,7 +189,7 @@ namespace Accounts.Management.Web.Controllers
         {
             try
             {
-                var user = await _userRepository.GetByIdAsync(id, User.CompanyId());
+                var user = await _userRepository.GetByIdAsync(id);
                 return View(user.ToUserUpdateRequest());
             }
             catch (Exception ex)
@@ -236,7 +234,7 @@ namespace Accounts.Management.Web.Controllers
         {
             try
             {
-                var user = await _userRepository.GetByIdAsync(id, User.CompanyId());
+                var user = await _userRepository.GetByIdAsync(id);
                 return View(user);
             }
             catch (Exception ex)

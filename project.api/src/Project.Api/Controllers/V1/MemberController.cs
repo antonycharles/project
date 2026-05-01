@@ -85,7 +85,7 @@ public class MemberController : ControllerBase
     {
         try
         {
-            var members = await _memberService.GetByProjectIdAsync(User.CompanyId(), projectId);
+            var members = await _memberService.GetByProjectIdAsync(projectId);
             return Ok(members);
         }
         catch (Exception ex)

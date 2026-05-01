@@ -22,7 +22,6 @@ namespace Accounts.Application.Handlers
         private readonly AccountsContext _context;
         private readonly IPasswordProvider _passwordProvider;
         private readonly AccountsSettings _settings;
-        private readonly ICompanyHandler _companyHandler;
         private readonly IAppHandler _appHandler;
         private readonly IProfileHandler _profileHandler;
         private readonly IUserProfileHandler _userProfileHandler;
@@ -31,7 +30,6 @@ namespace Accounts.Application.Handlers
             AccountsContext context,
             IPasswordProvider passwordProvider,
             IOptions<AccountsSettings> settings,
-            ICompanyHandler companyHandler,
             IProfileHandler profileHandler,
             IUserProfileHandler userProfileHandler,
             IAppHandler appHandler)
@@ -39,7 +37,6 @@ namespace Accounts.Application.Handlers
             _context = context;
             _passwordProvider = passwordProvider;
             _settings = settings.Value;
-            _companyHandler = companyHandler;
             _profileHandler = profileHandler;
             _userProfileHandler = userProfileHandler;
             _appHandler = appHandler;
@@ -52,48 +49,10 @@ namespace Accounts.Application.Handlers
 
             await ValidExistsAsync(user);
 
-            using var transaction = await _context.Database.BeginTransactionAsync();
-
-            try
-            {
-                _context.Add(user);
-                await _context.SaveChangesAsync();
-
-                if (request.CreateCompanyDefault == true)
-                {
-                    await CreateCompanyProfileDefaultAsync(user);
-                }
-                
-                await transaction.CommitAsync();
-                return user.ToUserResponse();
-            }
-            catch
-            {
-                await transaction.RollbackAsync();
-
-                throw;
-            }
-        }
-
-        private async Task CreateCompanyProfileDefaultAsync(User user)
-        {
-            var company = await _companyHandler.CreateAsync(new CompanyRequest { Name = $"Project Default", });
-            
-            var profiles = await _profileHandler.GetDefaultAsync();
-
-            foreach(var profile in profiles)
-            {
-                _ = await _userProfileHandler.CreateAsync(new UserProfileRequest
-                {
-                    CompanyId = company.Id,
-                    ProfileId = profile.Id,
-                    UserId = user.Id
-                });
-            }
-
-            user.LastCompanyId = company.Id;
-            _context.Update(user);
+            _context.Add(user);
             await _context.SaveChangesAsync();
+
+            return user.ToUserResponse();
         }
 
         public async Task DeleteAsync(Guid id)
@@ -118,8 +77,7 @@ namespace Accounts.Application.Handlers
                 .ThenInclude(i => i.Profile)
                 .ThenInclude(i => i.App)
                 .Include(i => i.UserProfiles.Where(w => w.Status == StatusEnum.Active && w.IsDeleted == false))
-                .ThenInclude(i => i.Company)
-                .Where(w => w.IsDeleted == false && w.UserProfiles.Any(a => a.CompanyId == request.CompanyId));
+                .Where(w => w.IsDeleted == false);
 
             if (request.UserId.HasValue)
                 query = query.Where(w => w.Id == request.UserId.Value);
@@ -141,26 +99,19 @@ namespace Accounts.Application.Handlers
             return new PaginatedResponse<UserResponse>(response, totalItems, request.PageIndex, request.PageSize, request);
         }
 
-        public async Task<UserResponse> GetByIdAsync(Guid id, Guid companyId)
+        public async Task<UserResponse> GetByIdAsync(Guid id)
         {
             var user = await _context.Users.AsNoTracking()
-                .Include(i => i.UserProfiles.Where(w => w.Status == StatusEnum.Active && w.IsDeleted == false && w.CompanyId == companyId))
+                .Include(i => i.UserProfiles.Where(w => w.Status == StatusEnum.Active && w.IsDeleted == false))
                 .ThenInclude(i => i.Profile)
                 .ThenInclude(i => i.App)
-                .Include(i => i.UserProfiles.Where(w => w.Status == StatusEnum.Active && w.IsDeleted == false && w.CompanyId == companyId))
-                .ThenInclude(i => i.Company)
+                .Include(i => i.UserProfiles.Where(w => w.Status == StatusEnum.Active && w.IsDeleted == false))
                 .Include(i => i.UserPhoto)
                 .FirstOrDefaultAsync(w => w.Id == id  && w.IsDeleted == false);
 
             if (user == null)
                 throw new NotFoundException("User not found");
             
-
-            if(companyId != Guid.Empty)
-                user.UserProfiles = user.UserProfiles.Where(w => w.CompanyId == companyId).ToList();
-            else
-                user.UserProfiles = new List<UserProfile>();
-
             return user.ToUserResponse(_settings.FileApiUrl);
         }
 
@@ -180,26 +131,6 @@ namespace Accounts.Application.Handlers
             await ValidExistsAsync(user);
 
             _context.Update(user);
-
-            await _context.SaveChangesAsync();
-        }
-
-        public async Task UpdateLastCompanyAsync(Guid id, Guid companyId)
-        {
-            var user = await _context.Users.Include(i => i.UserProfiles.Where(w => w.Status == StatusEnum.Active && w.IsDeleted == false))
-                .FirstOrDefaultAsync(w => w.Id == id && w.IsDeleted == false);
-
-            if (user == null)
-                throw new NotFoundException("User not found");
-                
-            if(user.UserProfiles.Any(a => a.CompanyId == companyId))
-            {
-                user.LastCompanyId = companyId;
-            }
-            else
-            {
-                throw new BusinessException("User does not have access to this company");
-            }
 
             await _context.SaveChangesAsync();
         }

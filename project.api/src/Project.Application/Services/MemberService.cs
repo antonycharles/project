@@ -29,22 +29,17 @@ namespace Project.Application.Services
             return MapToDto(member);
         }
 
-        public async Task<IEnumerable<MemberDto>> GetByProjectIdAsync(Guid companyId, Guid projectId)
+        public async Task<IEnumerable<MemberDto>> GetByProjectIdAsync(Guid projectId)
         {
             var members = await _memberRepository.GetByProjectIdAsync(projectId);
-            var users = await _userRepository.GetUsersByIdsAsync(companyId, members.Select(m => m.UserId).ToList());
+            var users = await _userRepository.GetUsersByIdsAsync(members.Select(m => m.UserId).ToList());
             return MapToDtoList(members, users);
         }
 
         public async Task<MemberDto> AddAsync(MemberCreateDto dto)
         {
             var member = MapToNewMember(dto);
-
-            var exists = await _memberRepository.ExistsByNameAndCompanyIdAsync(member.UserId, member.ProjectId);
             
-            if (exists)
-                throw new BusinessException("Member already exists in this project");
-
             await _memberRepository.AddAsync(member);
             return MapToDto(member);
         }

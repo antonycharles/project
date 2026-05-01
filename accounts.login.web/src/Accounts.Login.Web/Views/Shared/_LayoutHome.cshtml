@@ -58,34 +58,9 @@
                 <div class="row align-items-center">
                     <div class="col d-flex align-items-center">
                         <div>
-                            <h4 class="mb-0 text-white"><i class="bi bi-building me-1 text-white"></i> @User.CompanyName()</h4>
                         </div>
                     </div>
                     <div class="col d-flex align-items-center justify-content-end">
-                        <button type="button" data-bs-toggle="modal" data-bs-target="#modalChangeCompany" class="btn btn-light btn-sm me-2">Change company</button>
-                    </div>
-                </div>
-                <div class="modal fade" id="modalChangeCompany" tabindex="-1" aria-labelledby="modalChangeCompanyLabel" aria-hidden="true">
-                    <div class="modal-dialog">
-                        <form class="modal-content">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    <h1 class="modal-title fs-5" id="modalChangeCompanyLabel">Change Company</h1>
-                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                                </div>
-                                <div class="modal-body">
-                                    <div class="d-grid gap-2">
-                                        @foreach (var company in (ViewData["Companies"] as List<CompanyResponse>))
-                                        {
-                                            <a asp-controller="Login" asp-action="Index" asp-route-appSlug="accounts-login-web" asp-route-companyId="@company.Id" class="btn btn-light" type="button">@company.Name</a>
-                                        }
-                                    </div>
-                                </div>
-                                <div class="modal-footer">
-                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                                </div>
-                            </div>
-                        </form>
                     </div>
                 </div>
             </div>

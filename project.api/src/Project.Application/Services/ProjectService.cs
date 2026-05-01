@@ -22,7 +22,7 @@ namespace Project.Application.Services
             _memberService = memberService;
         }
 
-        public async Task<ProjectDto?> GetByIdAsync(Guid companyId, Guid id)
+        public async Task<ProjectDto?> GetByIdAsync(Guid id)
         {
             var Project = await _ProjectRepository.GetByIdAsync(id);
 
@@ -30,7 +30,7 @@ namespace Project.Application.Services
 
             var result = MapToDto(Project);
 
-            result.Members = await _memberService.GetByProjectIdAsync(companyId, id);
+            result.Members = await _memberService.GetByProjectIdAsync(id);
 
             return result;
         }
@@ -42,20 +42,10 @@ namespace Project.Application.Services
             return families.Select(MapToDto);
         }
 
-        public async Task<IEnumerable<ProjectDto>> GetByCompanyIdAsync(Guid companyId)
-        {
-            var families = await _ProjectRepository.GetByCompanyIdAsync(companyId);
-            return families.Select(MapToDto);
-        }
 
         public async Task<ProjectDto> AddAsync(ProjectCreateDto dto)
         {
             var project = MapToNewProject(dto);
-
-            var exist = await _ProjectRepository.ExistsByNameAndCompanyIdAsync(dto.Name, dto.CompanyId, Guid.Empty);
-            
-            if (exist) 
-                throw new BusinessException("A project with the same name already exists in the company.");
 
             await _ProjectRepository.AddAsync(project);
 
@@ -72,24 +62,19 @@ namespace Project.Application.Services
         {
             var project = await _ProjectRepository.GetByIdAsync(dto.Id);
 
-            if (project == null || project.CompanyId != dto.CompanyId) 
+            if (project == null) 
                 throw new BusinessException("Project not found");
-
-            var exist = await _ProjectRepository.ExistsByNameAndCompanyIdAsync(dto.Name, dto.CompanyId, dto.Id);
-            
-            if (exist) 
-                throw new BusinessException("A project with the same name already exists in the company.");
 
             MapUpdate(dto, project);
 
             await _ProjectRepository.UpdateAsync(project);
         }
 
-        public async Task DeleteAsync(Guid id, Guid companyId)
+        public async Task DeleteAsync(Guid id)
         {
             var project = await _ProjectRepository.GetByIdAsync(id);
 
-            if (project == null || project.CompanyId != companyId) 
+            if (project == null) 
                 throw new BusinessException("Project not found");
                 
             await _ProjectRepository.DeleteAsync(id);
@@ -113,7 +98,6 @@ namespace Project.Application.Services
                 Name = dto.Name,
                 Description = dto.Description,
                 UserCreatedId = dto.UserCreatedId,
-                CompanyId = dto.CompanyId,
                 Status = StatusEnum.Active,
                 CreatedAt = DateTime.UtcNow,
                 UpdatedAt = DateTime.UtcNow

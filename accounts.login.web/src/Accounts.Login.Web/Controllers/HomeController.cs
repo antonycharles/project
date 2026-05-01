@@ -18,8 +18,7 @@ public class HomeController : BaseHomeController
     public HomeController(
         ILogger<HomeController> logger, 
         IAppRepository appRepository, 
-        ICompanyRepository companyRepository,
-        IOptions<AccountsLoginSettings> configuration) : base(configuration,companyRepository)
+        IOptions<AccountsLoginSettings> configuration) : base(configuration)
     {
         _logger = logger;
         _appRepository = appRepository;

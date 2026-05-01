@@ -72,12 +72,10 @@ namespace Accounts.Application.Handlers
         public async Task<AuthenticationResponse> GenerateUserTokenAsync(Guid userId, string appSlug, string? redirectUri, EnvironmentEnum? environment)
         {
             var user = await _context.Users.AsNoTracking()
-                .Include(i => i.LastCompany)
                 .Include(i => i.UserProfiles.Where(w => w.Status == StatusEnum.Active && w.IsDeleted == false))
                 .ThenInclude(i => i.Profile)
                 .ThenInclude(i => i.App)
                 .Include(i => i.UserProfiles.Where(w => w.Status == StatusEnum.Active && w.IsDeleted == false))
-                .ThenInclude(i => i.Company)
                 .Include(i => i.UserProfiles.Where(w => w.Status == StatusEnum.Active && w.IsDeleted == false))
                 .ThenInclude(i => i.Profile)
                 .ThenInclude(i => i.ProfilePermissions.Where(w => w.Status == StatusEnum.Active && w.IsDeleted == false))
@@ -85,17 +83,9 @@ namespace Accounts.Application.Handlers
                 .Include(i => i.UserPhoto)
                 .FirstOrDefaultAsync(w => w.Id == userId);
 
-            var lastCompany = user?.LastCompany;
-
-            if(lastCompany == null || lastCompany?.Status != StatusEnum.Active || lastCompany?.IsDeleted == true)
-                lastCompany = user.UserProfiles.FirstOrDefault(w => w.Company.Status == StatusEnum.Active && w.Company.IsDeleted == false)?.Company;
-
             var profileQuery = user?.UserProfiles?
                 .Where(w => w.Status == StatusEnum.Active)
                 .Where(w => w.Profile?.App?.Slug == appSlug && w.Profile.Status == StatusEnum.Active);
-
-            if(lastCompany != null)
-                profileQuery = profileQuery?.Where(w => w.CompanyId == lastCompany.Id);
 
             var profile = profileQuery.Select(s => s.Profile).FirstOrDefault();
 
@@ -107,8 +97,6 @@ namespace Accounts.Application.Handlers
                 new Claim(CustomClaimTypes.Name, user.Name),
                 new Claim(CustomClaimTypes.Email, user.Email),
                 new Claim(CustomClaimTypes.Type, UserTypeEnum.user.ToString()),
-                new Claim(CustomClaimTypes.CompanyId, lastCompany != null ? lastCompany.Id.ToString() : ""),
-                new Claim(CustomClaimTypes.CompanyName, lastCompany != null ? lastCompany.Name : ""),
                 new Claim(CustomClaimTypes.Image, user.UserPhoto != null ? _settings.FileApiUrl + "/File/" + user.UserPhoto.DocumentId : "")
             };
 

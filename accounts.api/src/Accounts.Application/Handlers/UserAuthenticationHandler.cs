@@ -68,16 +68,9 @@ namespace Accounts.Application.Handlers
         
         private async Task<UserProfile> GetUserProfileAsync(User user, UserAuthenticationRequest request)
         {
-            if(user.LastCompanyId == null)
-            {
-                user.LastCompanyId = _context.UserProfiles.AsNoTracking()
-                    .Where(w => w.UserId == user.Id && w.Profile.App.Slug == request.AppSlug)
-                    .Select(s => s.CompanyId)
-                    .FirstOrDefault();
-            }
 
             var userProfileExist = user.UserProfiles
-                .FirstOrDefault(w => w.Profile.App.Slug == request.AppSlug && w.CompanyId == user.LastCompanyId);
+                .FirstOrDefault(w => w.Profile.App.Slug == request.AppSlug);
                 
             if(userProfileExist != null)
                 return userProfileExist;
@@ -86,12 +79,11 @@ namespace Accounts.Application.Handlers
                 .Include(i => i.App)
                 .FirstOrDefaultAsync(w => w.IsDefault == true && w.App.Slug == request.AppSlug);
 
-            if(profileDefault == null || user.LastCompanyId == null)
+            if(profileDefault == null)
                 throw new BusinessException(MSG_PROFILE_NOT_FOUND_FOR_USER);
 
             var userProfile = new UserProfile{
                 UserId = user.Id,
-                CompanyId = user.LastCompanyId.Value,
                 ProfileId = profileDefault.Id
             };
 

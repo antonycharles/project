@@ -8,6 +8,6 @@ namespace Project.Domain.Interfaces.Externals
 {
     public interface IUserRepository
     {
-        Task<List<UserResponse>> GetUsersByIdsAsync(Guid companyId, List<Guid> ids);
+        Task<List<UserResponse>> GetUsersByIdsAsync(List<Guid> ids);
     }
 }

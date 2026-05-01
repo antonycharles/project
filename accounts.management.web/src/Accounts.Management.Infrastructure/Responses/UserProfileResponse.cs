@@ -12,8 +12,6 @@ namespace Accounts.Management.Infrastructure.Responses
         public Guid UserId { get; set; }
         public Guid ProfileId { get; set; }
         public ProfileResponse? Profile { get; set; }
-        public Guid CompanyId { get; set; }
-        public CompanyResponse? Company { get; set; }
         public StatusEnum Status { get; set; }
     }
 }

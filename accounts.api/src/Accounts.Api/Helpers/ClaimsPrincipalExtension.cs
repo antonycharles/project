@@ -19,11 +19,5 @@ namespace Accounts.Api.Helpers
             var idClaim = claimsPrincipal.Claims.FirstOrDefault(c => c.Type == CustomClaimTypes.Id);
             return idClaim?.Value != null ? new Guid(idClaim.Value) : Guid.Empty;
         }
-
-        public static Guid GetCompanyId(this ClaimsPrincipal claimsPrincipal)
-        {
-            var companyIdClaim = claimsPrincipal.Claims.FirstOrDefault(c => c.Type == CustomClaimTypes.CompanyId);
-            return companyIdClaim?.Value != null && companyIdClaim.Value != "" ? new Guid(companyIdClaim.Value) : Guid.Empty;
-        }
     }
 }

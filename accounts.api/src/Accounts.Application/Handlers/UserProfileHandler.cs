@@ -33,7 +33,7 @@ namespace Accounts.Application.Handlers
                 throw new NotFoundException("Profile not found");
 
             var existUserProfileForApp = await _context.UserProfiles.AsNoTracking()
-                .AnyAsync(w => w.IsDeleted == false && w.UserId == userProfile.UserId && w.Profile.AppId == profile.AppId && w.CompanyId == userProfile.CompanyId);
+                .AnyAsync(w => w.IsDeleted == false && w.UserId == userProfile.UserId && w.Profile.AppId == profile.AppId);
 
             if(existUserProfileForApp == true)
                 throw new BusinessException("User already has a profile for this app");

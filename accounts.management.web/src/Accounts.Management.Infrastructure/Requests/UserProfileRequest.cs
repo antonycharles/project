@@ -6,6 +6,5 @@ namespace Accounts.Management.Infrastructure.Requests
     {
         public Guid UserId { get; set; }
         public Guid ProfileId { get; set; }
-        public Guid CompanyId { get; set; }
     }
 }

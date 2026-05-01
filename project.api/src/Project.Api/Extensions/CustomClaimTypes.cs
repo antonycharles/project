@@ -13,7 +13,5 @@ namespace Project.Api.Extensions
         public static string Role = "roles";
         public static string Type = "type";
         public static string Image = "image";
-        public static string CompanyName = "company";
-        public static string CompanyId = "companyId";
     }
 }

@@ -24,13 +24,13 @@ namespace Project.Infrastructure.Repositories.Externals
             _clientAuthorizationRepository = clientAuthorizationRepository;
         }
 
-        public async Task<List<UserResponse>> GetUsersByIdsAsync(Guid companyId, List<Guid> ids)
+        public async Task<List<UserResponse>> GetUsersByIdsAsync(List<Guid> ids)
         {
             try
             {
                 await AddToken();
                 var userIdsQuery = string.Join("&", ids.Select(id => $"UserIds={id}"));
-                var url = $"/v1/User?{userIdsQuery}&CompanyId={companyId}";
+                var url = $"/v1/User?{userIdsQuery}";
                 var resultado = await base.GetAsync<PaginatedResponse<UserResponse>>(url) ?? new PaginatedResponse<UserResponse>(new List<UserResponse>(), 0, 1, ids.Count, null);
                 return resultado.Items;
             }

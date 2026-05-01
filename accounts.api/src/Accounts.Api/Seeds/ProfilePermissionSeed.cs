@@ -103,7 +103,6 @@ namespace Accounts.Api.Seeds
                 "token-public-key",
                 "user-create",
                 "user-update",
-                "company-list",
                 "app-list"
             };
 

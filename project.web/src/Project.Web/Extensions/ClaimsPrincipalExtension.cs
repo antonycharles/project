@@ -13,14 +13,6 @@ namespace Project.Web.Extensions
                 ? id
                 : Guid.Empty;
 
-        public static Guid CompanyId(this ClaimsPrincipal? user)
-            => Guid.TryParse(user?.FindFirst(CustomClaimTypes.CompanyId)?.Value, out var id)
-                ? id
-                : Guid.Empty;
-
-        public static string CompanyName(this ClaimsPrincipal? user)
-            => user?.FindFirst(CustomClaimTypes.CompanyName)?.Value ?? "Unknown Company";
-
         public static string GetName(this ClaimsPrincipal? user)
             => user?.FindFirst(CustomClaimTypes.Name)?.Value ?? "Unknown User";
 

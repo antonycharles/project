@@ -39,15 +39,6 @@ namespace Accounts.Api.Helpers
             public const string Delete = $"{code}-{prefix}-{delete}";
         }
 
-        public class CompanyRole
-        {
-            private const string prefix = "company";
-            public const string List = $"{code}-{prefix}-{list}";
-            public const string Create = $"{code}-{prefix}-{create}";
-            public const string Update = $"{code}-{prefix}-{update}";
-            public const string Delete = $"{code}-{prefix}-{delete}";
-        }
-
         public class PermissionRole
         {
             private const string prefix = "permission";

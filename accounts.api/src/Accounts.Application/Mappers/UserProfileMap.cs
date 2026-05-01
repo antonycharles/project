@@ -13,8 +13,7 @@ namespace Accounts.Application.Mappers
         public static UserProfile ToUserProfile(this UserProfileRequest request) => new UserProfile
         {
             UserId = request.UserId,
-            ProfileId = request.ProfileId,
-            CompanyId = request.CompanyId
+            ProfileId = request.ProfileId
         };
         
         public static UserProfileResponse ToUserProfileResponse(this UserProfile entity) => new UserProfileResponse
@@ -23,8 +22,6 @@ namespace Accounts.Application.Mappers
             UserId = entity.UserId,
             ProfileId = entity.ProfileId,
             Profile = entity.Profile != null ? entity.Profile.ToProfileResponse() : null,
-            CompanyId = entity.CompanyId,
-            Company = entity.Company != null ? entity.Company.ToCompanyResponse() : null,
             Status = entity.Status
         };
     }
