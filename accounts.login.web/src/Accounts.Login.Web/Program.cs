@@ -13,8 +13,8 @@ builder.Services.AddAuthentication("CookieAuth")
     .AddCookie("CookieAuth", options =>
     {
         options.Cookie.Name = "Accounts.Login.Web";
-        options.LoginPath = "/Login";
-        options.AccessDeniedPath = "/Login";
+        options.LoginPath = "/accounts/Login";
+        options.AccessDeniedPath = "/accounts/Login";
         options.ExpireTimeSpan = TimeSpan.FromMinutes(180);
     });
 
@@ -43,6 +43,7 @@ builder.Services.AddCors(options =>
 });
 
 var app = builder.Build();
+app.UsePathBase("/accounts");
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())

@@ -51,7 +51,7 @@ namespace File.Api.Seeds
             Guid appId,
             string fileName,
             string contentType = "image/png",
-            string urlBase = "http://localhost:9502/")
+            string urlBase = "http://localhost/api/file/")
         {
 
             var existing = await fileDocumentRepository.GetByAppIdAndNameAsync(appId, fileName);

@@ -17,14 +17,14 @@ namespace Accounts.Api.Seeds
             var callbacks = new List<AppCallback>();
             
             callbacks.Add(new AppCallback{
-                Url = "http://localhost:9002/Account/Callback",
+                Url = "http://localhost/accounts-management/Account/Callback",
                 Environment = Core.Enums.EnvironmentEnum.Staging,
                 AppId = apps.FirstOrDefault(a => a.Slug == "accounts-management").Id,
                 IsDefault = true
             });
 
             callbacks.Add(new AppCallback{
-                Url = "http://localhost:9001/Home",
+                Url = "http://localhost/accounts",
                 Environment = Core.Enums.EnvironmentEnum.Staging,
                 AppId = apps.FirstOrDefault(a => a.Slug == "accounts-login-web").Id,
                 IsDefault = true
@@ -32,7 +32,7 @@ namespace Accounts.Api.Seeds
 
 
             callbacks.Add(new AppCallback{
-                Url = "http://localhost:9003/auth/callback",
+                Url = "http://localhost/project/auth/callback",
                 Environment = Core.Enums.EnvironmentEnum.Staging,
                 AppId = apps.FirstOrDefault(a => a.Slug == "project-api").Id,
                 IsDefault = true

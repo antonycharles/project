@@ -171,6 +171,24 @@ services:
             - ASPNETCORE_ENVIRONMENT=Development
         depends_on:
             - projectapi
+
+    apigateway:
+        image: nginx:1.27-alpine
+        container_name: api-gateway
+        ports:
+            - "80:80"
+        networks:
+            - project-network
+        volumes:
+            - ./infra/nginx:/etc/nginx/conf.d:ro
+        depends_on:
+            - userapi
+            - accountsapi
+            - fileapi
+            - projectapi
+            - accountsloginweb
+            - accountsmanagementweb
+            - projectweb
 volumes:
     cache:
         driver: local

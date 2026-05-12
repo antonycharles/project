@@ -23,6 +23,7 @@ builder.Services.AddControllersWithViews();
 
 
 var app = builder.Build();
+app.UsePathBase("/accounts-management");
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())
